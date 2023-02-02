@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\ConsumeController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +16,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::prefix('/consume')->group(function () {
+    Route::get('/limit/{page_limit}/order/{order}/favorite/{favorite}', [ConsumeController::class, 'getAllConsume']);
+    Route::get('/total/byfrom', [ConsumeController::class, 'getTotalConsumeByFrom']);
+    Route::get('/total/bytype', [ConsumeController::class, 'getTotalConsumeByType']);
 });
