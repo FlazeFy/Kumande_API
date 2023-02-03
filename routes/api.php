@@ -24,4 +24,8 @@ Route::prefix('/consume')->group(function () {
     Route::get('/limit/{page_limit}/order/{order}/favorite/{favorite}', [ConsumeController::class, 'getAllConsume']);
     Route::get('/total/byfrom', [ConsumeController::class, 'getTotalConsumeByFrom']);
     Route::get('/total/bytype', [ConsumeController::class, 'getTotalConsumeByType']);
+    Route::delete('/delete/{id}', [ConsumeController::class, 'deleteConsumeById']);
+    Route::put('/update/{id}', [ConsumeController::class, 'updateConsumeData']);
+    Route::put('/update/{id}', [ConsumeController::class, 'updateConsumeFavorite']);
+    Route::post('/create', [ConsumeController::class, 'createConsume']);
 });
