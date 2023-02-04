@@ -36,4 +36,42 @@ class BudgetController extends Controller
             "data"=> $bdt
         ]);
     }
+
+    public function deleteBudgetById($id){
+        Budget::where('budget_id', $id)->delete();
+
+        return response()->json([
+            "msg"=> "Data deleted", 
+            "status"=> 200
+        ]);
+    }
+
+    public function updateBudgetData(Request $request, $id){
+        $csl = Budget::where('budget_id', $id)->update([
+            'budget_total' => $request->budget_total,
+            'budget_month_year' => $request->budget_month_year,
+            'budget_over' => $request->budget_over,
+            'updated_at' => date("Y-m-d h:i:s")
+        ]);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Data successfully updated',
+            'result' => $csl
+        ]);
+    }
+
+    public function updateBudgetStatus(Request $request, $id){
+        $csl = Budget::where('budget_id', $id)->update([
+            'budget_status' => $request->budget_status,
+            'updated_at' => date("Y-m-d h:i:s"),
+            'achieve_at' => date("Y-m-d h:i:s")
+        ]);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Status successfully updated',
+            'result' => $csl
+        ]);
+    }
 }

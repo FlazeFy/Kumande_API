@@ -40,7 +40,7 @@ class ConsumeController extends Controller
     }
 
     public function getTotalConsumeByFrom(){
-        $csm = Consume::selectRaw('consume_from, count(*) as total')
+        $csm = Consume::selectRaw('consume_from, count(1) as total')
             ->groupBy('consume_from')
             ->orderBy('total', 'DESC')
             ->get();
@@ -53,7 +53,7 @@ class ConsumeController extends Controller
     }
 
     public function getTotalConsumeByType(){
-        $csm = Consume::selectRaw('consume_type, count(*) as total')
+        $csm = Consume::selectRaw('consume_type, count(1) as total')
             ->groupBy('consume_type')
             ->orderBy('total', 'DESC')
             ->get();

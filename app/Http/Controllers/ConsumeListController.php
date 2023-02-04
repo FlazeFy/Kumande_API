@@ -29,4 +29,28 @@ class ConsumeListController extends Controller
             "data"=> $csl
         ]);
     }
+
+    public function deleteListById($id){
+        ConsumeList::where('list_id', $id)->delete();
+
+        return response()->json([
+            "msg"=> "Data deleted", 
+            "status"=> 200
+        ]);
+    }
+
+    public function updateListData(Request $request, $id){
+        $csl = ConsumeList::where('list_id', $id)->update([
+            'list_name' => $request->list_name,
+            'list_desc' => $request->list_desc,
+            'list_tag' => $request->list_tag,
+            'updated_at' => date("Y-m-d h:i:s")
+        ]);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Data successfully updated',
+            'result' => $csl
+        ]);
+    }
 }
