@@ -4,6 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ConsumeController;
+use App\Http\Controllers\BudgetController;
+use App\Http\Controllers\ConsumeListController;
+use App\Http\Controllers\ScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,4 +31,16 @@ Route::prefix('/consume')->group(function () {
     Route::put('/update/{id}', [ConsumeController::class, 'updateConsumeData']);
     Route::put('/update/{id}', [ConsumeController::class, 'updateConsumeFavorite']);
     Route::post('/create', [ConsumeController::class, 'createConsume']);
+});
+
+Route::prefix('/budget')->group(function () {
+    Route::get('/limit/{page_limit}/order/{order}/over/{over}', [BudgetController::class, 'getAllBudget']);
+});
+
+Route::prefix('/list')->group(function () {
+    Route::get('/limit/{page_limit}/order/{order}', [ConsumeListController::class, 'getAllList']);
+});
+
+Route::prefix('/schedule')->group(function () {
+    Route::get('/limit/{page_limit}/order/{order}', [ScheduleController::class, 'getAllSchedule']);
 });

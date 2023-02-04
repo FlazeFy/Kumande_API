@@ -20,12 +20,12 @@ class ConsumeController extends Controller
 
     public function getAllConsume($page_limit, $order, $favorite){
         if($favorite == "all"){
-            $csm = Consume::select('consume_id', 'consume_type', 'consume_name', 'consume_from', 'consume_payment', 'consume_favorite', 'consume_tag', 'consume_comment', 'created_at', 'updated_at')
+            $csm = Consume::select('*')
                 ->orderBy('created_at', $order)
                 ->orderBy('consume_id', $order)
                 ->paginate($page_limit);
         } else {
-            $csm = Consume::select('consume_id', 'consume_type', 'consume_name', 'consume_from', 'consume_payment', 'consume_favorite', 'consume_tag', 'consume_comment', 'created_at', 'updated_at')
+            $csm = Consume::select('*')
                 ->where('consume_favorite',$favorite)
                 ->orderBy('created_at', $order)
                 ->orderBy('consume_id', $order)
