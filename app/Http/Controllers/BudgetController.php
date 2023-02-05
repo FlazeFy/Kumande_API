@@ -47,7 +47,7 @@ class BudgetController extends Controller
     }
 
     public function updateBudgetData(Request $request, $id){
-        $csl = Budget::where('budget_id', $id)->update([
+        $bdt = Budget::where('budget_id', $id)->update([
             'budget_total' => $request->budget_total,
             'budget_month_year' => $request->budget_month_year,
             'budget_over' => $request->budget_over,
@@ -57,12 +57,12 @@ class BudgetController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Data successfully updated',
-            'result' => $csl
+            'result' => $bdt
         ]);
     }
 
     public function updateBudgetStatus(Request $request, $id){
-        $csl = Budget::where('budget_id', $id)->update([
+        $bdt = Budget::where('budget_id', $id)->update([
             'budget_status' => $request->budget_status,
             'updated_at' => date("Y-m-d h:i:s"),
             'achieve_at' => date("Y-m-d h:i:s")
@@ -71,7 +71,58 @@ class BudgetController extends Controller
         return response()->json([
             'status' => 200,
             'message' => 'Status successfully updated',
-            'result' => $csl
+            'result' => $bdt
+        ]);
+    }
+
+    public function createBudget(Request $request){
+        function getFirstId(){
+            $randChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+            $check = Budget::select('budget_id')
+                ->orderBy('created_at', 'DESC')
+                ->limit(1)
+                ->get();
+
+            foreach($check as $ck){
+                $before_alph = substr($ck->budget_id,0,2);
+                $before_num = substr($ck->budget_id,2,1);
+
+                if($before_num < 9){
+                    $after_num = (int)$before_num + 1;
+                    $after_alph = $before_alph;
+                } else {
+                    $after_num = 0;
+                    $after_alph = substr(str_shuffle(str_repeat($randChar, 5)), 0, 2);
+                }
+            }            
+
+            return $after_alph.$after_num;
+        }
+
+        function getSecondId(){
+            $now = date("myd");
+            
+            return $now;
+        }
+
+        $getFinalId = getFirstId()."-".getSecondId()."-".$request->budget_over;
+
+        $bdt = Budget::create([
+            'budget_id' => $getFinalId,
+            'budget_total' => $request->budget_total,
+            'budget_month_year' => $request->budget_month_year,
+            'budget_over' => $request->budget_over,
+            'budget_status' => $request->budget_status,
+            'created_at' => date("Y-m-d h:i:s"),
+            'updated_at' => date("Y-m-d h:i:s"),
+            'achieve_at' => null
+        ]);
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Data successfully created',
+            'result' => $bdt
         ]);
     }
 }

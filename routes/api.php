@@ -38,16 +38,19 @@ Route::prefix('/budget')->group(function () {
     Route::delete('/delete/{id}', [BudgetController::class, 'deleteBudgetById']);
     Route::put('/update/data/{id}', [BudgetController::class, 'updateBudgetData']);
     Route::put('/update/status/{id}', [BudgetController::class, 'updateBudgetStatus']);
+    Route::post('/create', [BudgetController::class, 'createBudget']);
 });
 
 Route::prefix('/list')->group(function () {
     Route::get('/limit/{page_limit}/order/{order}', [ConsumeListController::class, 'getAllList']);
     Route::delete('/delete/{id}', [ConsumeListController::class, 'deleteListById']);
     Route::put('/update/data/{id}', [ConsumeListController::class, 'updateListData']);
+    Route::post('/create', [ConsumeListController::class, 'createList']);
 });
 
 Route::prefix('/schedule')->group(function () {
     Route::get('/limit/{page_limit}/order/{order}', [ScheduleController::class, 'getAllSchedule']);
     Route::delete('/delete/{id}', [ScheduleController::class, 'deleteScheduleById']);
     Route::put('/update/data/{id}', [ScheduleController::class, 'updateScheduleData']);
+    Route::post('/create', [ScheduleController::class, 'createSchedule']);
 });
