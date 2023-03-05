@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Helpers\Generator;
 
 use App\Models\Budget;
 
@@ -76,37 +77,10 @@ class BudgetController extends Controller
     }
 
     public function createBudget(Request $request){
-        function getFirstCode(){
-            $randChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        $firstCode = Generator::getFirstCode("budget");
+        $secondCode = Generator::getDateCode();
 
-            $check = Budget::select('budget_code')
-                ->orderBy('created_at', 'DESC')
-                ->limit(1)
-                ->get();
-
-            foreach($check as $ck){
-                $before_alph = substr($ck->budget_code,0,2);
-                $before_num = substr($ck->budget_code,2,1);
-
-                if($before_num < 9){
-                    $after_num = (int)$before_num + 1;
-                    $after_alph = $before_alph;
-                } else {
-                    $after_num = 0;
-                    $after_alph = substr(str_shuffle(str_repeat($randChar, 5)), 0, 2);
-                }
-            }            
-
-            return $after_alph.$after_num;
-        }
-
-        function getSecondCode(){
-            $now = date("myd");
-            
-            return $now;
-        }
-
-        $getFinalCode = getFirstCode()."-".getSecondCode()."-".$request->budget_over;
+        $getFinalCode = $firstCode."-".$secondCode."-".$request->budget_over;
 
         $bdt = Budget::create([
             'budget_code' => $getFinalCode,

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Helpers\Generator;
 
 use App\Models\ConsumeList;
 
@@ -55,43 +56,11 @@ class ConsumeListController extends Controller
     }
 
     public function createList(Request $request){
-        function getFirstCode(){
-            $randChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-            $check = ConsumeList::select('list_code')
-                ->orderBy('created_at', 'DESC')
-                ->limit(1)
-                ->get();
-
-            foreach($check as $ck){
-                $before_alph = substr($ck->list_code,0,2);
-                $before_num = substr($ck->list_code,2,1);
-
-                if($before_num < 9){
-                    $after_num = (int)$before_num + 1;
-                    $after_alph = $before_alph;
-                } else {
-                    $after_num = 0;
-                    $after_alph = substr(str_shuffle(str_repeat($randChar, 5)), 0, 2);
-                }
-            }            
-
-            return $after_alph.$after_num;
-        }
-
-        function getSecondCode(){
-            $now = date("myd");
-            
-            return $now;
-        }
-
-        function getThirdCode($name){
-            $id = strtoupper(substr($name, 0,1));
-
-            return $id;
-        }
-
-        $getFinalCode = getFirstCode()."-".getSecondCode()."-".getThirdCode($request->list_name);
+        $firstCode = Generator::getFirstCode("list");
+        $secondCode = Generator::getDateCode();
+        $thirdCode = Generator::getInitialCode($request->list_name);
+        
+        $getFinalCode = $firstCode."-".$secondCode."-".$thirdCode;
 
         $csl = ConsumeList::create([
             'list_code' => $getFinalCode,

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Helpers\Generator;
 
 use App\Models\Consume;
 
@@ -106,76 +107,11 @@ class ConsumeController extends Controller
     }
 
     public function createConsume(Request $request){
+        $firstCode = Generator::getConsumeFromCode($request->consume_from);
+        $secondCode = Generator::getFirstCode("consume");
+        $thirdCode = Generator::getConsumeTimeCode().Generator::getDateCode().Generator::getConsumeCode($request->consume_type);
 
-        function getFirstCode($from){
-            if($from == "GoFood"){
-                return "GFD";
-            } else if($from == "GrabFood"){
-                return "GBF";
-            } else if($from == "ShopeeFood"){
-                return "SPF";
-            } else if($from == "Others"){
-                return "OTH";
-            } else if($from == "Home"){
-                return "HOM";
-            }
-        }
-
-        function getSecondCode(){
-            $randChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-            $check = Consume::select('consume_code')
-                ->orderBy('created_at', 'DESC')
-                ->limit(1)
-                ->get();
-
-            foreach($check as $ck){
-                $before_alph = substr($ck->consume_code,4,2);
-                $before_num = substr($ck->consume_code,6,1);
-
-                if($before_num < 9){
-                    $after_num = (int)$before_num + 1;
-                    $after_alph = $before_alph;
-                } else {
-                    $after_num = 0;
-                    $after_alph = substr(str_shuffle(str_repeat($randChar, 5)), 0, 2);
-                }
-            }            
-
-            return $after_alph.$after_num;
-        }
-
-        function getConsumeCode($type){
-            if($type == "Food"){
-                return "FD";
-            } else { //Drink
-                return "DR";
-            }
-        }
-
-        function getConsumeTimeCode(){
-            $now = date("Y-m-d h:i:s");
-            $hour = date("h", strtotime($now));
-
-            if($hour > 5 && $hour <= 10){
-                $time = "B"; //Breakfast
-            } else if($hour > 10 && $hour <= 15){
-                $time = "L"; //Lunch
-            } else if($hour > 15 && $hour <= 22){
-                $time = "D"; //Dinner
-            } else {
-                $time = "S"; //Snack
-            }
-            return $time;
-        }
-
-        function getThirdCode(){
-            $timeStamp = date('dmy');
-
-            return getConsumeTimeCode().$timeStamp;
-        }
-
-        $getFinalCode = getFirstCode($request->consume_from)."-".getSecondCode()."-".getThirdCode();
+        $getFinalCode = $firstCode."-".$secondCode."-".$thirdCode;
 
         $csm = Consume::create([
             'consume_code' => $getFinalCode,

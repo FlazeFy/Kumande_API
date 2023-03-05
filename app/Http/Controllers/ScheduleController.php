@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Helpers\Generator;
 
 use App\Models\Schedule;
 
@@ -56,67 +57,13 @@ class ScheduleController extends Controller
     }
 
     public function createSchedule(Request $request){
-        $check = Schedule::select('schedule_code','schedule_time')
-            ->orderBy('created_at', 'DESC')
-            ->limit(1)
-            ->get();
+        $firstCode = Generator::getFirstCode("schedule");
+        $secondCode = Generator::getDateCode();
+        $thirdCode = Generator::getInitialCode($request->schedule_consume);
+        $getFinalId = $firstCode."-".$secondCode."-".$thirdCode;
+        $check = Generator::checkSchedule($request->schedule_time);
 
-        function checkSchedule($schedule, $mytime){
-            $res = false;
-            $parsedMyTime = json_decode($mytime);
-
-            foreach($parsedMyTime as $pmt){
-                $myday = $pmt->day;
-                $mycategory = $pmt->category;
-
-                foreach($schedule as $sc){
-                    $parsedTime = json_decode($sc->schedule_time);
-    
-                    foreach($parsedTime as $pt){
-                        if($pt->day == $myday && $pt->category == $mycategory){
-                            $res = true;
-                        }
-                    }
-                }
-            }
-
-            return $res;
-        }
-
-        function getFirstId($schedule){
-            $randChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-            foreach($schedule as $sc){
-                $before_alph = substr($sc->schedule_code,0,2);
-                $before_num = substr($sc->schedule_code,2,1);
-
-                if($before_num < 9){
-                    $after_num = (int)$before_num + 1;
-                    $after_alph = $before_alph;
-                } else {
-                    $after_num = 0;
-                    $after_alph = substr(str_shuffle(str_repeat($randChar, 5)), 0, 2);
-                }
-            }            
-
-            return $after_alph.$after_num;
-        }
-
-        function getSecondId(){
-            $now = date("myd");
-            
-            return $now;
-        }
-
-        function getThirdId($name){
-            $id = strtoupper(substr($name, 0,1));
-
-            return $id;
-        }
-
-        $getFinalId = getFirstId($check)."-".getSecondId()."-".getThirdId($request->schedule_consume);
-
-        if(!checkSchedule($check, $request->schedule_time)){
+        if(!$check){
             $sch = Schedule::create([
                 'schedule_code' => $getFinalId,
                 'schedule_consume' => $request->schedule_consume,
