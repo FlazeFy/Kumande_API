@@ -22,13 +22,13 @@ class ConsumeController extends Controller
         if($favorite == "all"){
             $csm = Consume::select('*')
                 ->orderBy('created_at', $order)
-                ->orderBy('consume_id', $order)
+                ->orderBy('consume_code', $order)
                 ->paginate($page_limit);
         } else {
             $csm = Consume::select('*')
                 ->where('consume_favorite',$favorite)
                 ->orderBy('created_at', $order)
-                ->orderBy('consume_id', $order)
+                ->orderBy('consume_code', $order)
                 ->paginate($page_limit);
         }
     
@@ -66,7 +66,7 @@ class ConsumeController extends Controller
     }
 
     public function deleteConsumeById($id){
-        Consume::where('consume_id', $id)->delete();
+        Consume::where('id', $id)->delete();
 
         return response()->json([
             "msg"=> "Data deleted", 
@@ -75,7 +75,7 @@ class ConsumeController extends Controller
     }
 
     public function updateConsumeData(Request $request, $id){
-        $csm = Consume::where('consume_id', $id)->update([
+        $csm = Consume::where('id', $id)->update([
             'consume_type' => $request->consume_type,
             'consume_name' => $request->consume_name,
             'consume_from' => $request->consume_from,
@@ -93,7 +93,7 @@ class ConsumeController extends Controller
     }
 
     public function updateConsumeFavorite(Request $request, $id){
-        $csm = Consume::where('consume_id', $id)->update([
+        $csm = Consume::where('id', $id)->update([
             'consume_favorite' => $request->consume_favorite,
             'updated_at' => date("Y-m-d h:i:s")
         ]);
@@ -107,7 +107,7 @@ class ConsumeController extends Controller
 
     public function createConsume(Request $request){
 
-        function getFirstId($from){
+        function getFirstCode($from){
             if($from == "GoFood"){
                 return "GFD";
             } else if($from == "GrabFood"){
@@ -121,17 +121,17 @@ class ConsumeController extends Controller
             }
         }
 
-        function getSecondId(){
+        function getSecondCode(){
             $randChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-            $check = Consume::select('consume_id')
+            $check = Consume::select('consume_code')
                 ->orderBy('created_at', 'DESC')
                 ->limit(1)
                 ->get();
 
             foreach($check as $ck){
-                $before_alph = substr($ck->consume_id,4,2);
-                $before_num = substr($ck->consume_id,6,1);
+                $before_alph = substr($ck->consume_code,4,2);
+                $before_num = substr($ck->consume_code,6,1);
 
                 if($before_num < 9){
                     $after_num = (int)$before_num + 1;
@@ -169,16 +169,16 @@ class ConsumeController extends Controller
             return $time;
         }
 
-        function getThirdId(){
+        function getThirdCode(){
             $timeStamp = date('dmy');
 
             return getConsumeTimeCode().$timeStamp;
         }
 
-        $getFinalId = getFirstId($request->consume_from)."-".getSecondId()."-".getThirdId();
+        $getFinalCode = getFirstCode($request->consume_from)."-".getSecondCode()."-".getThirdCode();
 
         $csm = Consume::create([
-            'consume_id' => $getFinalId,
+            'consume_code' => $getFinalCode,
             'consume_type' => $request->consume_type,
             'consume_name' => $request->consume_name,
             'consume_from' => $request->consume_from,

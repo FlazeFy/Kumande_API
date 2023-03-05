@@ -31,7 +31,7 @@ class ConsumeListController extends Controller
     }
 
     public function deleteListById($id){
-        ConsumeList::where('list_id', $id)->delete();
+        ConsumeList::where('id', $id)->delete();
 
         return response()->json([
             "msg"=> "Data deleted", 
@@ -40,7 +40,7 @@ class ConsumeListController extends Controller
     }
 
     public function updateListData(Request $request, $id){
-        $csl = ConsumeList::where('list_id', $id)->update([
+        $csl = ConsumeList::where('id', $id)->update([
             'list_name' => $request->list_name,
             'list_desc' => $request->list_desc,
             'list_tag' => $request->list_tag,
@@ -55,17 +55,17 @@ class ConsumeListController extends Controller
     }
 
     public function createList(Request $request){
-        function getFirstId(){
+        function getFirstCode(){
             $randChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-            $check = ConsumeList::select('list_id')
+            $check = ConsumeList::select('list_code')
                 ->orderBy('created_at', 'DESC')
                 ->limit(1)
                 ->get();
 
             foreach($check as $ck){
-                $before_alph = substr($ck->list_id,0,2);
-                $before_num = substr($ck->list_id,2,1);
+                $before_alph = substr($ck->list_code,0,2);
+                $before_num = substr($ck->list_code,2,1);
 
                 if($before_num < 9){
                     $after_num = (int)$before_num + 1;
@@ -79,22 +79,22 @@ class ConsumeListController extends Controller
             return $after_alph.$after_num;
         }
 
-        function getSecondId(){
+        function getSecondCode(){
             $now = date("myd");
             
             return $now;
         }
 
-        function getThirdId($name){
+        function getThirdCode($name){
             $id = strtoupper(substr($name, 0,1));
 
             return $id;
         }
 
-        $getFinalId = getFirstId()."-".getSecondId()."-".getThirdId($request->list_name);
+        $getFinalCode = getFirstCode()."-".getSecondCode()."-".getThirdCode($request->list_name);
 
         $csl = ConsumeList::create([
-            'list_id' => $getFinalId,
+            'list_code' => $getFinalCode,
             'list_name' => $request->list_name,
             'list_desc' => $request->list_desc,
             'list_tag' => $request->list_tag,

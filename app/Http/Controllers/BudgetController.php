@@ -38,7 +38,7 @@ class BudgetController extends Controller
     }
 
     public function deleteBudgetById($id){
-        Budget::where('budget_id', $id)->delete();
+        Budget::where('id', $id)->delete();
 
         return response()->json([
             "msg"=> "Data deleted", 
@@ -47,7 +47,7 @@ class BudgetController extends Controller
     }
 
     public function updateBudgetData(Request $request, $id){
-        $bdt = Budget::where('budget_id', $id)->update([
+        $bdt = Budget::where('id', $id)->update([
             'budget_total' => $request->budget_total,
             'budget_month_year' => $request->budget_month_year,
             'budget_over' => $request->budget_over,
@@ -62,7 +62,7 @@ class BudgetController extends Controller
     }
 
     public function updateBudgetStatus(Request $request, $id){
-        $bdt = Budget::where('budget_id', $id)->update([
+        $bdt = Budget::where('id', $id)->update([
             'budget_status' => $request->budget_status,
             'updated_at' => date("Y-m-d h:i:s"),
             'achieve_at' => date("Y-m-d h:i:s")
@@ -76,17 +76,17 @@ class BudgetController extends Controller
     }
 
     public function createBudget(Request $request){
-        function getFirstId(){
+        function getFirstCode(){
             $randChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-            $check = Budget::select('budget_id')
+            $check = Budget::select('budget_code')
                 ->orderBy('created_at', 'DESC')
                 ->limit(1)
                 ->get();
 
             foreach($check as $ck){
-                $before_alph = substr($ck->budget_id,0,2);
-                $before_num = substr($ck->budget_id,2,1);
+                $before_alph = substr($ck->budget_code,0,2);
+                $before_num = substr($ck->budget_code,2,1);
 
                 if($before_num < 9){
                     $after_num = (int)$before_num + 1;
@@ -100,16 +100,16 @@ class BudgetController extends Controller
             return $after_alph.$after_num;
         }
 
-        function getSecondId(){
+        function getSecondCode(){
             $now = date("myd");
             
             return $now;
         }
 
-        $getFinalId = getFirstId()."-".getSecondId()."-".$request->budget_over;
+        $getFinalCode = getFirstCode()."-".getSecondCode()."-".$request->budget_over;
 
         $bdt = Budget::create([
-            'budget_id' => $getFinalId,
+            'budget_code' => $getFinalCode,
             'budget_total' => $request->budget_total,
             'budget_month_year' => $request->budget_month_year,
             'budget_over' => $request->budget_over,
