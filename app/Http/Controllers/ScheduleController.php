@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Helpers\Generator;
+use Illuminate\Support\Facades\Validator;
 
 use App\Models\Schedule;
 
@@ -41,51 +43,92 @@ class ScheduleController extends Controller
     }
 
     public function updateScheduleData(Request $request, $id){
-        $sch = Schedule::where('id', $id)->update([
-            'schedule_consume' => $request->schedule_consume,
-            'schedule_desc' => $request->schedule_desc,
-            'schedule_tag' => $request->schedule_tag,
-            'schedule_time' => $request->schedule_time,
-            'updated_at' => date("Y-m-d h:i:s")
-        ]);
+        try{
+            $validator = Validator::make($request->all(), [
+                'schedule_consume' => 'required|max:75|min:1',
+                'schedule_desc' => 'nullable|max:255|min:1',
+                'schedule_tag' => 'nullable|json',
+                'schedule_time' => 'required|json',
+            ]);
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Data successfully updated',
-            'result' => $sch
-        ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()
+                ], Response::HTTP_BAD_REQUEST);
+            } else {        
+                $sch = Schedule::where('id', $id)->update([
+                    'schedule_consume' => $request->schedule_consume,
+                    'schedule_desc' => $request->schedule_desc,
+                    'schedule_tag' => $request->schedule_tag,
+                    'schedule_time' => $request->schedule_time,
+                    'updated_at' => date("Y-m-d h:i:s")
+                ]);
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Schedule updated',
+                    'data' => $sch
+                ], Response::HTTP_OK);
+            }
+        } catch(\Exception $err) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $err->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     public function createSchedule(Request $request){
-        $firstCode = Generator::getFirstCode("schedule");
-        $secondCode = Generator::getDateCode();
-        $thirdCode = Generator::getInitialCode($request->schedule_consume);
-        $getFinalId = $firstCode."-".$secondCode."-".$thirdCode;
-        $check = Generator::checkSchedule($request->schedule_time);
+        try{
+            $validator = Validator::make($request->all(), [
+                'schedule_consume' => 'required|max:75|min:1',
+                'schedule_desc' => 'nullable|max:255|min:1',
+                'schedule_tag' => 'nullable|json',
+                'schedule_time' => 'required|json',
+            ]);
 
-        if(!$check){
-            $sch = Schedule::create([
-                'schedule_code' => $getFinalId,
-                'schedule_consume' => $request->schedule_consume,
-                'schedule_desc' => $request->schedule_desc,
-                'schedule_tag' => $request->schedule_tag,
-                'schedule_time' => $request->schedule_time,
-                'created_at' => date("Y-m-d h:i:s"),
-                'updated_at' => date("Y-m-d h:i:s")
-            ]);
-    
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()
+                ], Response::HTTP_BAD_REQUEST);
+            } else {        
+                $firstCode = Generator::getFirstCode("schedule");
+                $secondCode = Generator::getDateCode();
+                $thirdCode = Generator::getInitialCode($request->schedule_consume);
+                $getFinalId = $firstCode."-".$secondCode."-".$thirdCode;
+                $check = Generator::checkSchedule($request->schedule_time);
+
+                if(!$check){
+                    $sch = Schedule::create([
+                        'schedule_code' => $getFinalId,
+                        'schedule_consume' => $request->schedule_consume,
+                        'schedule_desc' => $request->schedule_desc,
+                        'schedule_tag' => $request->schedule_tag,
+                        'schedule_time' => $request->schedule_time,
+                        'created_at' => date("Y-m-d h:i:s"),
+                        'updated_at' => date("Y-m-d h:i:s")
+                    ]);
+            
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Schedule created',
+                        'data' => $sch
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Schedule failed to create',
+                        'data' => "There's a schedule with same day and category"
+                    ], Response::HTTP_OK);
+                }
+            }
+        } catch(\Exception $err) {
             return response()->json([
-                'status' => 200,
-                'message' => 'Data successfully created',
-                'result' => $sch
-            ]);
-        } else {
-            return response()->json([
-                'status' => 200,
-                'message' => "Data failed to create",
-                'result' => "There's a schedule with same day and category"
-            ]);
+                'status' => 'error',
+                'message' => $err->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-        
     }
 }
