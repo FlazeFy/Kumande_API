@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Helpers\Generator;
+use Illuminate\Support\Facades\Validator;
 
 use App\Models\ConsumeList;
 
@@ -41,40 +43,80 @@ class ConsumeListController extends Controller
     }
 
     public function updateListData(Request $request, $id){
-        $csl = ConsumeList::where('id', $id)->update([
-            'list_name' => $request->list_name,
-            'list_desc' => $request->list_desc,
-            'list_tag' => $request->list_tag,
-            'updated_at' => date("Y-m-d h:i:s")
-        ]);
+        try{
+            $validator = Validator::make($request->all(), [
+                'list_name' => 'required|max:75|min:1',
+                'list_desc' => 'nullable|max:255|min:1',
+                'list_tag' => 'nullable|json'
+            ]);
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Data successfully updated',
-            'result' => $csl
-        ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()
+                ], Response::HTTP_BAD_REQUEST);
+            } else {
+                $csl = ConsumeList::where('id', $id)->update([
+                    'list_name' => $request->list_name,
+                    'list_desc' => $request->list_desc,
+                    'list_tag' => $request->list_tag,
+                    'updated_at' => date("Y-m-d h:i:s")
+                ]);
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'List updated',
+                    'data' => $csl
+                ], Response::HTTP_OK);
+            }
+        } catch(\Exception $err) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $err->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     public function createList(Request $request){
-        $firstCode = Generator::getFirstCode("list");
-        $secondCode = Generator::getDateCode();
-        $thirdCode = Generator::getInitialCode($request->list_name);
-        
-        $getFinalCode = $firstCode."-".$secondCode."-".$thirdCode;
+        try{
+            $validator = Validator::make($request->all(), [
+                'list_name' => 'required|max:75|min:1',
+                'list_desc' => 'nullable|max:255|min:1',
+                'list_tag' => 'nullable|json'
+            ]);
 
-        $csl = ConsumeList::create([
-            'list_code' => $getFinalCode,
-            'list_name' => $request->list_name,
-            'list_desc' => $request->list_desc,
-            'list_tag' => $request->list_tag,
-            'created_at' => date("Y-m-d h:i:s"),
-            'updated_at' => date("Y-m-d h:i:s")
-        ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $validator->errors()
+                ], Response::HTTP_BAD_REQUEST);
+            } else {
+                $firstCode = Generator::getFirstCode("list");
+                $secondCode = Generator::getDateCode();
+                $thirdCode = Generator::getInitialCode($request->list_name);
+                
+                $getFinalCode = $firstCode."-".$secondCode."-".$thirdCode;
 
-        return response()->json([
-            'status' => 200,
-            'message' => 'Data successfully created',
-            'result' => $csl
-        ]);
+                $csl = ConsumeList::create([
+                    'list_code' => $getFinalCode,
+                    'list_name' => $request->list_name,
+                    'list_desc' => $request->list_desc,
+                    'list_tag' => $request->list_tag,
+                    'created_at' => date("Y-m-d h:i:s"),
+                    'updated_at' => date("Y-m-d h:i:s")
+                ]);
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'List created',
+                    'data' => $csl
+                ], Response::HTTP_OK);
+            }
+        } catch(\Exception $err) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $err->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }
