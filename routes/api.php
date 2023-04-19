@@ -24,7 +24,7 @@ use App\Http\Controllers\ScheduleController;
 // });
 
 Route::prefix('/v1/consume')->group(function () {
-    Route::get('/limit/{page_limit}/order/{order}/favorite/{favorite}', [ConsumeController::class, 'getAllConsume']);
+    Route::get('/limit/{page_limit}/order/{order}/favorite/{favorite}/type/{type}', [ConsumeController::class, 'getAllConsume']);
     Route::get('/total/byfrom', [ConsumeController::class, 'getTotalConsumeByFrom']);
     Route::get('/total/bytype', [ConsumeController::class, 'getTotalConsumeByType']);
     Route::delete('/delete/{id}', [ConsumeController::class, 'deleteConsumeById']);
