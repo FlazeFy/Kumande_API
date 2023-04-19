@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\AuthApi\Commands as CommandAuthApi;
+use App\Http\Controllers\AuthApi\Queries as QueryAuthApi;
 use App\Http\Controllers\ConsumeController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ConsumeListController;
@@ -22,6 +24,9 @@ use App\Http\Controllers\ScheduleController;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
+
+Route::post('/v1/login', [CommandAuthApi::class, 'login']);
+Route::get('/v1/logout', [QueryAuthApi::class, 'logout'])->middleware(['auth:sanctum']);
 
 Route::prefix('/v1/consume')->group(function () {
     Route::get('/limit/{page_limit}/order/{order}/favorite/{favorite}/type/{type}', [ConsumeController::class, 'getAllConsume']);
