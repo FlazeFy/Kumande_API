@@ -5,7 +5,10 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthApi\Commands as CommandAuthApi;
 use App\Http\Controllers\AuthApi\Queries as QueryAuthApi;
-use App\Http\Controllers\ConsumeController;
+use App\Http\Controllers\ConsumeApi\Commands as CommandConsumeApi;
+use App\Http\Controllers\ConsumeApi\Queries as QueryConsumeApi;
+use App\Http\Controllers\PaymentApi\Commands as CommandPaymentApi;
+use App\Http\Controllers\PaymentApi\Queries as QueryPaymentApi;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ConsumeListController;
 use App\Http\Controllers\ScheduleController;
@@ -29,13 +32,18 @@ Route::post('/v1/login', [CommandAuthApi::class, 'login']);
 Route::get('/v1/logout', [QueryAuthApi::class, 'logout'])->middleware(['auth:sanctum']);
 
 Route::prefix('/v1/consume')->group(function () {
-    Route::get('/limit/{page_limit}/order/{order}/favorite/{favorite}/type/{type}', [ConsumeController::class, 'getAllConsume']);
-    Route::get('/total/byfrom', [ConsumeController::class, 'getTotalConsumeByFrom']);
-    Route::get('/total/bytype', [ConsumeController::class, 'getTotalConsumeByType']);
-    Route::delete('/delete/{id}', [ConsumeController::class, 'deleteConsumeById']);
-    Route::put('/update/data/{id}', [ConsumeController::class, 'updateConsumeData']);
-    Route::put('/update/favorite/{id}', [ConsumeController::class, 'updateConsumeFavorite']);
-    Route::post('/create', [ConsumeController::class, 'createConsume']);
+    Route::get('/limit/{page_limit}/order/{order}/favorite/{favorite}/type/{type}', [QueryConsumeApi::class, 'getAllConsume']);
+    Route::get('/total/byfrom', [QueryConsumeApi::class, 'getTotalConsumeByFrom']);
+    Route::get('/total/bytype', [QueryConsumeApi::class, 'getTotalConsumeByType']);
+    Route::delete('/delete/{id}', [CommandConsumeApi::class, 'deleteConsumeById']);
+    Route::put('/update/data/{id}', [CommandConsumeApi::class, 'updateConsumeData']);
+    Route::put('/update/favorite/{id}', [CommandConsumeApi::class, 'updateConsumeFavorite']);
+    Route::post('/create', [CommandConsumeApi::class, 'createConsume']);
+});
+
+Route::prefix('/v1/payment')->group(function () {
+    Route::get('/total/month/{year}', [QueryPaymentApi::class, 'getTotalSpendMonth']);
+    Route::get('/total/month/{month}/year/{year}', [QueryPaymentApi::class, 'getTotalSpendDay']);
 });
 
 Route::prefix('/v1/budget')->group(function () {
