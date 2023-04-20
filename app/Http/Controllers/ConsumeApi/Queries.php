@@ -78,9 +78,9 @@ class Queries extends Controller
     public function getTotalConsumeByFrom(){
         try{
             $csm = Consume::selectRaw('consume_from as context, count(1) as total')
-            ->groupBy('consume_from')
-            ->orderBy('total', 'DESC')
-            ->get();
+                ->groupBy('consume_from')
+                ->orderBy('total', 'DESC')
+                ->get();
 
             return response()->json([
                 "msg"=> count($csm)." Data retrived", 
