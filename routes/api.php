@@ -9,9 +9,10 @@ use App\Http\Controllers\ConsumeApi\Commands as CommandConsumeApi;
 use App\Http\Controllers\ConsumeApi\Queries as QueryConsumeApi;
 use App\Http\Controllers\PaymentApi\Commands as CommandPaymentApi;
 use App\Http\Controllers\PaymentApi\Queries as QueryPaymentApi;
+use App\Http\Controllers\ScheduleApi\Commands as CommandScheduleApi;
+use App\Http\Controllers\ScheduleApi\Queries as QueryScheduleApi;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ConsumeListController;
-use App\Http\Controllers\ScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +32,7 @@ use App\Http\Controllers\ScheduleController;
 Route::post('/v1/login', [CommandAuthApi::class, 'login']);
 Route::get('/v1/logout', [QueryAuthApi::class, 'logout'])->middleware(['auth:sanctum']);
 
-Route::prefix('/v1/consume')->group(function () {
+Route::prefix('/v1/consume')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/limit/{page_limit}/order/{order}/favorite/{favorite}/type/{type}', [QueryConsumeApi::class, 'getAllConsume']);
     Route::get('/total/byfrom', [QueryConsumeApi::class, 'getTotalConsumeByFrom']);
     Route::get('/total/bytype', [QueryConsumeApi::class, 'getTotalConsumeByType']);
@@ -41,12 +42,12 @@ Route::prefix('/v1/consume')->group(function () {
     Route::post('/create', [CommandConsumeApi::class, 'createConsume']);
 });
 
-Route::prefix('/v1/payment')->group(function () {
+Route::prefix('/v1/payment')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/total/month/{year}', [QueryPaymentApi::class, 'getTotalSpendMonth']);
     Route::get('/total/month/{month}/year/{year}', [QueryPaymentApi::class, 'getTotalSpendDay']);
 });
 
-Route::prefix('/v1/budget')->group(function () {
+Route::prefix('/v1/budget')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/limit/{page_limit}/order/{order}/over/{over}', [BudgetController::class, 'getAllBudget']);
     Route::delete('/delete/{id}', [BudgetController::class, 'deleteBudgetById']);
     Route::put('/update/data/{id}', [BudgetController::class, 'updateBudgetData']);
@@ -54,16 +55,17 @@ Route::prefix('/v1/budget')->group(function () {
     Route::post('/create', [BudgetController::class, 'createBudget']);
 });
 
-Route::prefix('/v1/list')->group(function () {
+Route::prefix('/v1/list')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/limit/{page_limit}/order/{order}', [ConsumeListController::class, 'getAllList']);
     Route::delete('/delete/{id}', [ConsumeListController::class, 'deleteListById']);
     Route::put('/update/data/{id}', [ConsumeListController::class, 'updateListData']);
     Route::post('/create', [ConsumeListController::class, 'createList']);
 });
 
-Route::prefix('/v1/schedule')->group(function () {
-    Route::get('/limit/{page_limit}/order/{order}', [ScheduleController::class, 'getAllSchedule']);
-    Route::delete('/delete/{id}', [ScheduleController::class, 'deleteScheduleById']);
-    Route::put('/update/data/{id}', [ScheduleController::class, 'updateScheduleData']);
-    Route::post('/create', [ScheduleController::class, 'createSchedule']);
+Route::prefix('/v1/schedule')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/limit/{page_limit}/order/{order}', [QueryScheduleApi::class, 'getAllSchedule']);
+    Route::get('/day/{day}', [QueryScheduleApi::class, 'getTodaySchedule']);
+    Route::delete('/delete/{id}', [CommandScheduleApi::class, 'deleteScheduleById']);
+    Route::put('/update/data/{id}', [CommandScheduleApi::class, 'updateScheduleData']);
+    Route::post('/create', [CommandScheduleApi::class, 'createSchedule']);
 });

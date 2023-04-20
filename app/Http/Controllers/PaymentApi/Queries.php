@@ -4,9 +4,7 @@ namespace App\Http\Controllers\PaymentApi;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Helpers\Generator;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Validator;
 
 use App\Models\Payment;
 
@@ -22,10 +20,13 @@ class Queries extends Controller
         //
     }
 
-    public function getTotalSpendMonth($year){
+    public function getTotalSpendMonth(Request $request, $year){
         try{
+            $user_id = $request->user()->id;
+
             $csm = Payment::selectRaw('MONTH(created_at) as context, SUM(payment_price) as total')
                 ->groupBy('context')
+                ->where('created_by', $user_id)
                 ->whereRaw('YEAR(created_at) = '.$year)
                 ->orderBy('context','ASC')
                 ->get();
@@ -45,7 +46,7 @@ class Queries extends Controller
             
                 $obj[] = [
                     'context' => $mon,
-                    'count' => (int)$spend,
+                    'total' => (int)$spend,
                 ];
             }
 
@@ -64,10 +65,13 @@ class Queries extends Controller
         }
     }
 
-    public function getTotalSpendDay($month, $year){
+    public function getTotalSpendDay(Request $request, $month, $year){
         try{
+            $user_id = $request->user()->id;
+
             $csm = Payment::selectRaw('DAY(created_at) as context, SUM(payment_price) as total')
                 ->groupBy('context')
+                ->where('created_by', $user_id)
                 ->whereRaw('YEAR(created_at) = '.$year)
                 ->whereRaw('MONTH(created_at) = '.$month)
                 ->orderBy('context','ASC')
@@ -89,7 +93,7 @@ class Queries extends Controller
             
                 $obj[] = [
                     'context' => (string)$i,
-                    'count' => (int)$spend,
+                    'total' => (int)$spend,
                 ];
             }
 

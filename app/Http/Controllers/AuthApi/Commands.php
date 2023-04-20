@@ -27,12 +27,12 @@ class Commands extends Controller
                 'token' => null
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         } else {
-            $user = User::where('username', $request->username)->first();
+            $user = User::where('email', $request->email)->first();
 
             if (!$user) {
                 return response()->json([
                     'status' => 401,
-                    'message' => "Username doesn't exist",
+                    'message' => "Email doesn't exist",
                     'result' => null,
                     'token' => null,                
                 ], Response::HTTP_UNAUTHORIZED);

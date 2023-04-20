@@ -22,13 +22,16 @@ class Queries extends Controller
         //
     }
 
-    public function getAllConsume($page_limit, $order, $favorite, $type){
+    public function getAllConsume(Request $request, $page_limit, $order, $favorite, $type){
         try{
+            $user_id = $request->user()->id;
+
             if($favorite == "all"){
                 if($type != "All"){
                     $csm = Consume::selectRaw('consume.id, slug_name, consume_type, consume_name, consume_detail, consume_from, is_favorite, consume_tag, consume_comment, consume.created_at, payment_method, payment_price, is_payment')
                         ->join('payment', 'payment.consume_id', '=', 'consume.id')
                         ->whereNull('deleted_at')
+                        ->where('consume.created_by', $user_id)
                         ->where('consume_type',$type)
                         ->orderBy('consume.created_at', $order)
                         ->orderBy('slug_name', $order)
@@ -37,6 +40,7 @@ class Queries extends Controller
                     $csm = Consume::selectRaw('consume.id, slug_name, consume_type, consume_name, consume_detail, consume_from, is_favorite, consume_tag, consume_comment, consume.created_at, payment_method, payment_price, is_payment')
                         ->join('payment', 'payment.consume_id', '=', 'consume.id')
                         ->whereNull('deleted_at')
+                        ->where('consume.created_by', $user_id)
                         ->orderBy('consume.created_at', $order)
                         ->orderBy('slug_name', $order)
                         ->paginate($page_limit);
@@ -47,6 +51,7 @@ class Queries extends Controller
                         ->join('payment', 'payment.consume_id', '=', 'consume.id')
                         ->where('is_favorite',$favorite)
                         ->whereNull('deleted_at')
+                        ->where('consume.created_by', $user_id)
                         ->where('consume_type',$type)
                         ->orderBy('consume.created_at', $order)
                         ->orderBy('slug_name', $order)
@@ -56,6 +61,7 @@ class Queries extends Controller
                         ->join('payment', 'payment.consume_id', '=', 'consume.id')
                         ->where('is_favorite',$favorite)
                         ->whereNull('deleted_at')
+                        ->where('consume.created_by', $user_id)
                         ->orderBy('consume.created_at', $order)
                         ->orderBy('slug_name', $order)
                         ->paginate($page_limit);
@@ -75,9 +81,12 @@ class Queries extends Controller
         }
     }
 
-    public function getTotalConsumeByFrom(){
+    public function getTotalConsumeByFrom(Request $request){
         try{
+            $user_id = $request->user()->id;
+
             $csm = Consume::selectRaw('consume_from as context, count(1) as total')
+                ->where('created_by', $user_id)
                 ->groupBy('consume_from')
                 ->orderBy('total', 'DESC')
                 ->get();
@@ -95,9 +104,12 @@ class Queries extends Controller
         }
     }
 
-    public function getTotalConsumeByType(){
+    public function getTotalConsumeByType(Request $request){
         try{
+            $user_id = $request->user()->id;
+
             $csm = Consume::selectRaw('consume_type as context, count(1) as total')
+                ->where('created_by', $user_id)
                 ->groupBy('consume_type')
                 ->orderBy('total', 'DESC')
                 ->get();

@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\ScheduleApi;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Helpers\Generator;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
 use App\Models\Schedule;
 
-class ScheduleController extends Controller
+class Commands extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,25 +22,20 @@ class ScheduleController extends Controller
         //
     }
 
-    public function getAllSchedule($page_limit, $order){
-        $sch = Schedule::select('*')
-            ->orderBy('created_at', $order)
-            ->paginate($page_limit);
-    
-        return response()->json([
-            "msg"=> count($sch)." Data retrived", 
-            "status"=> 200,
-            "data"=> $sch
-        ]);
-    }
-
     public function deleteScheduleById($id){
-        Schedule::where('id', $id)->delete();
+        try{
+            Schedule::where('id', $id)->delete();
 
-        return response()->json([
-            "msg"=> "Data deleted", 
-            "status"=> 200
-        ]);
+            return response()->json([
+                "msg"=> "Data deleted", 
+                "status"=> 200
+            ]);
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     public function updateScheduleData(Request $request, $id){
