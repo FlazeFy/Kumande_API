@@ -50,7 +50,7 @@ class Queries extends Controller
             $sch = Schedule::select('*')
                 ->where('created_by', $user_id)
                 ->whereRaw("schedule_time LIKE '%".'"'."day".'"'.":".'"'.$day.'"'."%'")
-                ->orderByRaw("JSON_EXTRACT(schedule_time, '$.time') ASC")
+                ->orderByRaw("JSON_EXTRACT(schedule_time, '$[0].time') ASC")
                 ->get();
 
             return response()->json([

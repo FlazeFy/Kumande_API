@@ -7,6 +7,8 @@ use App\Http\Controllers\AuthApi\Commands as CommandAuthApi;
 use App\Http\Controllers\AuthApi\Queries as QueryAuthApi;
 use App\Http\Controllers\ConsumeApi\Commands as CommandConsumeApi;
 use App\Http\Controllers\ConsumeApi\Queries as QueryConsumeApi;
+use App\Http\Controllers\ConsumeApi\CommandsList as CommandConsumeListApi;
+use App\Http\Controllers\ConsumeApi\QueriesList as QueryConsumeListApi;
 use App\Http\Controllers\PaymentApi\Commands as CommandPaymentApi;
 use App\Http\Controllers\PaymentApi\Queries as QueryPaymentApi;
 use App\Http\Controllers\ScheduleApi\Commands as CommandScheduleApi;
@@ -36,6 +38,8 @@ Route::prefix('/v1/consume')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/limit/{page_limit}/order/{order}/favorite/{favorite}/type/{type}', [QueryConsumeApi::class, 'getAllConsume']);
     Route::get('/total/byfrom', [QueryConsumeApi::class, 'getTotalConsumeByFrom']);
     Route::get('/total/bytype', [QueryConsumeApi::class, 'getTotalConsumeByType']);
+    Route::get('/total/bymain', [QueryConsumeApi::class, 'getTotalConsumeByMainIng']);
+    Route::get('/total/day/cal/month/{month}/year/{year}', [QueryConsumeApi::class, 'getDailyConsumeCal']);
     Route::delete('/delete/{id}', [CommandConsumeApi::class, 'deleteConsumeById']);
     Route::put('/update/data/{id}', [CommandConsumeApi::class, 'updateConsumeData']);
     Route::put('/update/favorite/{id}', [CommandConsumeApi::class, 'updateConsumeFavorite']);
@@ -60,10 +64,10 @@ Route::prefix('/v1/budget')->middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::prefix('/v1/list')->middleware(['auth:sanctum'])->group(function () {
-    Route::get('/limit/{page_limit}/order/{order}', [ConsumeListController::class, 'getAllList']);
-    Route::delete('/delete/{id}', [ConsumeListController::class, 'deleteListById']);
-    Route::put('/update/data/{id}', [ConsumeListController::class, 'updateListData']);
-    Route::post('/create', [ConsumeListController::class, 'createList']);
+    Route::get('/limit/{page_limit}/order/{order}', [QueryConsumeListApi::class, 'getAllList']);
+    Route::delete('/delete/{id}', [CommandConsumeListApi::class, 'deleteListById']);
+    Route::put('/update/data/{id}', [CommandConsumeListApi::class, 'updateListData']);
+    Route::post('/create', [CommandConsumeListApi::class, 'createList']);
 });
 
 Route::prefix('/v1/schedule')->middleware(['auth:sanctum'])->group(function () {

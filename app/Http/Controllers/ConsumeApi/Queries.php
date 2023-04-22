@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Helpers\Generator;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 use App\Models\Consume;
@@ -68,11 +69,19 @@ class Queries extends Controller
                 }
             }
         
-            return response()->json([
-                "msg"=> count($csm)." Data retrived", 
-                "status"=>200,
-                "data"=>$csm
-            ]);
+            if ($csm->count() > 0) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => count($csm)." Data retrived", 
+                    'data' => $csm
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Consume not found',
+                    'data' => null
+                ], Response::HTTP_NOT_FOUND);
+            }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -91,11 +100,19 @@ class Queries extends Controller
                 ->orderBy('total', 'DESC')
                 ->get();
 
-            return response()->json([
-                "msg"=> count($csm)." Data retrived", 
-                "status"=> 200,
-                "data"=> $csm
-            ]);
+            if ($csm->count() > 0) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => count($csm)." Data retrived", 
+                    'data' => $csm
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Consume not found',
+                    'data' => null
+                ], Response::HTTP_NOT_FOUND);
+            }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -114,11 +131,108 @@ class Queries extends Controller
                 ->orderBy('total', 'DESC')
                 ->get();
 
+            if ($csm->count() > 0) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => count($csm)." Data retrived", 
+                    'data' => $csm
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Consume not found',
+                    'data' => null
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
             return response()->json([
-                "msg"=> count($csm)." Data retrived", 
-                "status"=> 200,
-                "data"=> $csm
-            ]);
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function getTotalConsumeByMainIng(Request $request){
+        try{
+            $user_id = $request->user()->id;
+
+            $csm = DB::select(DB::raw("SELECT 
+                    REPLACE(JSON_EXTRACT(consume_detail, '$[0].main_ing'), '\"', '') as context, count(1) as total
+                    FROM consume
+                    GROUP BY 1
+                    ORDER BY 2 DESC
+                    LIMIT 8
+                "));
+
+            if (count($csm) > 0) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => count($csm)." Data retrived", 
+                    'data' => $csm
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Consume not found',
+                    'data' => null
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function getDailyConsumeCal(Request $request, $month, $year){
+        try{
+            $user_id = $request->user()->id;
+
+            $csm = DB::select(DB::raw("SELECT 
+                    DAY(created_at) as context, SUM(REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '')) as total 
+                    FROM consume
+                    WHERE MONTH(created_at) = ".$month."
+                    AND YEAR(created_at) = ".$year."
+                    GROUP BY 1
+                    ORDER BY 2 DESC
+                "));
+
+            $obj = [];
+            $date = $year."-".$month."-01";
+            $max = date("t", strtotime($date));
+
+            for ($i = 1; $i <= $max; $i++) {
+                $spend = 0;
+            
+                foreach ($csm as $cs) {
+                    if ($cs->context == $i) {
+                        $spend = $cs->total;
+                        break;
+                    }
+                }
+            
+                $obj[] = [
+                    'context' => (string)$i,
+                    'total' => (int)$spend,
+                ];
+            }
+
+            $collection = collect($obj);
+
+            if ($collection->count() > 0) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => count($collection)." Data retrived", 
+                    'data' => $collection
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Consume not found',
+                    'data' => null
+                ], Response::HTTP_NOT_FOUND);
+            }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',

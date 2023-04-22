@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 use App\Helpers\Generator;
 use App\Helpers\Validation;
+use App\Helpers\Converter;
 
 use App\Models\Consume;
 use App\Models\Payment;
@@ -114,10 +115,18 @@ class Commands extends Controller
                 return response()->json([
                     'status' => 'error',
                     'message' => $validator->errors()
-                ], Response::HTTP_BAD_REQUEST);
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {        
                 $id = Generator::getUUID();
                 $slug = Generator::getSlug($request->consume_name, "consume");
+
+                $jsonDetail = Converter::getEncoded($request->consume_detail);
+                $jsonTag = Converter::getEncoded($request->consume_tag);
+                // $jsonDetail = json_encode($request->consume_detail);
+                // $jsonTag =  json_encode($request->consume_tag);
+
+                $detail = json_decode($jsonDetail, true);
+                $tag = json_decode($jsonTag, true);
 
                 $user_id = $request->user()->id;
 
@@ -126,10 +135,10 @@ class Commands extends Controller
                     'slug_name' => $slug,
                     'consume_type' => $request->consume_type,
                     'consume_name' => $request->consume_name,
-                    'consume_detail' => $request->consume_detail,
+                    'consume_detail' => $detail,
                     'consume_from' => $request->consume_from,
                     'is_favorite' => $request->is_favorite,
-                    'consume_tag' => $request->consume_tag,
+                    'consume_tag' => $tag,
                     'consume_comment' => $request->consume_comment,
                     'created_at' => date("Y-m-d h:i:s"),
                     'updated_at' => null,

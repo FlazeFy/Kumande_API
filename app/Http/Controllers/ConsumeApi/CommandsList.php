@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\ConsumeApi;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Helpers\Generator;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 use App\Models\ConsumeList;
 
-class ConsumeListController extends Controller
+class CommandsList extends Controller
 {
     /**
      * Display a listing of the resource.
