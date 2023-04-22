@@ -47,6 +47,10 @@ Route::prefix('/v1/payment')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/total/month/{month}/year/{year}', [QueryPaymentApi::class, 'getTotalSpendDay']);
 });
 
+Route::prefix('/v1/analytic')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/payment/month/{month}/year/{year}', [QueryPaymentApi::class, 'getAnalyticSpendMonth']);
+});
+
 Route::prefix('/v1/budget')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/limit/{page_limit}/order/{order}/over/{over}', [BudgetController::class, 'getAllBudget']);
     Route::delete('/delete/{id}', [BudgetController::class, 'deleteBudgetById']);

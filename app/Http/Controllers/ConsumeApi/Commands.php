@@ -4,11 +4,14 @@ namespace App\Http\Controllers\ConsumeApi;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Helpers\Generator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
+use App\Helpers\Generator;
+use App\Helpers\Validation;
+
 use App\Models\Consume;
+use App\Models\Payment;
 
 class Commands extends Controller
 {
@@ -105,15 +108,7 @@ class Commands extends Controller
 
     public function createConsume(Request $request){
         try{
-            $validator = Validator::make($request->all(), [
-                'consume_type' => 'required|max:10|min:1',
-                'consume_name' => 'required|json',
-                'consume_from' => 'required|max:10|min:1',
-                'consume_payment' => 'required|json',
-                'consume_tag' => 'nullable|json',
-                'is_favorite' => 'required|max:1',
-                'consume_comment' => 'nullable|max:255|min:1'
-            ]);
+            $validator = Validation::getValidateCreateConsume($request);
 
             if ($validator->fails()) {
                 return response()->json([
@@ -121,29 +116,50 @@ class Commands extends Controller
                     'message' => $validator->errors()
                 ], Response::HTTP_BAD_REQUEST);
             } else {        
-                $firstCode = Generator::getConsumeFromCode($request->consume_from);
-                $secondCode = Generator::getFirstCode("consume");
-                $thirdCode = Generator::getConsumeTimeCode().Generator::getDateCode().Generator::getConsumeCode($request->consume_type);
+                $id = Generator::getUUID();
+                $slug = Generator::getSlug($request->consume_name, "consume");
 
-                $getFinalCode = $firstCode."-".$secondCode."-".$thirdCode;
+                $user_id = $request->user()->id;
 
                 $csm = Consume::create([
-                    'slug_name' => $getFinalCode,
+                    'id' => $id,
+                    'slug_name' => $slug,
                     'consume_type' => $request->consume_type,
                     'consume_name' => $request->consume_name,
+                    'consume_detail' => $request->consume_detail,
                     'consume_from' => $request->consume_from,
-                    'consume_payment' => $request->consume_payment,
                     'is_favorite' => $request->is_favorite,
                     'consume_tag' => $request->consume_tag,
                     'consume_comment' => $request->consume_comment,
                     'created_at' => date("Y-m-d h:i:s"),
-                    'updated_at' => date("Y-m-d h:i:s")
+                    'updated_at' => null,
+                    'deleted_at' => null,
+                    'created_by' => $user_id,
+                    'updated_by' => null,
+                    'deleted_by' => null,
+                ]);
+
+                $pym = Payment::create([
+                    'id' => Generator::getUUID(),
+                    'consume_id' => $id,
+                    'payment_method' => $request->payment_method,  
+                    'payment_price' => $request->payment_price,
+                    'is_payment' => $request->is_payment,
+                    'created_at' => date("Y-m-d h:i:s"),
+                    'updated_at' => null,
+                    'created_by' => $user_id,
+                    'updated_by' => null,
+                ]);
+
+                $res = collect([
+                    'consume' => $csm,
+                    'payment' => $pym,
                 ]);
 
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Consume created',
-                    'data' => $csm
+                    'data' => $res
                 ], Response::HTTP_OK);
             }
         } catch(\Exception $err) {

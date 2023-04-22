@@ -4,6 +4,7 @@ namespace App\Http\Controllers\PaymentApi;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 use App\Models\Payment;
@@ -24,7 +25,7 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $csm = Payment::selectRaw('MONTH(created_at) as context, SUM(payment_price) as total')
+            $pym = Payment::selectRaw('MONTH(created_at) as context, SUM(payment_price) as total')
                 ->groupBy('context')
                 ->where('created_by', $user_id)
                 ->whereRaw('YEAR(created_at) = '.$year)
@@ -37,7 +38,7 @@ class Queries extends Controller
                 $timestamp = mktime(0, 0, 0, $i, 1, date('Y'));
                 $mon = date('M', $timestamp);
             
-                foreach ($csm as $cs) {
+                foreach ($pym as $cs) {
                     if ($cs->context == $i) {
                         $spend = $cs->total;
                         break;
@@ -69,7 +70,7 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $csm = Payment::selectRaw('DAY(created_at) as context, SUM(payment_price) as total')
+            $pym = Payment::selectRaw('DAY(created_at) as context, SUM(payment_price) as total')
                 ->groupBy('context')
                 ->where('created_by', $user_id)
                 ->whereRaw('YEAR(created_at) = '.$year)
@@ -84,7 +85,7 @@ class Queries extends Controller
             for ($i = 1; $i <= $max; $i++) {
                 $spend = 0;
             
-                foreach ($csm as $cs) {
+                foreach ($pym as $cs) {
                     if ($cs->context == $i) {
                         $spend = $cs->total;
                         break;
@@ -103,6 +104,36 @@ class Queries extends Controller
                 "msg"=> count($collection)." Data retrived", 
                 "status"=> 200,
                 "data"=> $collection
+            ]);
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function getAnalyticSpendMonth(Request $request, $month, $year){
+        try{
+            $user_id = $request->user()->id;
+
+            $pym = DB::select(DB::raw("SELECT 
+                    CAST(IFNULL(ROUND(AVG(total)),0) as INT) as average, 
+                    CAST(IFNULL(MAX(total),0) as INT) as max, 
+                    CAST(IFNULL(MIN(total),0) as INT) as min,
+                    CAST(IFNULL(SUM(total),0) as INT) as total 
+                    FROM(
+                        SELECT SUM(payment_price) as total FROM `payment` 
+                        WHERE MONTH(created_at) = '".$month."' AND YEAR(created_at) = '".$year."'
+                        AND created_by = '".$user_id."' 
+                        GROUP BY DAY(created_at)
+                        ) q
+                    "));
+
+            return response()->json([
+                "msg"=> "Analytic Data retrived", 
+                "status"=> 200,
+                "data"=> $pym
             ]);
         } catch(\Exception $e) {
             return response()->json([
