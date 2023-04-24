@@ -119,7 +119,12 @@ class Generator
                 ->where('slug_name', $replace)
                 ->limit(1)
                 ->get();
-        } 
+        } else if($type == "consume_list"){
+            $check = ConsumeList::select('slug_name')
+                ->where('slug_name', $replace)
+                ->limit(1)
+                ->get();
+        }
 
         if(count($check) > 0){
             $replace = $replace."_".date('mdhis'); 

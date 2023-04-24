@@ -27,8 +27,9 @@ class QueriesList extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $csl = ConsumeList::select('*')
+            $csl = ConsumeList::select('id', 'slug_name', 'list_name', 'list_desc', 'list_tag', 'created_at', 'updated_at')
                 ->orderBy('created_at', $order)
+                ->where('created_by', $user_id)
                 ->paginate($page_limit);
 
             if ($csl->count() > 0) {

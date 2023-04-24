@@ -4,12 +4,15 @@ namespace App\Http\Controllers\ConsumeApi;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Helpers\Generator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 use App\Models\ConsumeList;
+
+use App\Helpers\Validation;
+use App\Helpers\Generator;
+use App\Helpers\Converter;
 
 class CommandsList extends Controller
 {
@@ -81,11 +84,7 @@ class CommandsList extends Controller
 
     public function createList(Request $request){
         try{
-            $validator = Validator::make($request->all(), [
-                'list_name' => 'required|max:75|min:1',
-                'list_desc' => 'nullable|max:255|min:1',
-                'list_tag' => 'nullable|json'
-            ]);
+            $validator = Validation::getValidateCreateConsumeList($request);
 
             if ($validator->fails()) {
                 return response()->json([
@@ -93,26 +92,42 @@ class CommandsList extends Controller
                     'message' => $validator->errors()
                 ], Response::HTTP_BAD_REQUEST);
             } else {
-                $firstCode = Generator::getFirstCode("list");
-                $secondCode = Generator::getDateCode();
-                $thirdCode = Generator::getInitialCode($request->list_name);
-                
-                $getFinalCode = $firstCode."-".$secondCode."-".$thirdCode;
+                $user_id = $request->user()->id;
 
-                $csl = ConsumeList::create([
-                    'list_code' => $getFinalCode,
-                    'list_name' => $request->list_name,
-                    'list_desc' => $request->list_desc,
-                    'list_tag' => $request->list_tag,
-                    'created_at' => date("Y-m-d h:i:s"),
-                    'updated_at' => date("Y-m-d h:i:s")
-                ]);
+                if(ConsumeList::getAvailableListName($request->list_name, $user_id)){
+                    $slug = Generator::getSlug($request->list_name, "consume_list");
 
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'List created',
-                    'data' => $csl
-                ], Response::HTTP_OK);
+                    if($request->list_tag){
+                        $jsonTag = Converter::getEncoded($request->list_tag);
+                        $tag = json_decode($jsonTag, true);
+                    } else {
+                        $tag = null;
+                    }
+    
+                    $csl = ConsumeList::create([
+                        'id' => Generator::getUUID(),
+                        'slug_name' => $slug,
+                        'list_name' => $request->list_name,
+                        'list_desc' => $request->list_desc,
+                        'list_tag' => $tag,
+                        'created_at' => date("Y-m-d h:i:s"),
+                        'created_by' => $user_id,
+                        'updated_at' => null,
+                        'updated_by' => null,
+                    ]);
+    
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'List created',
+                        'data' => $csl
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'List name is already exist, try other name',
+                        'data' => null
+                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
             }
         } catch(\Exception $err) {
             return response()->json([

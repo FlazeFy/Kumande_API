@@ -31,4 +31,12 @@ class Validation
             'is_payment' => 'required|min:0|max:1',            
         ]);
     }
+
+    public static function getValidateCreateConsumeList($request){ 
+        return Validator::make($request->all(), [
+            'list_name' => 'required|min:3|max:75|string',
+            'list_desc' => 'nullable|min:1|max:255|string',
+            'list_tag' => 'nullable|json',
+        ]);
+    }
 }

@@ -16,4 +16,19 @@ class ConsumeList extends Model
     protected $casts = [
         'list_tag' => 'array'
     ];
+
+    public static function getAvailableListName($check, $id){
+        $csl = ConsumeList::select('list_name')
+            ->where('created_by', $id)
+            ->where('list_name', $check)
+            ->get();
+        
+        if(count($csl) > 0){
+            $res = false;
+        } else {
+            $res = true;
+        }
+
+        return $res;
+    }
 }
