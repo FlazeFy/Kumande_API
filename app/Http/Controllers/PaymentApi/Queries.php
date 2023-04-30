@@ -142,4 +142,40 @@ class Queries extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function getLifetimeSpend(Request $request){
+        try{
+            $user_id = $request->user()->id;
+
+            $csm = DB::select(DB::raw("SELECT 
+                    COUNT(payment_date) as total_days, CAST(IFNULL(SUM(total_payment),0) as INT) as total_payment 
+                    FROM
+                    (
+                    SELECT DATE(created_at) as payment_date, SUM(payment_price) as total_payment
+                    FROM payment
+                    WHERE created_by = '".$user_id."'
+                    GROUP BY payment_date
+                    ) q
+                "));
+
+            if (count($csm) > 0) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => count($csm)." Data retrived", 
+                    'data' => $csm
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Consume not found',
+                    'data' => null
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -13,6 +13,7 @@ use App\Http\Controllers\PaymentApi\Commands as CommandPaymentApi;
 use App\Http\Controllers\PaymentApi\Queries as QueryPaymentApi;
 use App\Http\Controllers\ScheduleApi\Commands as CommandScheduleApi;
 use App\Http\Controllers\ScheduleApi\Queries as QueryScheduleApi;
+use App\Http\Controllers\CountApi\QueriesCalorie as QueryCountApi;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ConsumeListController;
 
@@ -55,6 +56,11 @@ Route::prefix('/v1/analytic')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/payment/month/{month}/year/{year}', [QueryPaymentApi::class, 'getAnalyticSpendMonth']);
 });
 
+Route::prefix('/v1/count')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/calorie', [QueryCountApi::class, 'getLastCountCalorie']);
+    Route::get('/payment', [QueryPaymentApi::class, 'getLifetimeSpend']);
+});
+
 Route::prefix('/v1/budget')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/limit/{page_limit}/order/{order}/over/{over}', [BudgetController::class, 'getAllBudget']);
     Route::delete('/delete/{id}', [BudgetController::class, 'deleteBudgetById']);
@@ -71,7 +77,7 @@ Route::prefix('/v1/list')->middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::prefix('/v1/schedule')->middleware(['auth:sanctum'])->group(function () {
-    Route::get('/limit/{page_limit}/order/{order}', [QueryScheduleApi::class, 'getAllSchedule']);
+    Route::get('/', [QueryScheduleApi::class, 'getMySchedule']);
     Route::get('/day/{day}', [QueryScheduleApi::class, 'getTodaySchedule']);
     Route::delete('/delete/{id}', [CommandScheduleApi::class, 'deleteScheduleById']);
     Route::put('/update/data/{id}', [CommandScheduleApi::class, 'updateScheduleData']);

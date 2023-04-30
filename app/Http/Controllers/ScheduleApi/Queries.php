@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ScheduleApi;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Schedule;
 
@@ -20,21 +21,37 @@ class Queries extends Controller
         //
     }
 
-    public function getAllSchedule(Request $request, $page_limit, $order){
+    public function getMySchedule(Request $request, $user_id){
         try{
             $user_id = $request->user()->id;
 
-            $sch = Schedule::select('*')
-                ->where('created_by', $user_id)
-                ->orderBy('created_at', $order)
-                ->paginate($page_limit);
+            $sch = DB::select(DB::raw("SELECT 
+                    day, time, GROUP_CONCAT(schedule_consume SEPARATOR ', ') AS schedule_consume
+                    FROM (
+                    SELECT 
+                        REPLACE(JSON_EXTRACT(schedule_time, '$[0].day'), '\"', '') AS day, 
+                        REPLACE(JSON_EXTRACT(schedule_time, '$[0].category'), '\"', '') AS time,
+                            schedule_consume
+                        FROM `schedule`
+                        WHERE created_by = '".$user_id."'
+                    ) AS q
+                    GROUP BY 1, 2
+                    ORDER BY DAYNAME(1)
+                "));
         
-            return response()->json([
-                "msg"=> count($sch)." Data retrived", 
-                "status"=> 200,
-                "data"=> $sch
-            ]);
-
+            if (count($sch) > 0) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => "Schedule found", 
+                    'data' => $sch
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Schedule not found',
+                    'data' => null
+                ], Response::HTTP_NOT_FOUND);
+            }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
