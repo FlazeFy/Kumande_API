@@ -72,7 +72,7 @@ class Queries extends Controller
 
             return response()->json([
                 "msg"=> count($sch)." Data retrived", 
-                "status"=> 200,
+                "status"=> 'success',
                 "data"=> $sch
             ]);
         } catch(\Exception $e) {

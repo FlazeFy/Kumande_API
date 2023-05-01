@@ -14,6 +14,8 @@ use App\Http\Controllers\PaymentApi\Queries as QueryPaymentApi;
 use App\Http\Controllers\ScheduleApi\Commands as CommandScheduleApi;
 use App\Http\Controllers\ScheduleApi\Queries as QueryScheduleApi;
 use App\Http\Controllers\CountApi\QueriesCalorie as QueryCountApi;
+use App\Http\Controllers\UserApi\Queries as QueryUserApi;
+use App\Http\Controllers\UserApi\Commands as CommandUserApi;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ConsumeListController;
 
@@ -82,4 +84,9 @@ Route::prefix('/v1/schedule')->middleware(['auth:sanctum'])->group(function () {
     Route::delete('/delete/{id}', [CommandScheduleApi::class, 'deleteScheduleById']);
     Route::put('/update/data/{id}', [CommandScheduleApi::class, 'updateScheduleData']);
     Route::post('/create', [CommandScheduleApi::class, 'createSchedule']);
+});
+
+Route::prefix('/v1/user')->group(function () {
+    Route::get('/', [QueryUserApi::class, 'getMyProfile'])->middleware(['auth:sanctum']);
+    Route::post('/create', [CommandUserApi::class, 'createUser']);
 });

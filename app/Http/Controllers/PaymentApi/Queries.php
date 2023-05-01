@@ -132,7 +132,7 @@ class Queries extends Controller
 
             return response()->json([
                 "msg"=> "Analytic Data retrived", 
-                "status"=> 200,
+                "status"=> 'success',
                 "data"=> $pym
             ]);
         } catch(\Exception $e) {
@@ -161,7 +161,7 @@ class Queries extends Controller
             if (count($csm) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => count($csm)." Data retrived", 
+                    'message' => "Payment data retrived", 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {

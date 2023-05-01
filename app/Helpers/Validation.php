@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Rules\TypeConsume;
 use App\Rules\TypeFrom;
 use App\Rules\TypePayment;
+use App\Rules\TypeGender;
 
 class Validation
 {
@@ -37,6 +38,19 @@ class Validation
             'list_name' => 'required|min:3|max:75|string',
             'list_desc' => 'nullable|min:1|max:255|string',
             'list_tag' => 'nullable|json',
+        ]);
+    }
+
+    public static function getValidateCreateUser($request){ 
+        return Validator::make($request->all(), [
+            'firebase_id' => 'required|min:28|max:28|string',
+            'fullname' => 'required|min:2|max:50|string',
+            'username' => 'required|min:2|max:50|string',
+            'email' => 'required|min:10|max:75|string',
+            'password' => 'required|min:6|max:50|string',
+            'gender' => ['required', new TypeGender],
+            'image_url' => 'nullable|min:10|max:255|string',
+            'born_at' => 'nullable|date_format:Y-m-d',
         ]);
     }
 }

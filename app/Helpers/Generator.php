@@ -3,6 +3,7 @@ namespace App\Helpers;
 use App\Models\ConsumeList;
 use App\Models\Budget;
 use App\Models\Consume;
+use App\Models\User;
 use App\Models\Schedule;
 
 class Generator
@@ -124,6 +125,11 @@ class Generator
                 ->where('slug_name', $replace)
                 ->limit(1)
                 ->get();
+        } else if($type == "user"){
+            $check = User::select('slug_name')
+                ->where('slug_name', $replace)
+                ->limit(1)
+                ->get();
         }
 
         if(count($check) > 0){
@@ -170,6 +176,22 @@ class Generator
                     }
                 }
             }
+        }
+
+        return $res;
+    }
+
+    public static function checkUser($username, $email){
+        $user = User::select('username','email')
+            ->where('username', $username)
+            ->orWhere('email', $email)
+            ->limit(1)
+            ->get();
+
+        if(count($user) > 0){
+            $res = true; 
+        } else {
+            $res = false;
         }
 
         return $res;
