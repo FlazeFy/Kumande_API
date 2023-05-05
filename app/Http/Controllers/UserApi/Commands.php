@@ -62,8 +62,7 @@ class Commands extends Controller
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'User failed to create',
-                        'data' => "This email or username is already been used"
+                        'message' => "This email or username is already been used"
                     ], Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
             }

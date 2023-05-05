@@ -53,4 +53,15 @@ class Validation
             'born_at' => 'nullable|date_format:Y-m-d',
         ]);
     }
+
+    public static function getValidateCreateSchedule($request){ 
+        return Validator::make($request->all(), [
+            'schedule_consume' => 'required|string|min:4|max:75',
+            'consume_type' => ['required', new TypeConsume],
+            'consume_detail' => 'required|json',
+            'schedule_desc' =>  'nullable|string|min:1|max:255',
+            'schedule_tag' => 'required|json',
+            'schedule_time' => 'required|json'
+        ]);
+    }
 }

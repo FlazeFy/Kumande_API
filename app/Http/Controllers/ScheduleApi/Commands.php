@@ -5,6 +5,8 @@ namespace App\Http\Controllers\ScheduleApi;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Helpers\Generator;
+use App\Helpers\Validation;
+use App\Helpers\Converter;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
@@ -77,34 +79,41 @@ class Commands extends Controller
 
     public function createSchedule(Request $request){
         try{
-            $validator = Validator::make($request->all(), [
-                'schedule_consume' => 'required|max:75|min:1',
-                'schedule_desc' => 'nullable|max:255|min:1',
-                'schedule_tag' => 'nullable|json',
-                'schedule_time' => 'required|json',
-            ]);
+            $validator = Validation::getValidateCreateSchedule($request);
 
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
                     'message' => $validator->errors()
-                ], Response::HTTP_BAD_REQUEST);
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {        
-                $firstCode = Generator::getFirstCode("schedule");
-                $secondCode = Generator::getDateCode();
-                $thirdCode = Generator::getInitialCode($request->schedule_consume);
-                $getFinalId = $firstCode."-".$secondCode."-".$thirdCode;
                 $check = Generator::checkSchedule($request->schedule_time);
+                $user_id = $request->user()->id;
 
                 if(!$check){
+                    $id = Generator::getUUID();
+                    $slug = Generator::getSlug($request->schedule_consume, "schedule");
+
+                    $jsonDetail = Converter::getEncoded($request->consume_detail);
+                    $jsonTag = Converter::getEncoded($request->schedule_tag);
+                    $jsonTime = Converter::getEncoded($request->schedule_time);
+                    $detail = json_decode($jsonDetail, true);
+                    $tag = json_decode($jsonTag, true);
+                    $time = json_decode($jsonTime, true);
+
                     $sch = Schedule::create([
-                        'schedule_code' => $getFinalId,
+                        'id' => $id, 
+                        'slug_name' => $slug, 
                         'schedule_consume' => $request->schedule_consume,
+                        'consume_type' => $request->consume_type,
+                        'consume_detail' => $detail,
                         'schedule_desc' => $request->schedule_desc,
-                        'schedule_tag' => $request->schedule_tag,
-                        'schedule_time' => $request->schedule_time,
+                        'schedule_tag' => $tag,
+                        'schedule_time' => $time,
                         'created_at' => date("Y-m-d h:i:s"),
-                        'updated_at' => date("Y-m-d h:i:s")
+                        'created_by' => $user_id,
+                        'updated_at' => null,
+                        'updated_by' => null
                     ]);
             
                     return response()->json([
@@ -114,10 +123,9 @@ class Commands extends Controller
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
-                        'status' => 'success',
-                        'message' => 'Schedule failed to create',
-                        'data' => "There's a schedule with same day and category"
-                    ], Response::HTTP_OK);
+                        'status' => 'failed',
+                        'message' => 'There is a schedule with same day and category',
+                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
             }
         } catch(\Exception $err) {

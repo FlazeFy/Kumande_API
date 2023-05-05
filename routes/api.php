@@ -38,10 +38,11 @@ Route::post('/v1/login', [CommandAuthApi::class, 'login']);
 Route::get('/v1/logout', [QueryAuthApi::class, 'logout'])->middleware(['auth:sanctum']);
 
 Route::prefix('/v1/consume')->middleware(['auth:sanctum'])->group(function () {
-    Route::get('/limit/{page_limit}/order/{order}/favorite/{favorite}/type/{type}', [QueryConsumeApi::class, 'getAllConsume']);
+    Route::get('/limit/{page_limit}/order/{order}/favorite/{favorite}/type/{type}/provide/{provide}', [QueryConsumeApi::class, 'getAllConsume']);
     Route::get('/total/byfrom', [QueryConsumeApi::class, 'getTotalConsumeByFrom']);
     Route::get('/total/bytype', [QueryConsumeApi::class, 'getTotalConsumeByType']);
     Route::get('/total/bymain', [QueryConsumeApi::class, 'getTotalConsumeByMainIng']);
+    Route::get('/total/byprovide', [QueryConsumeApi::class, 'getTotalConsumeByProvide']);
     Route::get('/total/day/cal/month/{month}/year/{year}', [QueryConsumeApi::class, 'getDailyConsumeCal']);
     Route::delete('/delete/{id}', [CommandConsumeApi::class, 'deleteConsumeById']);
     Route::put('/update/data/{id}', [CommandConsumeApi::class, 'updateConsumeData']);

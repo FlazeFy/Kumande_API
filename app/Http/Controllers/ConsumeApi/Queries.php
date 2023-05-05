@@ -23,7 +23,7 @@ class Queries extends Controller
         //
     }
 
-    public function getAllConsume(Request $request, $page_limit, $order, $favorite, $type){
+    public function getAllConsume(Request $request, $page_limit, $order, $favorite, $type, $provide){
         try{
             $user_id = $request->user()->id;
 
@@ -158,6 +158,39 @@ class Queries extends Controller
 
             $csm = DB::select(DB::raw("SELECT 
                     REPLACE(JSON_EXTRACT(consume_detail, '$[0].main_ing'), '\"', '') as context, count(1) as total
+                    FROM consume
+                    GROUP BY 1
+                    ORDER BY 2 DESC
+                    LIMIT 8
+                "));
+
+            if (count($csm) > 0) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => count($csm)." Data retrived", 
+                    'data' => $csm
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Consume not found',
+                    'data' => null
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function getTotalConsumeByProvide(Request $request){
+        try{
+            $user_id = $request->user()->id;
+
+            $csm = DB::select(DB::raw("SELECT 
+                    REPLACE(JSON_EXTRACT(consume_detail, '$[0].provide'), '\"', '') as context, count(1) as total
                     FROM consume
                     GROUP BY 1
                     ORDER BY 2 DESC

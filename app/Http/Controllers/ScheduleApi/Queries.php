@@ -21,7 +21,7 @@ class Queries extends Controller
         //
     }
 
-    public function getMySchedule(Request $request, $user_id){
+    public function getMySchedule(Request $request){
         try{
             $user_id = $request->user()->id;
 
