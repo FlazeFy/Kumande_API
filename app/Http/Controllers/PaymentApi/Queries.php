@@ -130,6 +130,13 @@ class Queries extends Controller
                         ) q
                     "));
 
+            foreach ($pym as $p) {
+                $p->average = intval($p->average);
+                $p->max = intval($p->max);
+                $p->min = intval($p->min);
+                $p->total = intval($p->total);
+            }
+
             return response()->json([
                 "msg"=> "Analytic Data retrived", 
                 "status"=> 'success',
@@ -157,6 +164,11 @@ class Queries extends Controller
                     GROUP BY payment_date
                     ) q
                 "));
+
+            foreach ($csm as $c) {
+                $c->total_days = intval($c->total_days);
+                $c->total_payment = intval($c->total_payment );
+            }
 
             if (count($csm) > 0) {
                 return response()->json([

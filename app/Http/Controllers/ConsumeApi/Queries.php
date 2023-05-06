@@ -99,6 +99,11 @@ class Queries extends Controller
                 ->groupBy('consume_from')
                 ->orderBy('total', 'DESC')
                 ->get();
+            
+            foreach($csm as $c){
+                $c->context = $c->context;
+                $c->total = intval($c->total);
+            }
 
             if ($csm->count() > 0) {
                 return response()->json([
@@ -130,6 +135,11 @@ class Queries extends Controller
                 ->groupBy('consume_type')
                 ->orderBy('total', 'DESC')
                 ->get();
+
+            foreach($csm as $c){
+                $c->context = $c->context;
+                $c->total = intval($c->total);
+            }
 
             if ($csm->count() > 0) {
                 return response()->json([
@@ -164,6 +174,11 @@ class Queries extends Controller
                     LIMIT 8
                 "));
 
+            foreach($csm as $c){
+                $c->context = $c->context;
+                $c->total = intval($c->total);
+            }
+
             if (count($csm) > 0) {
                 return response()->json([
                     'status' => 'success',
@@ -196,6 +211,11 @@ class Queries extends Controller
                     ORDER BY 2 DESC
                     LIMIT 8
                 "));
+
+            foreach($csm as $c){
+                $c->context = $c->context;
+                $c->total = intval($c->total);
+            }
 
             if (count($csm) > 0) {
                 return response()->json([

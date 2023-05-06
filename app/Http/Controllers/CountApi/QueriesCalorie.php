@@ -30,6 +30,13 @@ class QueriesCalorie extends Controller
                 ->orderBy('created_at', 'DESC')
                 ->limit(1)->get();
 
+            foreach ($cal as $c) {
+                $c->weight = intval($c->weight);
+                $c->height = intval($c->height);
+                $c->result = intval($c->result);
+                $c->created_at = $c->created_at;
+            }
+
             return response()->json([
                 "message"=> "Count data retrived", 
                 "status"=> 'success',
