@@ -52,8 +52,8 @@ class Commands extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => $validator->errors()
-                ], Response::HTTP_BAD_REQUEST);
+                    'result' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {        
                 $sch = Schedule::where('id', $id)->update([
                     'schedule_consume' => $request->schedule_consume,
@@ -84,7 +84,7 @@ class Commands extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => $validator->errors()
+                    'result' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {        
                 $check = Generator::checkSchedule($request->schedule_time);
@@ -103,6 +103,7 @@ class Commands extends Controller
 
                     $sch = Schedule::create([
                         'id' => $id, 
+                        'firebase_id' => $request->firebase_id, 
                         'slug_name' => $slug, 
                         'schedule_consume' => $request->schedule_consume,
                         'consume_type' => $request->consume_type,

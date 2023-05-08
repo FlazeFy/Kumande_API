@@ -29,7 +29,7 @@ class Commands extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => $validator->errors()
+                    'result' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {        
                 $check = Generator::checkUser($request->username, $request->email);

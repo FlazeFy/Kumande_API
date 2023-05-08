@@ -61,6 +61,7 @@ Route::prefix('/v1/analytic')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('/v1/count')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/calorie', [QueryCountApi::class, 'getLastCountCalorie']);
+    Route::get('/calorie/fulfill/{date}', [QueryCountApi::class, 'getFulfillCalorie']);
     Route::get('/payment', [QueryPaymentApi::class, 'getLifetimeSpend']);
 });
 

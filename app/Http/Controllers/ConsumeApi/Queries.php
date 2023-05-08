@@ -72,7 +72,7 @@ class Queries extends Controller
             if ($csm->count() > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => count($csm)." Data retrived", 
+                    'message' => "Data retrived", 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
@@ -108,7 +108,7 @@ class Queries extends Controller
             if ($csm->count() > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => count($csm)." Data retrived", 
+                    'message' => "Data retrived", 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
@@ -144,7 +144,7 @@ class Queries extends Controller
             if ($csm->count() > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => count($csm)." Data retrived", 
+                    'message' => "Data retrived", 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
@@ -182,7 +182,7 @@ class Queries extends Controller
             if (count($csm) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => count($csm)." Data retrived", 
+                    'message' => "Data retrived", 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
@@ -220,7 +220,7 @@ class Queries extends Controller
             if (count($csm) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => count($csm)." Data retrived", 
+                    'message' => "Data retrived", 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
@@ -276,7 +276,7 @@ class Queries extends Controller
             if ($collection->count() > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => count($collection)." Data retrived", 
+                    'message' => "Data retrived", 
                     'data' => $collection
                 ], Response::HTTP_OK);
             } else {

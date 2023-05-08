@@ -54,7 +54,7 @@ class Queries extends Controller
             $collection = collect($obj);
 
             return response()->json([
-                "msg"=> count($collection)." Data retrived", 
+                "msg"=> "Data retrived", 
                 "status"=> 200,
                 "data"=> $collection
             ]);
@@ -101,7 +101,7 @@ class Queries extends Controller
             $collection = collect($obj);
 
             return response()->json([
-                "msg"=> count($collection)." Data retrived", 
+                "msg"=> "Data retrived", 
                 "status"=> 200,
                 "data"=> $collection
             ]);

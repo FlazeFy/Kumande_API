@@ -35,7 +35,7 @@ class QueriesList extends Controller
             if ($csl->count() > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => count($csl)." Data retrived", 
+                    'message' => "Data retrived", 
                     'data' => $csl
                 ], Response::HTTP_OK);
             } else {

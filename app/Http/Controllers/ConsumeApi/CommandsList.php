@@ -32,7 +32,7 @@ class CommandsList extends Controller
             ->paginate($page_limit);
     
         return response()->json([
-            "msg"=> count($csl)." Data retrived", 
+            "msg"=> "Data retrived", 
             "status"=> 200,
             "data"=> $csl
         ]);
@@ -58,8 +58,8 @@ class CommandsList extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => $validator->errors()
-                ], Response::HTTP_BAD_REQUEST);
+                    'result' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
                 $csl = ConsumeList::where('id', $id)->update([
                     'list_name' => $request->list_name,
@@ -89,8 +89,8 @@ class CommandsList extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => $validator->errors()
-                ], Response::HTTP_BAD_REQUEST);
+                    'result' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
                 $user_id = $request->user()->id;
 
@@ -106,6 +106,7 @@ class CommandsList extends Controller
     
                     $csl = ConsumeList::create([
                         'id' => Generator::getUUID(),
+                        'firebase_id' => $request->firebase_id,
                         'slug_name' => $slug,
                         'list_name' => $request->list_name,
                         'list_desc' => $request->list_desc,

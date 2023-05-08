@@ -34,7 +34,7 @@ class BudgetController extends Controller
         }
     
         return response()->json([
-            "msg"=> count($bdt)." Data retrived", 
+            "msg"=> "Data retrived", 
             "status"=>200,
             "data"=> $bdt
         ]);
@@ -60,8 +60,8 @@ class BudgetController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => $validator->errors()
-                ], Response::HTTP_BAD_REQUEST);
+                    'result' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
                 $bdt = Budget::where('id', $id)->update([
                     'budget_total' => $request->budget_total,
@@ -93,8 +93,8 @@ class BudgetController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => $validator->errors()
-                ], Response::HTTP_BAD_REQUEST);
+                    'result' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
                 $bdt = Budget::where('id', $id)->update([
                     'budget_status' => $request->budget_status,
@@ -128,8 +128,8 @@ class BudgetController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => $validator->errors()
-                ], Response::HTTP_BAD_REQUEST);
+                    'result' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
                 $firstCode = Generator::getFirstCode("budget");
                 $secondCode = Generator::getDateCode();

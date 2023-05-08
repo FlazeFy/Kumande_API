@@ -49,8 +49,8 @@ class Commands extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => $validator->errors()
-                ], Response::HTTP_BAD_REQUEST);
+                    'result' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {        
                 $csm = Consume::where('id', $id)->update([
                     'consume_type' => $request->consume_type,
@@ -85,8 +85,8 @@ class Commands extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => $validator->errors()
-                ], Response::HTTP_BAD_REQUEST);
+                    'result' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {        
                 $csm = Consume::where('id', $id)->update([
                     'is_favorite' => $request->is_favorite,
@@ -114,7 +114,7 @@ class Commands extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => $validator->errors()
+                    'result' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {        
                 $id = Generator::getUUID();
@@ -133,6 +133,7 @@ class Commands extends Controller
                 $csm = Consume::create([
                     'id' => $id,
                     'slug_name' => $slug,
+                    'firebase_id' => $request->firebase_id,
                     'consume_type' => $request->consume_type,
                     'consume_name' => $request->consume_name,
                     'consume_detail' => $detail,
