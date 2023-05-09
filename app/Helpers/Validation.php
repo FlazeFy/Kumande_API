@@ -64,4 +64,12 @@ class Validation
             'schedule_time' => 'required|json'
         ]);
     }
+
+    public static function getValidateCreateCountCalorie($request){ 
+        return Validator::make($request->all(), [
+            'weight' => 'required|numeric|min:35|max:150',
+            'height' => 'required|numeric|min:120|max:200',
+            'result' => 'required|numeric|min:1000|max:6000',
+        ]);
+    }
 }

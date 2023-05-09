@@ -10,6 +10,10 @@ use App\Helpers\Converter;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
+
 use App\Models\Schedule;
 
 class Commands extends Controller
@@ -116,6 +120,15 @@ class Commands extends Controller
                         'updated_at' => null,
                         'updated_by' => null
                     ]);
+
+                    $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
+                    $messaging = $factory->createMessaging();
+                    $message = CloudMessage::withTarget('token', $request->token_fcm)
+                        ->withNotification(Notification::create('You have successfully added new meals to schedule called ', $request->schedule_consume))
+                        ->withData([
+                            'schedule_consume' => $request->schedule_consume,
+                        ]);
+                    $response = $messaging->send($message);
             
                     return response()->json([
                         'status' => 'success',

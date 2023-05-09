@@ -14,6 +14,7 @@ use App\Http\Controllers\PaymentApi\Queries as QueryPaymentApi;
 use App\Http\Controllers\ScheduleApi\Commands as CommandScheduleApi;
 use App\Http\Controllers\ScheduleApi\Queries as QueryScheduleApi;
 use App\Http\Controllers\CountApi\QueriesCalorie as QueryCountApi;
+use App\Http\Controllers\CountApi\CommandsCalorie as CommandsCountCalorie;
 use App\Http\Controllers\UserApi\Queries as QueryUserApi;
 use App\Http\Controllers\UserApi\Commands as CommandUserApi;
 use App\Http\Controllers\BudgetController;
@@ -61,6 +62,7 @@ Route::prefix('/v1/analytic')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('/v1/count')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/calorie', [QueryCountApi::class, 'getLastCountCalorie']);
+    Route::post('/calorie', [CommandsCountCalorie::class, 'createCountCalorie']);
     Route::get('/calorie/fulfill/{date}', [QueryCountApi::class, 'getFulfillCalorie']);
     Route::get('/payment', [QueryPaymentApi::class, 'getLifetimeSpend']);
 });

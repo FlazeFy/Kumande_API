@@ -116,6 +116,15 @@ class CommandsList extends Controller
                         'updated_at' => null,
                         'updated_by' => null,
                     ]);
+
+                    $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
+                    $messaging = $factory->createMessaging();
+                    $message = CloudMessage::withTarget('token', $request->token_fcm)
+                        ->withNotification(Notification::create('You have successfully added new list called ', $request->list_name))
+                        ->withData([
+                            'list_name' => $request->list_name,
+                        ]);
+                    $response = $messaging->send($message);
     
                     return response()->json([
                         'status' => 'success',

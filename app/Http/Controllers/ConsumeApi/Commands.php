@@ -11,6 +11,10 @@ use App\Helpers\Generator;
 use App\Helpers\Validation;
 use App\Helpers\Converter;
 
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
+
 use App\Models\Consume;
 use App\Models\Payment;
 
@@ -166,10 +170,19 @@ class Commands extends Controller
                     'payment' => $pym,
                 ]);
 
+                $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
+                $messaging = $factory->createMessaging();
+                $message = CloudMessage::withTarget('token', $request->token_fcm)
+                    ->withNotification(Notification::create('You have successfully added new meals to history called ', $request->consume_name))
+                    ->withData([
+                        'consume_name' => $request->consume_name,
+                    ]);
+                $response = $messaging->send($message);
+
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Consume created',
-                    'data' => $res
+                    'data' => $response
                 ], Response::HTTP_OK);
             }
         } catch(\Exception $err) {
