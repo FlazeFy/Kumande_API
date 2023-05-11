@@ -21,25 +21,6 @@ class BudgetController extends Controller
         //
     }
 
-    public function getAllBudget($page_limit, $order, $over){
-        if($over == "all"){
-            $bdt = Budget::select('*')
-                ->orderBy('created_at', $order)
-                ->paginate($page_limit);
-        } else {
-            $bdt = Budget::select('*')
-                ->where('budget_over', $over)
-                ->orderBy('created_at', $order)
-                ->paginate($page_limit);
-        }
-    
-        return response()->json([
-            "msg"=> "Data retrived", 
-            "status"=>200,
-            "data"=> $bdt
-        ]);
-    }
-
     public function deleteBudgetById($id){
         Budget::where('id', $id)->delete();
 

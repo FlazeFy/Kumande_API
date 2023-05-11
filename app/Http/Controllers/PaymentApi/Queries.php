@@ -54,10 +54,10 @@ class Queries extends Controller
             $collection = collect($obj);
 
             return response()->json([
-                "msg"=> "Data retrived", 
-                "status"=> 200,
-                "data"=> $collection
-            ]);
+                'status' => 'success',
+                'message' => "Analytic data retrived", 
+                'data' => $collection
+            ], Response::HTTP_OK);
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -101,10 +101,10 @@ class Queries extends Controller
             $collection = collect($obj);
 
             return response()->json([
-                "msg"=> "Data retrived", 
-                "status"=> 200,
-                "data"=> $collection
-            ]);
+                'status' => 'success',
+                'message' => "Analytic data retrived", 
+                'data' => $collection
+            ], Response::HTTP_OK);
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -138,10 +138,10 @@ class Queries extends Controller
             }
 
             return response()->json([
-                "msg"=> "Analytic Data retrived", 
-                "status"=> 'success',
-                "data"=> $pym
-            ]);
+                'status' => 'success',
+                'message' => "Analytic data retrived", 
+                'data' => $pym
+            ], Response::HTTP_OK);
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -173,13 +173,13 @@ class Queries extends Controller
             if (count($csm) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Payment data retrived", 
+                    'message' => "Analytic data retrived", 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Consume not found',
+                    'message' => 'Analytic not found',
                     'data' => null
                 ], Response::HTTP_NOT_FOUND);
             }

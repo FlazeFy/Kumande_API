@@ -73,4 +73,38 @@ class Commands extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+ 
+    public function updateUser(Request $request){
+        try{
+            $validator = Validation::getValidateUpdateUser($request);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'result' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {        
+                $user_id = $request->user()->id;
+
+                $user = User::where('id',$user_id)->update([
+                    'fullname' => $request->fullname,
+                    'password' => $request->password,
+                    'gender' => $request->gender,
+                    'born_at' => $request->born_at,
+                    'updated_at' => date("Y-m-d h:i:s")
+                ]);
+        
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'User updated',
+                    'data' => $user." rows affected"
+                ], Response::HTTP_OK);
+            }
+        } catch(\Exception $err) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $err->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -54,6 +54,15 @@ class Validation
         ]);
     }
 
+    public static function getValidateUpdateUser($request){ 
+        return Validator::make($request->all(), [
+            'fullname' => 'required|min:2|max:50|string',
+            'password' => 'required|min:6|max:50|string',
+            'gender' => ['required', new TypeGender],
+            'born_at' => 'nullable|date_format:Y-m-d',
+        ]);
+    }
+
     public static function getValidateCreateSchedule($request){ 
         return Validator::make($request->all(), [
             'schedule_consume' => 'required|string|min:4|max:75',

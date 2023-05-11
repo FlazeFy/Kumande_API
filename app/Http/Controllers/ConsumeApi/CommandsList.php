@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Validator;
 
 use App\Models\ConsumeList;
 
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
+
 use App\Helpers\Validation;
 use App\Helpers\Generator;
 use App\Helpers\Converter;

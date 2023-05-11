@@ -13,6 +13,7 @@ use App\Http\Controllers\PaymentApi\Commands as CommandPaymentApi;
 use App\Http\Controllers\PaymentApi\Queries as QueryPaymentApi;
 use App\Http\Controllers\ScheduleApi\Commands as CommandScheduleApi;
 use App\Http\Controllers\ScheduleApi\Queries as QueryScheduleApi;
+use App\Http\Controllers\BudgetApi\Queries as QueryBudgetApi;
 use App\Http\Controllers\CountApi\QueriesCalorie as QueryCountApi;
 use App\Http\Controllers\CountApi\CommandsCalorie as CommandsCountCalorie;
 use App\Http\Controllers\UserApi\Queries as QueryUserApi;
@@ -68,11 +69,7 @@ Route::prefix('/v1/count')->middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::prefix('/v1/budget')->middleware(['auth:sanctum'])->group(function () {
-    Route::get('/limit/{page_limit}/order/{order}/over/{over}', [BudgetController::class, 'getAllBudget']);
-    Route::delete('/delete/{id}', [BudgetController::class, 'deleteBudgetById']);
-    Route::put('/update/data/{id}', [BudgetController::class, 'updateBudgetData']);
-    Route::put('/update/status/{id}', [BudgetController::class, 'updateBudgetStatus']);
-    Route::post('/create', [BudgetController::class, 'createBudget']);
+    Route::get('/{year}', [QueryBudgetApi::class, 'getAllBudgetByYear']);
 });
 
 Route::prefix('/v1/list')->middleware(['auth:sanctum'])->group(function () {
@@ -92,5 +89,6 @@ Route::prefix('/v1/schedule')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('/v1/user')->group(function () {
     Route::get('/', [QueryUserApi::class, 'getMyProfile'])->middleware(['auth:sanctum']);
+    Route::put('/edit', [CommandUserApi::class, 'updateUser'])->middleware(['auth:sanctum']);
     Route::post('/create', [CommandUserApi::class, 'createUser']);
 });
