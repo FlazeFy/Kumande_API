@@ -49,7 +49,7 @@ class Commands extends Controller
                         'gender' => $request->gender,
                         'image_url' => $request->image_url,
                         'born_at' => $request->born_at,
-                        'created_at' => date("Y-m-d h:i:s"),
+                        'created_at' => date("Y-m-d H:i:s"),
                         'updated_at' => null,
                         'deleted_at' => null
                     ]);
@@ -91,13 +91,43 @@ class Commands extends Controller
                     'password' => $request->password,
                     'gender' => $request->gender,
                     'born_at' => $request->born_at,
-                    'updated_at' => date("Y-m-d h:i:s")
+                    'updated_at' => date("Y-m-d H:i:s")
                 ]);
         
                 return response()->json([
                     'status' => 'success',
                     'message' => 'User updated',
                     'data' => $user." rows affected"
+                ], Response::HTTP_OK);
+            }
+        } catch(\Exception $err) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $err->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function updateImage(Request $request){
+        try{
+            $validator = Validation::getValidateUpdateImageUser($request);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'result' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {        
+                $user_id = $request->user()->id;
+
+                $user = User::where('id',$user_id)->update([
+                    'image_url' => $request->image_url,
+                    'updated_at' => date("Y-m-d H:i:s")
+                ]);
+        
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'User profile image updated',
                 ], Response::HTTP_OK);
             }
         } catch(\Exception $err) {

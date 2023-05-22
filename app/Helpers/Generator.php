@@ -87,7 +87,7 @@ class Generator
     }
 
     public static function getConsumeTimeCode(){
-        $now = date("Y-m-d h:i:s");
+        $now = date("Y-m-d H:i:s");
         $hour = date("h", strtotime($now));
 
         if($hour > 5 && $hour <= 10){

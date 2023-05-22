@@ -63,6 +63,12 @@ class Validation
         ]);
     }
 
+    public static function getValidateUpdateImageUser($request){ 
+        return Validator::make($request->all(), [
+            'image_url' => 'nullable|min:2|max:255|string',
+        ]);
+    }
+
     public static function getValidateCreateSchedule($request){ 
         return Validator::make($request->all(), [
             'schedule_consume' => 'required|string|min:4|max:75',

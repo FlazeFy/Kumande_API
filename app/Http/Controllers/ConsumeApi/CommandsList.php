@@ -69,7 +69,7 @@ class CommandsList extends Controller
                     'list_name' => $request->list_name,
                     'list_desc' => $request->list_desc,
                     'list_tag' => $request->list_tag,
-                    'updated_at' => date("Y-m-d h:i:s")
+                    'updated_at' => date("Y-m-d H:i:s")
                 ]);
 
                 return response()->json([
@@ -115,7 +115,7 @@ class CommandsList extends Controller
                         'list_name' => $request->list_name,
                         'list_desc' => $request->list_desc,
                         'list_tag' => $tag,
-                        'created_at' => date("Y-m-d h:i:s"),
+                        'created_at' => date("Y-m-d H:i:s"),
                         'created_by' => $user_id,
                         'updated_at' => null,
                         'updated_by' => null,

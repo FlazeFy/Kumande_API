@@ -63,7 +63,7 @@ class Commands extends Controller
                     'consume_payment' => $request->consume_payment,
                     'consume_tag' => $request->consume_tag,
                     'consume_comment' => $request->consume_comment,
-                    'updated_at' => date("Y-m-d h:i:s")
+                    'updated_at' => date("Y-m-d H:i:s")
                 ]);
 
                 return response()->json([
@@ -94,7 +94,7 @@ class Commands extends Controller
             } else {        
                 $csm = Consume::where('id', $id)->update([
                     'is_favorite' => $request->is_favorite,
-                    'updated_at' => date("Y-m-d h:i:s")
+                    'updated_at' => date("Y-m-d H:i:s")
                 ]);
 
                 return response()->json([
@@ -145,7 +145,7 @@ class Commands extends Controller
                     'is_favorite' => $request->is_favorite,
                     'consume_tag' => $tag,
                     'consume_comment' => $request->consume_comment,
-                    'created_at' => date("Y-m-d h:i:s"),
+                    'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => null,
                     'deleted_at' => null,
                     'created_by' => $user_id,
@@ -159,7 +159,7 @@ class Commands extends Controller
                     'payment_method' => $request->payment_method,  
                     'payment_price' => $request->payment_price,
                     'is_payment' => $request->is_payment,
-                    'created_at' => date("Y-m-d h:i:s"),
+                    'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => null,
                     'created_by' => $user_id,
                     'updated_by' => null,

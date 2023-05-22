@@ -22,16 +22,32 @@ class Queries extends Controller
                     AND created_by = '".$user_id."'
                 "));
 
-            foreach ($bdt as $b) {
-                $b->context = $b->context;
-                $b->total = intval($b->total);
-            }
+                $obj = [];
+                for ($i = 1; $i <= 12; $i++) {
+                    $total = 0;
+                    $timestamp = mktime(0, 0, 0, $i, 1, date('Y'));
+                    $mon = date('M', $timestamp);
+                
+                    foreach ($bdt as $bd) {
+                        if ($bd->context == $mon) {
+                            $total = $bd->total;
+                            break;
+                        }
+                    }
+                
+                    $obj[] = [
+                        'context' => $mon,
+                        'total' => (int)$total,
+                    ];
+                }
+    
+                $collection = collect($obj);
         
-            if (count($bdt) > 0) {
+            if (count($collection) > 0) {
                 return response()->json([
                     'status' => 'success',
                     'message' => "Budget retrived", 
-                    'data' => $bdt
+                    'data' => $collection
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([

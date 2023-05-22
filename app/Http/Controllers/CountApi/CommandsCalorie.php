@@ -41,7 +41,7 @@ class CommandsCalorie extends Controller
                     'weight' => $request->weight,
                     'height' => $request->height,
                     'result' => $request->result,
-                    'created_at' => date("Y-m-d h:i:s"),
+                    'created_at' => date("Y-m-d H:i:s"),
                     'created_by' => $user_id,
                     'deleted_at' => null,
                     'deleted_by' => null,

@@ -64,7 +64,7 @@ class Commands extends Controller
                     'schedule_desc' => $request->schedule_desc,
                     'schedule_tag' => $request->schedule_tag,
                     'schedule_time' => $request->schedule_time,
-                    'updated_at' => date("Y-m-d h:i:s")
+                    'updated_at' => date("Y-m-d H:i:s")
                 ]);
 
                 return response()->json([
@@ -115,7 +115,7 @@ class Commands extends Controller
                         'schedule_desc' => $request->schedule_desc,
                         'schedule_tag' => $tag,
                         'schedule_time' => $time,
-                        'created_at' => date("Y-m-d h:i:s"),
+                        'created_at' => date("Y-m-d H:i:s"),
                         'created_by' => $user_id,
                         'updated_at' => null,
                         'updated_by' => null

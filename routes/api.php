@@ -90,5 +90,6 @@ Route::prefix('/v1/schedule')->middleware(['auth:sanctum'])->group(function () {
 Route::prefix('/v1/user')->group(function () {
     Route::get('/', [QueryUserApi::class, 'getMyProfile'])->middleware(['auth:sanctum']);
     Route::put('/edit', [CommandUserApi::class, 'updateUser'])->middleware(['auth:sanctum']);
+    Route::put('/image', [CommandUserApi::class, 'updateImage'])->middleware(['auth:sanctum']);
     Route::post('/create', [CommandUserApi::class, 'createUser']);
 });

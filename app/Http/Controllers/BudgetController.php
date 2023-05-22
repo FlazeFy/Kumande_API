@@ -48,7 +48,7 @@ class BudgetController extends Controller
                     'budget_total' => $request->budget_total,
                     'budget_month_year' => $request->budget_month_year,
                     'budget_over' => $request->budget_over,
-                    'updated_at' => date("Y-m-d h:i:s")
+                    'updated_at' => date("Y-m-d H:i:s")
                 ]);
 
                 return response()->json([
@@ -79,8 +79,8 @@ class BudgetController extends Controller
             } else {
                 $bdt = Budget::where('id', $id)->update([
                     'budget_status' => $request->budget_status,
-                    'updated_at' => date("Y-m-d h:i:s"),
-                    'achieve_at' => date("Y-m-d h:i:s")
+                    'updated_at' => date("Y-m-d H:i:s"),
+                    'achieve_at' => date("Y-m-d H:i:s")
                 ]);
 
                 return response()->json([
@@ -123,8 +123,8 @@ class BudgetController extends Controller
                     'budget_month_year' => $request->budget_month_year,
                     'budget_over' => $request->budget_over,
                     'budget_status' => $request->budget_status,
-                    'created_at' => date("Y-m-d h:i:s"),
-                    'updated_at' => date("Y-m-d h:i:s"),
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s"),
                     'achieve_at' => null
                 ]);
 
