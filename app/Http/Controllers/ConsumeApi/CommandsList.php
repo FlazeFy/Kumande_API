@@ -36,7 +36,7 @@ class CommandsList extends Controller
             ->paginate($page_limit);
     
         return response()->json([
-            "msg"=> "Data retrived", 
+            "message"=> "Data retrived", 
             "status"=> 200,
             "data"=> $csl
         ]);
@@ -46,7 +46,7 @@ class CommandsList extends Controller
         ConsumeList::where('id', $id)->delete();
 
         return response()->json([
-            "msg"=> "Data deleted", 
+            "message"=> "Data deleted", 
             "status"=> 200
         ]);
     }

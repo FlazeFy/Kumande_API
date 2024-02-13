@@ -1,5 +1,5 @@
 # Kumande Backend Documentation
-https://leonardhors.id
+https://kumande.leonardhors.id
 
 ========================= Command =========================
 # First Run

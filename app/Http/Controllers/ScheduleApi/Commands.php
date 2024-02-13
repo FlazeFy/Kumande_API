@@ -33,7 +33,7 @@ class Commands extends Controller
             Schedule::where('id', $id)->delete();
 
             return response()->json([
-                "msg"=> "Data deleted", 
+                "message"=> "Data deleted", 
                 "status"=> 200
             ]);
         } catch(\Exception $e) {

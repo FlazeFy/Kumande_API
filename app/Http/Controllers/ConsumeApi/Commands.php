@@ -34,7 +34,7 @@ class Commands extends Controller
         Consume::where('id', $id)->delete();
 
         return response()->json([
-            "msg"=> "Data deleted", 
+            "message"=> "Data deleted", 
             "status"=> 200
         ]);
     }

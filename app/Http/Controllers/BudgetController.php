@@ -25,7 +25,7 @@ class BudgetController extends Controller
         Budget::where('id', $id)->delete();
 
         return response()->json([
-            "msg"=> "Data deleted", 
+            "message"=> "Data deleted", 
             "status"=> 200
         ]);
     }

@@ -71,7 +71,7 @@ class Queries extends Controller
                 ->get();
 
             return response()->json([
-                "msg"=> "Data retrived", 
+                "message"=> "Data retrived", 
                 "status"=> 'success',
                 "data"=> $sch
             ]);

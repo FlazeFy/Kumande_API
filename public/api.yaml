@@ -1,0 +1,33 @@
+openapi: 3.0.0
+info:
+  title: Kumande API
+  description: Kumande is an app that can help you manage your daily consumed food. From that, you can browse your past consumed food, analyze it, and make daily schedule. To help you maintain your healthy lifestyle, you can integrate your daily consumed food with BMI Calculator. In this app, also provide dashboard and statistic, so your meal schedule becomes more structured.
+  version: 0.1.0
+
+servers:
+  - url: http://localhost:8000/api
+    description: Development server
+  - url: https://kumande.leonardhors.site/api
+    description: Staging server
+
+paths:
+  /v1/consume/total/byfrom:
+    get:
+      summary: Returns a list of total consume by where it's from.
+      security:
+        - BearerAuth: []
+      responses:
+        '200': 
+          description: A JSON array of consume from list
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  type: string
+
+securityDefinitions:
+  BearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header
