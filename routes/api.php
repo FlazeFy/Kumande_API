@@ -18,6 +18,8 @@ use App\Http\Controllers\CountApi\QueriesCalorie as QueryCountApi;
 use App\Http\Controllers\CountApi\CommandsCalorie as CommandsCountCalorie;
 use App\Http\Controllers\UserApi\Queries as QueryUserApi;
 use App\Http\Controllers\UserApi\Commands as CommandUserApi;
+use App\Http\Controllers\TagApi\Queries as QueryTagApi;
+use App\Http\Controllers\TagApi\Commands as CommandTagApi;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ConsumeListController;
 
@@ -37,7 +39,7 @@ use App\Http\Controllers\ConsumeListController;
 // });
 
 Route::post('/v1/login', [CommandAuthApi::class, 'login']);
-Route::get('/v1/logout', [QueryAuthApi::class, 'logout'])->middleware(['auth:sanctum']);
+Route::post('/v1/logout', [QueryAuthApi::class, 'logout'])->middleware(['auth:sanctum']);
 
 Route::prefix('/v1/consume')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/limit/{page_limit}/order/{order}/favorite/{favorite}/type/{type}/provide/{provide}', [QueryConsumeApi::class, 'getAllConsume']);
@@ -59,6 +61,11 @@ Route::prefix('/v1/payment')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('/v1/analytic')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/payment/month/{month}/year/{year}', [QueryPaymentApi::class, 'getAnalyticSpendMonth']);
+});
+
+Route::prefix('/v1/tag')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/', [QueryTagApi::class, 'getMyTag']);
+    Route::delete('/{id}', [CommandTagApi::class, 'deleteTagById']);
 });
 
 Route::prefix('/v1/count')->middleware(['auth:sanctum'])->group(function () {

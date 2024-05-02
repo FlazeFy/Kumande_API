@@ -27,6 +27,7 @@ class ApiTest extends TestCase
     // TC-001
     public function test_post_login()
     {
+        // Post login
         $response = $this->httpClient->post("/api/v1/login", [
             'json' => [
                 'email' => 'flazen.edu@gmail.com',
@@ -37,8 +38,18 @@ class ApiTest extends TestCase
         $data = json_decode($response->getBody(), true);
         $this->assertArrayHasKey('token', $data);
 
-        Audit::auditRecord("Test - Returned Data", "TC-001", "Token : ".$data['token']);
-        return $data['token'];
+        $token = $data['token'];
+        Audit::auditRecord("Test - Returned Data", "TC-001", "Token : ".$token);
+
+        // View dashboard for test auth
+        $response = $this->httpClient->get("/api/v1/consume/total/byfrom", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+        $this->assertEquals(200, $response->getStatusCode());
+
+        return $token;
     }
 
     // TC-002

@@ -27,47 +27,22 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            if($favorite == "all"){
-                if($type != "All"){
-                    $csm = Consume::selectRaw('consume.id, slug_name, consume_type, consume_name, consume_detail, consume_from, is_favorite, consume_tag, consume_comment, consume.created_at, payment_method, payment_price, is_payment')
-                        ->join('payment', 'payment.consume_id', '=', 'consume.id')
-                        ->whereNull('deleted_at')
-                        ->where('consume.created_by', $user_id)
-                        ->where('consume_type',$type)
-                        ->orderBy('consume.created_at', $order)
-                        ->orderBy('slug_name', $order)
-                        ->paginate($page_limit);
-                } else {
-                    $csm = Consume::selectRaw('consume.id, slug_name, consume_type, consume_name, consume_detail, consume_from, is_favorite, consume_tag, consume_comment, consume.created_at, payment_method, payment_price, is_payment')
-                        ->join('payment', 'payment.consume_id', '=', 'consume.id')
-                        ->whereNull('deleted_at')
-                        ->where('consume.created_by', $user_id)
-                        ->orderBy('consume.created_at', $order)
-                        ->orderBy('slug_name', $order)
-                        ->paginate($page_limit);
-                }
-            } else {
-                if($type != "All"){
-                    $csm = Consume::selectRaw('consume.id, slug_name, consume_type, consume_name, consume_detail, consume_from, is_favorite, consume_tag, consume_comment, consume.created_at, payment_method, payment_price, is_payment')
-                        ->join('payment', 'payment.consume_id', '=', 'consume.id')
-                        ->where('is_favorite',$favorite)
-                        ->whereNull('deleted_at')
-                        ->where('consume.created_by', $user_id)
-                        ->where('consume_type',$type)
-                        ->orderBy('consume.created_at', $order)
-                        ->orderBy('slug_name', $order)
-                        ->paginate($page_limit);
-                } else {
-                    $csm = Consume::selectRaw('consume.id, slug_name, consume_type, consume_name, consume_detail, consume_from, is_favorite, consume_tag, consume_comment, consume.created_at, payment_method, payment_price, is_payment')
-                        ->join('payment', 'payment.consume_id', '=', 'consume.id')
-                        ->where('is_favorite',$favorite)
-                        ->whereNull('deleted_at')
-                        ->where('consume.created_by', $user_id)
-                        ->orderBy('consume.created_at', $order)
-                        ->orderBy('slug_name', $order)
-                        ->paginate($page_limit);
-                }
+            $csm = Consume::selectRaw('consume.id, slug_name, consume_type, consume_name, consume_detail, consume_from, is_favorite, consume_tag, consume_comment, consume.created_at, payment_method, payment_price, is_payment')
+                ->join('payment', 'payment.consume_id', '=', 'consume.id')
+                ->whereNull('deleted_at')
+                ->where('consume.created_by', $user_id);
+
+            if ($favorite != "all") {
+                $csm->where('is_favorite', $favorite);
             }
+
+            if ($type != "all") {
+                $csm->where('consume_type', $type);
+            }
+
+            $csm = $csm->orderBy('consume.created_at', $order)
+                ->orderBy('slug_name', $order)
+                ->paginate($page_limit);
         
             if ($csm->count() > 0) {
                 return response()->json([
