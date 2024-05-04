@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use GuzzleHttp\Client;
 use Tests\TestCase;
 use App\Helpers\Audit;
+use App\Helpers\Generator;
 
 class ApiTest extends TestCase
 {
@@ -23,6 +24,8 @@ class ApiTest extends TestCase
             'http_errors' => false
         ]);
     }
+
+    // ============================== Auth Module ==============================
 
     // TC-001
     public function test_post_login()
@@ -66,6 +69,8 @@ class ApiTest extends TestCase
         $this->assertArrayHasKey('message', $data);
     }
 
+    // ============================== Stats Module ==============================
+
     // TC-S001
     public function test_get_today_schedule(): void
     {
@@ -83,8 +88,14 @@ class ApiTest extends TestCase
     // TC-S002
     public function test_get_monthly_payment_analytic(): void
     {
+        $randDate = Generator::getRandDate();
+        $month = date('m',$randDate);
+        $year = date('Y',$randDate);
+
         $token = $this->test_post_login();
-        $response = $this->httpClient->get("/api/v1/analytic/payment/month/5/year/2024", [
+        Audit::auditRecord("Test - Returned Data", "TC-S002", "Month : $month\nYear : $year");
+
+        $response = $this->httpClient->get("/api/v1/analytic/payment/month/$month/year/$year", [
             'headers' => [
                 'Authorization' => "Bearer $token"
             ]
@@ -97,8 +108,13 @@ class ApiTest extends TestCase
     // TC-S003
     public function test_get_today_calories(): void
     {
+        $randDate = Generator::getRandDate();
+        $date = date('Y-m-d',$randDate);
+
         $token = $this->test_post_login();
-        $response = $this->httpClient->get("/api/v1/count/calorie/fulfill/2024-05-04", [
+        Audit::auditRecord("Test - Returned Data", "TC-S003", "Date : $date");
+
+        $response = $this->httpClient->get("/api/v1/count/calorie/fulfill/$date", [
             'headers' => [
                 'Authorization' => "Bearer $token"
             ]
@@ -141,6 +157,62 @@ class ApiTest extends TestCase
     {
         $token = $this->test_post_login();
         $response = $this->httpClient->get("/api/v1/consume/total/byprovide", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = json_decode($response->getBody(), true);
+        $this->assertArrayHasKey('message', $data);
+    }
+
+    // ============================== Schedule Module ==============================
+
+    // TC-C001
+    public function test_get_my_schedule(): void
+    {
+        $token = $this->test_post_login();
+        $response = $this->httpClient->get("/api/v1/schedule", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = json_decode($response->getBody(), true);
+        $this->assertArrayHasKey('message', $data);
+    }
+
+    // TC-C002
+    public function test_get_total_spend_day(): void
+    {
+        $randDate = Generator::getRandDate();
+        $month = date('m',$randDate);
+        $year = date('Y',$randDate);
+
+        $token = $this->test_post_login();
+        Audit::auditRecord("Test - Returned Data", "TC-C002", "Month : $month\nYear : $year");
+
+        $response = $this->httpClient->get("/api/v1/payment/total/month/$month/year/$year", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = json_decode($response->getBody(), true);
+        $this->assertArrayHasKey('message', $data);
+    }
+
+    // TC-C003
+    public function test_get_calendar_daily_calorie(): void
+    {
+        $randDate = Generator::getRandDate();
+        $month = date('m',$randDate);
+        $year = date('Y',$randDate);
+
+        $token = $this->test_post_login();
+        Audit::auditRecord("Test - Returned Data", "TC-C003", "Month : $month\nYear : $year");
+
+        $response = $this->httpClient->get("/api/v1/consume/total/day/cal/month/$month/year/$year", [
             'headers' => [
                 'Authorization' => "Bearer $token"
             ]

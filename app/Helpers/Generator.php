@@ -201,4 +201,12 @@ class Generator
 
         return $res;
     }
+
+    public static function getRandDate(){
+        $start = strtotime('2020-01-01 00:00:00');
+        $end = strtotime(date("Y-m-d H:i:s"));
+        $res = mt_rand($start, $end); 
+
+        return $res;
+    }
 }
