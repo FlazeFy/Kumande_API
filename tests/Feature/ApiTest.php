@@ -56,7 +56,7 @@ class ApiTest extends TestCase
     }
 
     // TC-002
-    public function test_get_sign_out(): void
+    public function test_post_sign_out(): void
     {
         $token = $this->test_post_login();
         $response = $this->httpClient->post("/api/v1/logout", [
@@ -157,6 +157,103 @@ class ApiTest extends TestCase
     {
         $token = $this->test_post_login();
         $response = $this->httpClient->get("/api/v1/consume/total/byprovide", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = json_decode($response->getBody(), true);
+        $this->assertArrayHasKey('message', $data);
+    }
+
+    // TC-S007
+    public function test_get_most_consume_main_ing(): void
+    {
+        $token = $this->test_post_login();
+        $response = $this->httpClient->get("/api/v1/consume/total/bymain", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = json_decode($response->getBody(), true);
+        $this->assertArrayHasKey('message', $data);
+    }
+
+    // TC-S008
+    public function test_get_total_spending_this_year(): void
+    {
+        $randDate = Generator::getRandDate();
+        $month = date('m',$randDate);
+
+        $token = $this->test_post_login();
+        $response = $this->httpClient->get("/api/v1/payment/total/month/$month", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = json_decode($response->getBody(), true);
+        $this->assertArrayHasKey('message', $data);
+    }
+
+    // TC-S009
+    public function test_get_total_daily_calorie_this_month(): void
+    {
+        // Notes : Same api with TC-C003
+        ApiTest::test_get_calendar_daily_calorie(); 
+    }
+
+    // TC-S010
+    public function test_get_budget_spending_this_year(): void
+    {
+        $randDate = Generator::getRandDate();
+        $year = date('Y',$randDate);
+
+        $token = $this->test_post_login();
+        $response = $this->httpClient->get("/api/v1/budget/$year", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = json_decode($response->getBody(), true);
+        $this->assertArrayHasKey('message', $data);
+    }
+
+    // TC-S011
+    public function test_get_spending_info(): void
+    {
+        $token = $this->test_post_login();
+        $response = $this->httpClient->get("/api/v1/count/payment", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = json_decode($response->getBody(), true);
+        $this->assertArrayHasKey('message', $data);
+    }
+
+    // TC-S012
+    public function test_get_body_info(): void
+    {
+        $token = $this->test_post_login();
+        $response = $this->httpClient->get("/api/v1/count/calorie", [
+            'headers' => [
+                'Authorization' => "Bearer $token"
+            ]
+        ]);
+        $this->assertEquals(200, $response->getStatusCode());
+        $data = json_decode($response->getBody(), true);
+        $this->assertArrayHasKey('message', $data);
+    }
+
+    // TC-S013
+    public function test_get_consume_total(): void
+    {
+        $token = $this->test_post_login();
+        $response = $this->httpClient->get("/api/v1/consume/total/bytype", [
             'headers' => [
                 'Authorization' => "Bearer $token"
             ]
