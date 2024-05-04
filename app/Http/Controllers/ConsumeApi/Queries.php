@@ -5,9 +5,11 @@ namespace App\Http\Controllers\ConsumeApi;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Helpers\Generator;
+use App\Helpers\Query;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 use App\Models\Consume;
 
@@ -258,6 +260,91 @@ class Queries extends Controller
                 return response()->json([
                     'status' => 'failed',
                     'message' => 'Consume not found',
+                    'data' => null
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function getMaxMinCalorie(Request $request){
+        try{
+            $user_id = $request->user()->id;
+            $cal = Query::querySelect("get_from_json_col","consume_detail","calorie");
+
+            $csm = Consume::selectRaw("
+                    MAX($cal) as max_calorie, 
+                    MIN($cal) as min_calorie, 
+                    CAST(AVG($cal) AS INT) as avg_calorie 
+                ")
+                ->where('created_by', $user_id)
+                ->get();
+
+            if ($csm->count() > 0) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => "Data retrived", 
+                    'data' => $csm
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Consume not found',
+                    'data' => null
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function getCalorieTotalByConsumeType(Request $request, $view){
+        try{
+            $user_id = $request->user()->id;
+
+            if($view == "all" || $view == "day" || $view == "week" || $view == "month" || $view == "year"){
+                $cal = Query::querySelect("get_from_json_col","consume_detail","calorie");
+
+                $csm = Consume::selectRaw("
+                    SUM($cal) as calorie, consume_type
+                ")
+                ->where('created_by', $user_id)
+                ->groupby('consume_type');
+
+                if($view == "day"){
+                    $csm->whereDate('created_at', Carbon::today());
+                } else if($view == "month"){
+                    $csm->whereMonth('created_at', Carbon::now()->month);
+                } else if($view == "year"){
+                    $csm->whereYear('created_at', Carbon::now()->year);
+                }
+
+                $csm = $csm->get();
+
+                if ($csm->count() > 0) {
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => "Data retrived", 
+                        'data' => $csm
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'Consume not found',
+                        'data' => null
+                    ], Response::HTTP_NOT_FOUND);
+                }
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Consume view must be all, day, week, month, or year',
                     'data' => null
                 ], Response::HTTP_NOT_FOUND);
             }

@@ -48,6 +48,9 @@ Route::prefix('/v1/consume')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/total/bymain', [QueryConsumeApi::class, 'getTotalConsumeByMainIng']);
     Route::get('/total/byprovide', [QueryConsumeApi::class, 'getTotalConsumeByProvide']);
     Route::get('/total/day/cal/month/{month}/year/{year}', [QueryConsumeApi::class, 'getDailyConsumeCal']);
+    Route::get('/calorie/maxmin', [QueryConsumeApi::class, 'getMaxMinCalorie']);
+    Route::get('/calorie/bytype/{view}', [QueryConsumeApi::class, 'getCalorieTotalByConsumeType']);
+    
     Route::delete('/delete/{id}', [CommandConsumeApi::class, 'deleteConsumeById']);
     Route::put('/update/data/{id}', [CommandConsumeApi::class, 'updateConsumeData']);
     Route::put('/update/favorite/{id}', [CommandConsumeApi::class, 'updateConsumeFavorite']);
