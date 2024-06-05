@@ -25,7 +25,7 @@ class Queries extends Controller
         //
     }
 
-    public function getAllConsume(Request $request, $page_limit, $order, $favorite, $type, $provide){
+    public function getAllConsume(Request $request, $page_limit, $order, $favorite, $type, $provide, $calorie){
         try{
             $user_id = $request->user()->id;
 
@@ -40,6 +40,13 @@ class Queries extends Controller
 
             if ($type != "all") {
                 $csm->where('consume_type', $type);
+            }
+
+            if($calorie != "all"){
+                $calQuery = Query::querySelect("get_from_json_col","consume_detail","calorie");
+                $splitCal = explode("-", $calorie);
+                $csm->whereRaw("$calQuery >= ".$splitCal[0]);
+                $csm->whereRaw("$calQuery <= ".$splitCal[1]);
             }
 
             $csm = $csm->orderBy('consume.created_at', $order)

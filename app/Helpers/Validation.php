@@ -63,6 +63,12 @@ class Validation
         ]);
     }
 
+    public static function getValidateUpdateTelegramID($request){ 
+        return Validator::make($request->all(), [
+            'telegram_user_id' => 'nullable|min:10|max:10|string',
+        ]);
+    }
+
     public static function getValidateUpdateImageUser($request){ 
         return Validator::make($request->all(), [
             'image_url' => 'nullable|min:2|max:255|string',
