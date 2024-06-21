@@ -7,6 +7,8 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Laravel\ScheduleMonitor\ScheduleHealth;
 
 use App\Schedule\ConsumeSchedule;
+use App\Schedule\PersonalAccessTokenSchedule;
+use App\Schedule\UserSchedule;
 
 class Kernel extends ConsoleKernel
 {
@@ -20,9 +22,13 @@ class Kernel extends ConsoleKernel
     {
         // In staging
         // $schedule->call([new ConsumeSchedule, 'remind_consume_schedule'])->hourly();
+        // $schedule->call([new PersonalAccessTokenSchedule, 'clean'])->dailyAt('01:00');
+        // $schedule->call([new UserSchedule, 'remind_clean'])->dailyAt('04:00');
 
         // In development
         $schedule->command(ConsumeSchedule::remind_consume_schedule())->everyMinute();
+        $schedule->command(PersonalAccessTokenSchedule::clean())->everyMinute();
+        $schedule->command(UserSchedule::remind_clean())->everyMinute();
     }
 
     /**

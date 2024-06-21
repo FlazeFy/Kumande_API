@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use DateTime;
 
 use App\Helpers\Math;
+use App\Helpers\LineMessage;
 
 use App\Models\Schedule;
 
@@ -42,21 +43,26 @@ class ConsumeSchedule
                 // Server with schedule
                 $diff_min = Math::countDiffFromDayTime('minute',"$sc_day $sc_time",$server_day_time);
                 if($diff_min < 360){ 
-                    if($dt->telegram_user_id){
-                        $tags = "";
-                        foreach ($dt->schedule_tag as $index => $tag) {
-                            $tags .= "#".$tag['slug_name'];
-                            
-                            if ($index < count($dt->schedule_tag) - 1) {
-                                $tags .= ', ';
-                            }
+                    $tags = "";
+                    foreach ($dt->schedule_tag as $index => $tag) {
+                        $tags .= "#".$tag['slug_name'];
+                        
+                        if ($index < count($dt->schedule_tag) - 1) {
+                            $tags .= ', ';
                         }
+                    }
+                    
+                    $message = "Hello $dt->username,\n\nJust a friendly reminder to enjoy the ".strtolower($dt->consume_type)." $dt->schedule_consume planned earlier for every $sc_day $sc_time. It's always good to stick to your schedule and make sure you're getting the nourishment you need.\n\nProvide : ".$dt->consume_detail[0]['provide']."\nMain Ingredient : ".$dt->consume_detail[0]['main_ing']."\nCalorie : ".$dt->consume_detail[0]['calorie']." Cal\nTags : $tags\n\nBon appétit!";
 
+                    if($dt->telegram_user_id){
                         $response = Telegram::sendMessage([
                             'chat_id' => $dt->telegram_user_id,
-                            'text' => "Hello $dt->username,\n\nJust a friendly reminder to enjoy the ".strtolower($dt->consume_type)." $dt->schedule_consume planned earlier for every $sc_day $sc_time. It's always good to stick to your schedule and make sure you're getting the nourishment you need.\n\nProvide : ".$dt->consume_detail[0]['provide']."\nMain Ingredient : ".$dt->consume_detail[0]['main_ing']."\nCalorie : ".$dt->consume_detail[0]['calorie']." Cal\nTags : $tags\n\nBon appétit!",
+                            'text' => $message,
                             'parse_mode' => 'HTML'
                         ]);
+                    }
+                    if($dt->line_user_id){
+                        LineMessage::sendMessage('text',$message,$dt->line_user_id);
                     }
                 }
             }

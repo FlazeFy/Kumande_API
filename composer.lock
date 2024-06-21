@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fe357223229716b8593c8d207b0ffab6",
+    "content-hash": "2c1270f55da91bcb3bd06fc3867873eb",
     "packages": [
         {
             "name": "beste/clock",
@@ -2982,6 +2982,103 @@
                 }
             ],
             "time": "2024-01-28T23:22:08+00:00"
+        },
+        {
+            "name": "linecorp/line-bot-sdk",
+            "version": "9.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/line/line-bot-sdk-php.git",
+                "reference": "3278acee0b895481fa7ca1605db4496078ff0b2a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/line/line-bot-sdk-php/zipball/3278acee0b895481fa7ca1605db4496078ff0b2a",
+                "reference": "3278acee0b895481fa7ca1605db4496078ff0b2a",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.3",
+                "guzzlehttp/psr7": "^1.7 || ^2.0",
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "guzzlehttp/guzzle": "^7.3",
+                "guzzlehttp/psr7": "^1.7 || ^2.0",
+                "orchestra/testbench": "*",
+                "phpmd/phpmd": "2.15.0",
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^10.2",
+                "squizlabs/php_codesniffer": "3.9.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "LINE\\Laravel\\LINEBotServiceProvider"
+                    ],
+                    "aliases": {
+                        "LINEChannelAccessTokenApi": "LINE\\Laravel\\Facades\\LINEChannelAccessTokenApi",
+                        "LINEInsightApi": "LINE\\Laravel\\Facades\\LINEInsightApi",
+                        "LINELiffApi": "LINE\\Laravel\\Facades\\LINELiffApi",
+                        "LINEManageAudienceApi": "LINE\\Laravel\\Facades\\LINEManageAudienceApi",
+                        "LINEManageAudienceBlobApi": "LINE\\Laravel\\Facades\\LINEManageAudienceBlobApi",
+                        "LINEMessagingApi": "LINE\\Laravel\\Facades\\LINEMessagingApi",
+                        "LINEMessagingBlobApi": "LINE\\Laravel\\Facades\\LINEMessagingBlobApi"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "LINE\\Parser\\": "src/parser/lib/",
+                    "LINE\\Laravel\\": "src/laravel/lib/",
+                    "LINE\\Webhook\\": "src/webhook/lib/",
+                    "LINE\\Constants\\": "src/constants/",
+                    "LINE\\Clients\\Liff\\": "src/clients/liff/lib/",
+                    "LINE\\Clients\\Insight\\": "src/clients/insight/lib/",
+                    "LINE\\Clients\\MessagingApi\\": "src/clients/messaging-api/lib/",
+                    "LINE\\Clients\\ManageAudience\\": "src/clients/manage-audience/lib/",
+                    "LINE\\Clients\\ChannelAccessToken\\": "src/clients/channel-access-token/lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "moznion",
+                    "email": "moznion@gmail.com",
+                    "role": "Retired"
+                },
+                {
+                    "name": "Satoru Yoshihara",
+                    "email": "vaduz0@gmail.com",
+                    "role": "Retired"
+                },
+                {
+                    "name": "Satoshi Shibuya",
+                    "email": "satosby@gmail.com",
+                    "role": "Maintainer"
+                },
+                {
+                    "name": "Shunsuke Mori",
+                    "email": "morimorim7180@gmail.com",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "SDK of the LINE BOT API for PHP",
+            "homepage": "https://github.com/line/line-bot-sdk-php",
+            "keywords": [
+                "bot",
+                "line",
+                "sdk"
+            ],
+            "support": {
+                "issues": "https://github.com/line/line-bot-sdk-php/issues",
+                "source": "https://github.com/line/line-bot-sdk-php/tree/9.9.0"
+            },
+            "time": "2024-04-17T08:41:37+00:00"
         },
         {
             "name": "monolog/monolog",
