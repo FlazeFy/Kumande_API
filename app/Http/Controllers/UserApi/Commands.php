@@ -89,7 +89,7 @@ class Commands extends Controller
 
                 $user = User::where('id',$user_id)->update([
                     'fullname' => $request->fullname,
-                    'password' => $request->password,
+                    'email' => $request->email,
                     'gender' => $request->gender,
                     'born_at' => $request->born_at,
                     'updated_at' => date("Y-m-d H:i:s")
@@ -98,7 +98,6 @@ class Commands extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => 'User updated',
-                    'data' => $user." rows affected"
                 ], Response::HTTP_OK);
             }
         } catch(\Exception $err) {
@@ -128,12 +127,14 @@ class Commands extends Controller
                 ]);
 
                 if($user > 0){
-                    $response = Telegram::sendMessage([
-                        'chat_id' => $telegram_user_id_old,
-                        'text' => "Hello $user_data->username,\nYour account has been signout from this device",
-                        'parse_mode' => 'HTML'
-                    ]);
-
+                    if($telegram_user_id_old != null){
+                        $response = Telegram::sendMessage([
+                            'chat_id' => $telegram_user_id_old,
+                            'text' => "Hello $user_data->username,\nYour account has been signout from this device",
+                            'parse_mode' => 'HTML'
+                        ]);
+                    }
+                    
                     return response()->json([
                         'status' => 'success',
                         'message' => 'User telegram id updated',

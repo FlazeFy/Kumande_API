@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
 use App\Models\Consume;
+use App\Models\Payment;
+use App\Models\Schedule;
 
 class Queries extends Controller
 {
@@ -130,6 +132,49 @@ class Queries extends Controller
                     'status' => 'success',
                     'message' => "Data retrived", 
                     'data' => $csm
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Consume not found',
+                    'data' => null
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function getConsumeDetailBySlug(Request $request, $slug){
+        try{
+            $user_id = $request->user()->id;
+
+            $consume = Consume::selectRaw('*')
+                ->where('created_by', $user_id)
+                ->where('slug_name', $slug)
+                ->first();
+
+            if ($consume->count() > 0) {
+                $payment = Payment::select('payment_method','payment_price','payment.created_at','payment.updated_at')
+                    ->join('consume','consume.id','=','payment.consume_id')
+                    ->where('payment.created_by', $user_id)
+                    ->where('slug_name', $slug)
+                    ->get();
+
+                $schedule = Schedule::select('schedule_time','created_at','updated_at')
+                    ->where('slug_name', $slug)
+                    ->get();
+
+                $consume->payment = $payment;
+                $consume->schedule = $schedule;
+                
+                return response()->json([
+                    'status' => 'success',
+                    'message' => "Data retrived", 
+                    'data' => $consume
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
@@ -354,6 +399,69 @@ class Queries extends Controller
                     'message' => 'Consume view must be all, day, week, month, or year',
                     'data' => null
                 ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function getConsumeByContext(Request $request, $ctx, $target){
+        try{
+            $user_id = $request->user()->id;
+            $is_ctx_valid = true;
+
+            $consume = Consume::selectRaw('slug_name, consume_type, consume_name, consume_detail, consume_from, is_favorite, consume_tag')
+                ->where('created_by',$user_id)
+                ->orderby('created_at','desc');
+
+            if ($ctx == 'provide' || $ctx == 'main_ing') {
+                $consume->whereRaw("REPLACE(JSON_UNQUOTE(JSON_EXTRACT(consume_detail, '$[0].$ctx')), '\"', '') = ?", $target);
+            } else if($ctx == 'consume_from' || $ctx == 'consume_type'){
+                $consume->where($ctx,$target);
+            } else if($ctx == 'month'){
+                $consume->whereRaw("MONTH(created_at) = ?",$target);
+            } else if($ctx == 'month_year'){
+                $date = explode("_", $target);
+                $consume->whereRaw("MONTH(created_at) = ?",$date[0])
+                    ->whereRaw("YEAR(created_at) = ?",$date[1]);
+            } else {
+                $is_ctx_valid = false;
+            }
+            $consume = $consume->get();
+
+            if($is_ctx_valid){
+                if ($consume->count() > 0) {
+                    foreach ($consume as $idx => $csm) {
+                        $schedule = Schedule::select('schedule_time')
+                            ->where('slug_name', $csm->slug_name)
+                            ->get();
+    
+                        $consume[$idx]->schedule = $schedule;
+                    }
+    
+                    $consume->schedule = $schedule;
+                    
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => "Data retrived", 
+                        'data' => $consume
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'Consume not found',
+                        'data' => null
+                    ], Response::HTTP_NOT_FOUND);
+                }
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Consume context not valid',
+                    'data' => null
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         } catch(\Exception $e) {
             return response()->json([

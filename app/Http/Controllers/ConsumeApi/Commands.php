@@ -17,6 +17,7 @@ use Kreait\Firebase\Messaging\Notification;
 
 use App\Models\Consume;
 use App\Models\Payment;
+use App\Models\User;
 
 class Commands extends Controller
 {
@@ -170,14 +171,18 @@ class Commands extends Controller
                     'payment' => $pym,
                 ]);
 
-                $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
-                $messaging = $factory->createMessaging();
-                $message = CloudMessage::withTarget('token', $request->token_fcm)
-                    ->withNotification(Notification::create('You have successfully added new meals to history called ', $request->consume_name))
-                    ->withData([
-                        'consume_name' => $request->consume_name,
-                    ]);
-                $response = $messaging->send($message);
+                $user = User::getProfile($user_id);
+                $fcm_token = $user->firebase_fcm_token;
+                if($fcm_token){
+                    $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
+                    $messaging = $factory->createMessaging();
+                    $message = CloudMessage::withTarget('token', $fcm_token)
+                        ->withNotification(Notification::create('You have successfully added new meals to history called ', $request->consume_name))
+                        ->withData([
+                            'consume_name' => $request->consume_name,
+                        ]);
+                    $response = $messaging->send($message);
+                }
 
                 return response()->json([
                     'status' => 'success',

@@ -43,6 +43,8 @@ Route::post('/v1/logout', [QueryAuthApi::class, 'logout'])->middleware(['auth:sa
 
 Route::prefix('/v1/consume')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/limit/{page_limit}/order/{order}/favorite/{favorite}/type/{type}/provide/{provide}/calorie/{calorie}', [QueryConsumeApi::class, 'getAllConsume']);
+    Route::get('/detail/{slug}', [QueryConsumeApi::class, 'getConsumeDetailBySlug']);
+    Route::get('/by/context/{ctx}/{target}', [QueryConsumeApi::class, 'getConsumeByContext']);
     Route::get('/total/byfrom', [QueryConsumeApi::class, 'getTotalConsumeByFrom']);
     Route::get('/total/bytype', [QueryConsumeApi::class, 'getTotalConsumeByType']);
     Route::get('/total/bymain', [QueryConsumeApi::class, 'getTotalConsumeByMainIng']);

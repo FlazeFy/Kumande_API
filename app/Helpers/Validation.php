@@ -57,7 +57,7 @@ class Validation
     public static function getValidateUpdateUser($request){ 
         return Validator::make($request->all(), [
             'fullname' => 'required|min:2|max:50|string',
-            'password' => 'required|min:6|max:50|string',
+            'email' => 'required|string|email',
             'gender' => ['required', new TypeGender],
             'born_at' => 'nullable|date_format:Y-m-d',
         ]);
