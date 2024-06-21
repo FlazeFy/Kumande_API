@@ -15,7 +15,7 @@ class User extends Authenticatable
 
     protected $table = 'user';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'firebase_id','telegram_user_id','slug_name', 'fullname', 'username', 'email', 'password', 'gender', 'image_url', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['id', 'firebase_id','telegram_user_id','slug_name', 'fullname', 'username', 'email', 'password', 'gender', 'image_url', 'timezone', 'created_at', 'updated_at', 'deleted_at'];
 
     public static function getProfile($id){
         $res = User::find($id);

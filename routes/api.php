@@ -44,7 +44,7 @@ Route::post('/v1/logout', [QueryAuthApi::class, 'logout'])->middleware(['auth:sa
 Route::prefix('/v1/consume')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/limit/{page_limit}/order/{order}/favorite/{favorite}/type/{type}/provide/{provide}/calorie/{calorie}', [QueryConsumeApi::class, 'getAllConsume']);
     Route::get('/detail/{slug}', [QueryConsumeApi::class, 'getConsumeDetailBySlug']);
-    Route::get('/by/context/{ctx}/{target}', [QueryConsumeApi::class, 'getConsumeByContext']);
+    Route::post('/by/context/{ctx}/{target}', [QueryConsumeApi::class, 'getConsumeByContext']);
     Route::get('/total/byfrom', [QueryConsumeApi::class, 'getTotalConsumeByFrom']);
     Route::get('/total/bytype', [QueryConsumeApi::class, 'getTotalConsumeByType']);
     Route::get('/total/bymain', [QueryConsumeApi::class, 'getTotalConsumeByMainIng']);
@@ -103,6 +103,7 @@ Route::prefix('/v1/user')->group(function () {
     Route::get('/', [QueryUserApi::class, 'getMyProfile'])->middleware(['auth:sanctum']);
     Route::put('/edit', [CommandUserApi::class, 'updateUser'])->middleware(['auth:sanctum']);
     Route::put('/edit_telegram_id', [CommandUserApi::class, 'updateTelegramId'])->middleware(['auth:sanctum']);
+    Route::put('/edit_timezone', [CommandUserApi::class, 'updateTimezone'])->middleware(['auth:sanctum']);
     Route::put('/image', [CommandUserApi::class, 'updateImage'])->middleware(['auth:sanctum']);
     Route::post('/create', [CommandUserApi::class, 'createUser']);
 });

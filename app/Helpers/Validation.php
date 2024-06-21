@@ -69,6 +69,12 @@ class Validation
         ]);
     }
 
+    public static function getValidateUpdateUserTimezone($request){ 
+        return Validator::make($request->all(), [
+            'timezone' => 'nullable|min:6|max:6|string',
+        ]);
+    }
+
     public static function getValidateUpdateImageUser($request){ 
         return Validator::make($request->all(), [
             'image_url' => 'nullable|min:2|max:255|string',
@@ -92,5 +98,15 @@ class Validation
             'height' => 'required|numeric|min:120|max:200',
             'result' => 'required|numeric|min:1000|max:6000',
         ]);
+    }
+
+    public static function isValidUTCOffset($val) {
+        $pattern = '/^([+-](?:0[0-9]|1[0-4]):[0-5][0-9])$/';
+        
+        if (preg_match($pattern, $val)) {
+            return true;
+        }
+        
+        return false;
     }
 }

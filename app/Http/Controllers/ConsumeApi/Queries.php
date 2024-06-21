@@ -430,7 +430,13 @@ class Queries extends Controller
             } else {
                 $is_ctx_valid = false;
             }
-            $consume = $consume->get();
+
+            if($request->limit){
+                $consume = $consume->limit($request->limit)
+                    ->get();
+            } else {
+                $consume = $consume->get();
+            }
 
             if($is_ctx_valid){
                 if ($consume->count() > 0) {
