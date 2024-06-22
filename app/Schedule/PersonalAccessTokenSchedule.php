@@ -13,11 +13,14 @@ use App\Models\PersonalAccessToken;
 use App\Mail\ScheduleEmail;
 use Illuminate\Support\Facades\Mail;
 use Telegram\Bot\Laravel\Facades\Telegram;
+use App\Service\FirebaseRealtime;
 
 class PersonalAccessTokenSchedule
 {
     public static function clean()
     {
+        $firebaseRealtime = new FirebaseRealtime();
+        
         $days = 30;
         $access = [];
         $access = PersonalAccessToken::whereDate('created_at', '<', Carbon::now()->subDays($days))->delete();
@@ -27,5 +30,12 @@ class PersonalAccessTokenSchedule
         } else {
             $context = "No data removed from access token with ".$days." days as it days limiter";
         }
+
+        $record = [
+            'context' => 'personal_access_token',
+            'result' => $context,
+        ];
+
+        $firebaseRealtime->insert_command('task_scheduling/clean/' . uniqid(), $record);
     }
 }

@@ -13,6 +13,10 @@ use App\Models\Schedule;
 use App\Mail\ScheduleEmail;
 use Illuminate\Support\Facades\Mail;
 use Telegram\Bot\Laravel\Facades\Telegram;
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
+use App\Service\FirebaseRealtime;
 
 class ConsumeSchedule
 {
@@ -21,7 +25,10 @@ class ConsumeSchedule
         $schedule = Schedule::getAllScheduleReminder();
         
         if($schedule){
+            $firebaseRealtime = new FirebaseRealtime();
+
             foreach($schedule as $dt){
+                $status_exec = false;
                 $server_datetime = new DateTime();
 
                 // Schedule time config
@@ -44,15 +51,19 @@ class ConsumeSchedule
                 $diff_min = Math::countDiffFromDayTime('minute',"$sc_day $sc_time",$server_day_time);
                 if($diff_min < 360){ 
                     $tags = "";
-                    foreach ($dt->schedule_tag as $index => $tag) {
-                        $tags .= "#".$tag['slug_name'];
-                        
-                        if ($index < count($dt->schedule_tag) - 1) {
-                            $tags .= ', ';
+                    if($dt->schedule_tag){
+                        foreach ($dt->schedule_tag as $index => $tag) {
+                            $tags .= "#".$tag['slug_name'];
+                            
+                            if ($index < count($dt->schedule_tag) - 1) {
+                                $tags .= ', ';
+                            }
                         }
+                    } else {
+                        $tags = "-";
                     }
                     
-                    $message = "Hello $dt->username,\n\nJust a friendly reminder to enjoy the ".strtolower($dt->consume_type)." $dt->schedule_consume planned earlier for every $sc_day $sc_time. It's always good to stick to your schedule and make sure you're getting the nourishment you need.\n\nProvide : ".$dt->consume_detail[0]['provide']."\nMain Ingredient : ".$dt->consume_detail[0]['main_ing']."\nCalorie : ".$dt->consume_detail[0]['calorie']." Cal\nTags : $tags\n\nBon appétit!";
+                    $message = "Hello $dt->username,\n\nJust a friendly reminder to enjoy the ".strtolower($dt->schedule_time[0]['category'])." ".strtolower($dt->consume_type)." $dt->schedule_consume planned earlier for every $sc_day $sc_time. It's always good to stick to your schedule and make sure you're getting the nourishment you need.\n\nProvide : ".$dt->consume_detail[0]['provide']."\nMain Ingredient : ".$dt->consume_detail[0]['main_ing']."\nCalorie : ".$dt->consume_detail[0]['calorie']." Cal\nTags : $tags\n\nBon appétit!";
 
                     if($dt->telegram_user_id){
                         $response = Telegram::sendMessage([
@@ -64,7 +75,30 @@ class ConsumeSchedule
                     if($dt->line_user_id){
                         LineMessage::sendMessage('text',$message,$dt->line_user_id);
                     }
+                    if($dt->firebase_fcm_token){
+                        $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
+                        $messaging = $factory->createMessaging();
+                        $message = CloudMessage::withTarget('token', $dt->firebase_fcm_token)
+                            ->withNotification(Notification::create($message, $dt->schedule_consume))
+                            ->withData([
+                                'schedule_consume' => $dt->schedule_consume,
+                            ]);
+                        $response = $messaging->send($message);
+                    }
+                    $status_exec = true;
                 }
+
+                $record = [
+                    'context' => 'schedule',
+                    'context_id' => $dt->id,
+                    'sended_to' => $dt->user_id,
+                    'telegram_message' => $dt->telegram_user_id,
+                    'line_message' => $dt->line_user_id,
+                    'firebase_fcm_message' => $dt->firebase_fcm_token,
+                    'is_execute' => $status_exec
+                ];
+
+                $firebaseRealtime->insert_command('task_scheduling/message/' . uniqid(), $record);
             }
         }
     }

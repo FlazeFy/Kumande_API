@@ -23,7 +23,7 @@ class User extends Authenticatable
     }
 
     public static function getAllCleanReminder(){
-        $res = User::select('telegram_user_id','line_user_id','username','email','deleted_at')
+        $res = User::select('id','telegram_user_id','firebase_fcm_token','line_user_id','username','email','deleted_at')
             ->whereNotNull('deleted_at')
             ->get();
 
