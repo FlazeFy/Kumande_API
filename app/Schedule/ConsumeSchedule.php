@@ -9,6 +9,7 @@ use App\Helpers\Math;
 use App\Helpers\LineMessage;
 
 use App\Models\Schedule;
+use App\Models\Consume;
 
 use App\Mail\ScheduleEmail;
 use Illuminate\Support\Facades\Mail;
@@ -99,6 +100,75 @@ class ConsumeSchedule
                 ];
 
                 $firebaseRealtime->insert_command('task_scheduling/message/' . uniqid(), $record);
+            }
+        }
+    }
+
+    public static function summary_day()
+    {
+        $summary = Consume::getConsumeSummary('daily');
+        
+        if($summary){
+            $firebaseRealtime = new FirebaseRealtime();
+            $current_username = "";
+            $consume = "";
+            $total = count($summary);
+            $total_calorie = 0;
+            $total_payment = 0;
+            $id_context= [];
+
+            foreach($summary as $index => $dt){
+                if($current_username == "" || $dt->username == $current_username){
+                    $consume .= "- $dt->consume_name ($dt->consume_type | $dt->consume_from) from ".$dt->consume_detail[0]['provide']." with main ingredient ".$dt->consume_detail[0]['main_ing']." and calorie ".$dt->consume_detail[0]['calorie']." cal \n Rp. ".number_format($dt->payment_price).",00 \n\n";
+                    $current_username = $dt->username;
+                    $total_calorie = $total_calorie + $dt->consume_detail[0]['calorie'];
+                    $total_payment = $total_payment + $dt->payment_price;
+                    array_push($id_context,[
+                        'consume_id'=>$dt->consume_id,
+                        'payment_id'=>$dt->payment_id
+                    ]);
+                }
+
+                if($index == $total - 1 || ($index < $total - 1 && $dt->username != $summary[$index + 1]->username)){
+                    $message = "Hello $dt->username,\n\nYour last day summary is here. Here's the data :\n\n$consume"."Total Calorie : $total_calorie cal \nTotal Payment : Rp. ".number_format($total_payment).",00\n\nHave a great day!";
+
+                    if($dt->telegram_user_id){
+                        $response = Telegram::sendMessage([
+                            'chat_id' => $dt->telegram_user_id,
+                            'text' => $message,
+                            'parse_mode' => 'HTML'
+                        ]);
+                    }
+                    if($dt->line_user_id){
+                        LineMessage::sendMessage('text',$message,$dt->line_user_id);
+                    }
+                    if($dt->firebase_fcm_token){
+                        $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
+                        $messaging = $factory->createMessaging();
+                        $message = CloudMessage::withTarget('token', $dt->firebase_fcm_token)
+                            ->withNotification(Notification::create($message, $id_context))
+                            ->withData([
+                                'id_context' => $id_context,
+                            ]);
+                        $response = $messaging->send($message);
+                    }
+
+                    $record = [
+                        'context' => 'summary_consume',
+                        'context_id' => $id_context,
+                        'total_price' => $total_price,
+                        'total_calorie' => $total_calorie,
+                        'telegram_message' => $dt->telegram_user_id,
+                        'line_message' => $dt->line_user_id,
+                        'firebase_fcm_message' => $dt->firebase_fcm_token,
+                    ];
+    
+                    $firebaseRealtime->insert_command('task_scheduling/summary/' . uniqid(), $record);
+
+                    $total_calorie = 0;
+                    $total_payment = 0;
+                    $id_context= [];
+                }
             }
         }
     }
