@@ -25,12 +25,14 @@ class Kernel extends ConsoleKernel
         // $schedule->call([new PersonalAccessTokenSchedule, 'clean'])->dailyAt('01:00');
         // $schedule->call([new UserSchedule, 'remind_clean'])->dailyAt('04:00');
         // $schedule->call([new ConsumeSchedule, 'summary_day'])->dailyAt('02:00');
+        // $schedule->call([new ConsumeSchedule, 'summary_weekly'])->dailyAt('05:00');
 
         // In development
         $schedule->command(ConsumeSchedule::remind_consume_schedule())->everyMinute();
         $schedule->command(PersonalAccessTokenSchedule::clean())->everyMinute();
         $schedule->command(UserSchedule::remind_clean())->everyMinute();
         $schedule->command(ConsumeSchedule::summary_day())->everyMinute();
+        $schedule->command(ConsumeSchedule::summary_weekly())->everyMinute();
     }
 
     /**

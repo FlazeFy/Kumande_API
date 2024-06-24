@@ -31,11 +31,11 @@ class PersonalAccessTokenSchedule
             $context = "No data removed from access token with ".$days." days as it days limiter";
         }
 
+        // Audit to firebase realtime
         $record = [
             'context' => 'personal_access_token',
             'result' => $context,
         ];
-
         $firebaseRealtime->insert_command('task_scheduling/clean/' . uniqid(), $record);
     }
 }

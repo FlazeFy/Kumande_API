@@ -62,7 +62,8 @@ class UserSchedule
 
                 $status_exec = true;
             }
-
+            
+            // Audit to firebase realtime
             $record = [
                 'context' => 'user_delete_reminder',
                 'sended_to' => $dt->id,
@@ -71,7 +72,6 @@ class UserSchedule
                 'firebase_fcm_message' => $dt->firebase_fcm_token,
                 'is_execute' => $status_exec
             ];
-
             $firebaseRealtime->insert_command('task_scheduling/message/' . uniqid(), $record);
         }
     }
