@@ -15,6 +15,7 @@ use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 
 use App\Models\Schedule;
+use App\Models\User;
 
 class Commands extends Controller
 {
@@ -83,64 +84,132 @@ class Commands extends Controller
 
     public function createSchedule(Request $request){
         try{
-            $validator = Validation::getValidateCreateSchedule($request);
+            $success_add = 0;
+            $user_id = $request->user()->id;
+            $schedule_consume = "";
 
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => 'error',
-                    'result' => $validator->errors()
-                ], Response::HTTP_UNPROCESSABLE_ENTITY);
-            } else {        
-                $check = Generator::checkSchedule($request->schedule_time);
-                $user_id = $request->user()->id;
+            if(!$request->schedule_consume){
+                $schedule = json_decode($request->getContent(), true);
 
-                if(!$check){
-                    $id = Generator::getUUID();
-                    $slug = Generator::getSlug($request->schedule_consume, "schedule");
+                foreach($schedule as $dt){
+                    $validator = Validation::getValidateCreateSchedule(new Request($dt));
+                    if ($validator->fails()) {
+                        return response()->json([
+                            'status' => 'error',
+                            'result' => $validator->errors()
+                        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                    } else { 
+                        $reqnew = new Request($dt);
+                        $check = Generator::checkSchedule($reqnew['schedule_time']);
 
-                    $jsonDetail = Converter::getEncoded($request->consume_detail);
-                    $jsonTag = Converter::getEncoded($request->schedule_tag);
-                    $jsonTime = Converter::getEncoded($request->schedule_time);
-                    $detail = json_decode($jsonDetail, true);
-                    $tag = json_decode($jsonTag, true);
-                    $time = json_decode($jsonTime, true);
+                        if(!$check){
+                            $id = Generator::getUUID();
 
-                    $sch = Schedule::create([
-                        'id' => $id, 
-                        'firebase_id' => $request->firebase_id, 
-                        'slug_name' => $slug, 
-                        'schedule_consume' => $request->schedule_consume,
-                        'consume_type' => $request->consume_type,
-                        'consume_detail' => $detail,
-                        'schedule_desc' => $request->schedule_desc,
-                        'schedule_tag' => $tag,
-                        'schedule_time' => $time,
-                        'created_at' => date("Y-m-d H:i:s"),
-                        'created_by' => $user_id,
-                        'updated_at' => null,
-                        'updated_by' => null
-                    ]);
+                            $jsonDetail = Converter::getEncoded($dt['consume_detail']);
+                            $jsonTag = Converter::getEncoded($dt['schedule_tag']);
+                            $jsonTime = Converter::getEncoded($dt['schedule_time']);
+                            $detail = json_decode($jsonDetail, true);
+                            $tag = json_decode($jsonTag, true);
+                            $time = json_decode($jsonTime, true);
 
+                            $sch = Schedule::create([
+                                'id' => $id, 
+                                'firebase_id' => $dt['firebase_id'], 
+                                'consume_id' => $dt['consume_id'], 
+                                'schedule_consume' => $dt['schedule_consume'],
+                                'consume_type' => $dt['consume_type'],
+                                'consume_detail' => $detail,
+                                'schedule_desc' => $dt['schedule_desc'],
+                                'schedule_tag' => $tag,
+                                'schedule_time' => $time,
+                                'created_at' => date("Y-m-d H:i:s"),
+                                'created_by' => $user_id,
+                                'updated_at' => null,
+                                'updated_by' => null
+                            ]);
+
+                            $success_add++;
+                            $schedule_consume .= $dt['schedule_consume'];
+                        } else {
+                            return response()->json([
+                                'status' => 'failed',
+                                'message' => 'There is a schedule with same day and category',
+                            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                        }
+                    }
+                }
+            } else {
+                $validator = Validation::getValidateCreateSchedule($request);
+
+                if ($validator->fails()) {
+                    return response()->json([
+                        'status' => 'error',
+                        'result' => $validator->errors()
+                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                } else {    
+                    $check = Generator::checkSchedule($request->schedule_time);
+                    if(!$check){
+                        $id = Generator::getUUID();
+
+                        $jsonDetail = Converter::getEncoded($request->consume_detail);
+                        $jsonTag = Converter::getEncoded($request->schedule_tag);
+                        $jsonTime = Converter::getEncoded($request->schedule_time);
+                        $detail = json_decode($jsonDetail, true);
+                        $tag = json_decode($jsonTag, true);
+                        $time = json_decode($jsonTime, true);
+
+                        $sch = Schedule::create([
+                            'id' => $id, 
+                            'firebase_id' => $request->firebase_id, 
+                            'consume_id' => $request->consume_id, 
+                            'schedule_consume' => $request->schedule_consume,
+                            'consume_type' => $request->consume_type,
+                            'consume_detail' => $detail,
+                            'schedule_desc' => $request->schedule_desc,
+                            'schedule_tag' => $tag,
+                            'schedule_time' => $time,
+                            'created_at' => date("Y-m-d H:i:s"),
+                            'created_by' => $user_id,
+                            'updated_at' => null,
+                            'updated_by' => null
+                        ]);
+
+                        $schedule_consume .= $request->schedule_consume;
+                        $success_add++;
+                    } else {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'There is a schedule with same day and category',
+                        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                    }
+                }
+            }
+
+            if($success_add > 0){
+                $user_data = User::getProfile($user_id);
+                $fcm_token = $user_data->firebase_fcm_token;
+                if($fcm_token){
                     $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
                     $messaging = $factory->createMessaging();
-                    $message = CloudMessage::withTarget('token', $request->token_fcm)
-                        ->withNotification(Notification::create('You have successfully added new meals to schedule called ', $request->schedule_consume))
+                    $message = CloudMessage::withTarget('token', $fcm_token)
+                        ->withNotification(Notification::create('You have successfully added new meals to schedule called ', $schedule_consume))
                         ->withData([
-                            'schedule_consume' => $request->schedule_consume,
+                            'schedule_consume' => $schedule_consume,
                         ]);
                     $response = $messaging->send($message);
-            
-                    return response()->json([
-                        'status' => 'success',
-                        'message' => 'Schedule created',
-                        'data' => $sch
-                    ], Response::HTTP_OK);
-                } else {
-                    return response()->json([
-                        'status' => 'failed',
-                        'message' => 'There is a schedule with same day and category',
-                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
+        
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Schedule created',
+                    'data' => $sch
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'No schedule created',
+                    'data' => $sch
+                ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $err) {
             return response()->json([
