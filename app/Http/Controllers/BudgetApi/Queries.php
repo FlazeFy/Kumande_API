@@ -68,10 +68,45 @@ class Queries extends Controller
     public function getBudgetDashboard(Request $request){
         try{
             $user_id = $request->user()->id;
+            $month_search = $request->month ?? null;
+            $year_search = $request->year ?? null;
             
-            $bdt = Budget::selectRaw("REPLACE(JSON_EXTRACT(budget_month_year, '$[0].month'), '\"', '') as month, REPLACE(JSON_EXTRACT(budget_month_year, '$[0].year'), '\"', '') as year, budget_total, budget_over")
+            $year_json = "REPLACE(JSON_EXTRACT(budget_month_year, '$[0].year'), '\"', '')";
+            $month_json = "REPLACE(JSON_EXTRACT(budget_month_year, '$[0].month'), '\"', '')";
+
+            $month_case = "
+                CASE $month_json
+                    WHEN 'Jan' THEN 1
+                    WHEN 'Feb' THEN 2
+                    WHEN 'Mar' THEN 3
+                    WHEN 'Apr' THEN 4
+                    WHEN 'May' THEN 5
+                    WHEN 'Jun' THEN 6
+                    WHEN 'Jul' THEN 7
+                    WHEN 'Aug' THEN 8
+                    WHEN 'Sep' THEN 9
+                    WHEN 'Oct' THEN 10
+                    WHEN 'Nov' THEN 11
+                    WHEN 'Dec' THEN 12
+                END
+            ";
+
+            $date_json = "STR_TO_DATE(CONCAT($year_json, '-', $month_case, '-01'), '%Y-%m-%d')";
+
+            $bdt = Budget::selectRaw("$month_json as month, $year_json as year, budget_total")
                 ->where('created_by', $user_id)
-                ->get();
+                ->orderByRaw("$date_json DESC");
+
+            if($year_search && $month_search){
+                $bdt->whereRaw("$month_json = ?", [$month_search])
+                    ->whereRaw("$year_json = ?", [$year_search]);
+            }
+
+            $bdt = $bdt->get();
+
+            $total = Payment::selectRaw('CAST(SUM(payment_price) as UNSIGNED) as total_all')
+                ->where('created_by', $user_id)
+                ->first();
 
             if($bdt){
                 $pyt = [];
@@ -80,7 +115,14 @@ class Queries extends Controller
                         ->where('created_by', $user_id)
                         ->whereRaw('YEAR(created_at) = ?', [$dt->year])
                         ->whereRaw("DATE_FORMAT(created_at, '%b') = ?", [$dt->month])
-                        ->get();
+                        ->first();
+
+                    if($pyt->total_price == null){
+                        $pyt->total_price = 0;
+                    }
+                    if($pyt->average_payment == null){
+                        $pyt->average_payment = 0;
+                    }
 
                     $bdt[$idx]->payment_history = $pyt;
                 }
@@ -88,12 +130,14 @@ class Queries extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => "Budget retrived", 
-                    'data' => $bdt
+                    'data' => $bdt,
+                    'total_all' => $total->total_all
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
                     'message' => 'Budget not found',
+                    'total_all' => $total->total_all
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {

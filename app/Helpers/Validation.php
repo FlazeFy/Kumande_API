@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Rules\TypeConsume;
 use App\Rules\TypeFrom;
 use App\Rules\TypePayment;
+use App\Rules\TypeMonth;
 use App\Rules\TypeGender;
 
 class Validation
@@ -30,6 +31,14 @@ class Validation
             'payment_method' => ['required', new TypePayment],
             'payment_price' => 'required|numeric|min:0|max:10000000',
             'is_payment' => 'required|min:0|max:1',            
+        ]);
+    }
+
+    public static function getValidateCreateBudget($request){ 
+        return Validator::make($request->all(), [
+            'budget_total' => 'required|numeric|min:1',
+            'month' => ['required', new TypeMonth],
+            'year' => 'required|numeric|min:1980',     
         ]);
     }
 

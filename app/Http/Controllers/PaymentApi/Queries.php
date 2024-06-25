@@ -190,4 +190,36 @@ class Queries extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function getMonthlySpend(Request $request, $month, $year){
+        try{
+            $user_id = $request->user()->id;
+
+            $csm = Payment::select('consume_name','consume_type','consume_id','payment_method','payment_price','payment.created_at')
+                ->join('consume','consume.id','=','payment.consume_id')
+                ->where('payment.created_by',$user_id)
+                ->whereRaw("DATE_FORMAT(payment.created_at, '%b') = ?",[$month])
+                ->whereRaw('YEAR(payment.created_at) = ?',[$year])
+                ->orderby('payment.created_by','DESC')
+                ->paginate(15);
+
+            if (count($csm) > 0) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => "Payment data retrived", 
+                    'data' => $csm
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Payment not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

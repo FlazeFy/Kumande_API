@@ -14,6 +14,7 @@ use App\Http\Controllers\PaymentApi\Queries as QueryPaymentApi;
 use App\Http\Controllers\ScheduleApi\Commands as CommandScheduleApi;
 use App\Http\Controllers\ScheduleApi\Queries as QueryScheduleApi;
 use App\Http\Controllers\BudgetApi\Queries as QueryBudgetApi;
+use App\Http\Controllers\BudgetApi\Commands as CommandsBudgetApi;
 use App\Http\Controllers\CountApi\QueriesCalorie as QueryCountApi;
 use App\Http\Controllers\CountApi\CommandsCalorie as CommandsCountCalorie;
 use App\Http\Controllers\UserApi\Queries as QueryUserApi;
@@ -63,6 +64,7 @@ Route::prefix('/v1/consume')->middleware(['auth:sanctum'])->group(function () {
 Route::prefix('/v1/payment')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/total/month/{year}', [QueryPaymentApi::class, 'getTotalSpendMonth']);
     Route::get('/total/month/{month}/year/{year}', [QueryPaymentApi::class, 'getTotalSpendDay']);
+    Route::get('/detail/month/{month}/year/{year}', [QueryPaymentApi::class, 'getMonthlySpend']);
 });
 
 Route::prefix('/v1/analytic')->middleware(['auth:sanctum'])->group(function () {
@@ -82,8 +84,9 @@ Route::prefix('/v1/count')->middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::prefix('/v1/budget')->middleware(['auth:sanctum'])->group(function () {
-    Route::get('/dashboard', [QueryBudgetApi::class, 'getBudgetDashboard']);
+    Route::post('/dashboard', [QueryBudgetApi::class, 'getBudgetDashboard']);
     Route::get('/by/{year}', [QueryBudgetApi::class, 'getAllBudgetByYear']);
+    Route::post('/create', [CommandsBudgetApi::class, 'createBudget']);
 });
 
 Route::prefix('/v1/list')->middleware(['auth:sanctum'])->group(function () {
