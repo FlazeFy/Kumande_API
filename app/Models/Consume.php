@@ -44,4 +44,17 @@ class Consume extends Model
 
         return $res->get();
     }
+
+    public static function searchConsumeNameAvailable($user_id, $search){
+        $res = Consume::select("id")
+            ->whereRaw("LOWER(REPLACE(consume_name,' ','')) = ?", [$search])
+            ->where('created_by', $user_id)
+            ->first();
+            
+        if($res){
+            return $res->id;
+        } else {
+            return false;
+        }
+    }
 }

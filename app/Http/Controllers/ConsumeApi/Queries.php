@@ -164,7 +164,8 @@ class Queries extends Controller
                     ->where('slug_name', $slug)
                     ->get();
 
-                $schedule = Schedule::select('schedule_time','created_at','updated_at')
+                $schedule = Schedule::select('schedule_time','schedule.created_at','schedule.updated_at')
+                    ->join('consume','consume.id','=','schedule.consume_id')
                     ->where('slug_name', $slug)
                     ->get();
 
@@ -468,6 +469,36 @@ class Queries extends Controller
                     'message' => 'Consume context not valid',
                     'data' => null
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function getListConsume(Request $request){
+        try{
+            $user_id = $request->user()->id;
+
+            $consume = Consume::select('slug_name', 'consume_name')
+                ->where('created_by',$user_id)
+                ->orderby('consume_name','asc')
+                ->get();
+
+            if ($consume->count() > 0) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => "Consume found", 
+                    'data' => $consume
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Consume not found',
+                    'data' => null
+                ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([

@@ -52,6 +52,7 @@ Route::prefix('/v1/consume')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/total/day/cal/month/{month}/year/{year}', [QueryConsumeApi::class, 'getDailyConsumeCal']);
     Route::get('/calorie/maxmin', [QueryConsumeApi::class, 'getMaxMinCalorie']);
     Route::get('/calorie/bytype/{view}', [QueryConsumeApi::class, 'getCalorieTotalByConsumeType']);
+    Route::get('/list/select', [QueryConsumeApi::class, 'getListConsume']);
     
     Route::delete('/delete/{id}', [CommandConsumeApi::class, 'deleteConsumeById']);
     Route::put('/update/data/{id}', [CommandConsumeApi::class, 'updateConsumeData']);
@@ -81,7 +82,8 @@ Route::prefix('/v1/count')->middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::prefix('/v1/budget')->middleware(['auth:sanctum'])->group(function () {
-    Route::get('/{year}', [QueryBudgetApi::class, 'getAllBudgetByYear']);
+    Route::get('/dashboard', [QueryBudgetApi::class, 'getBudgetDashboard']);
+    Route::get('/by/{year}', [QueryBudgetApi::class, 'getAllBudgetByYear']);
 });
 
 Route::prefix('/v1/list')->middleware(['auth:sanctum'])->group(function () {

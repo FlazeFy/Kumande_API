@@ -122,37 +122,43 @@ class Commands extends Controller
                     'result' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {        
-                $id = Generator::getUUID();
-                $slug = Generator::getSlug($request->consume_name, "consume");
-
-                $jsonDetail = Converter::getEncoded($request->consume_detail);
-                $jsonTag = Converter::getEncoded($request->consume_tag);
-                // $jsonDetail = json_encode($request->consume_detail);
-                // $jsonTag =  json_encode($request->consume_tag);
-
-                $detail = json_decode($jsonDetail, true);
-                $tag = json_decode($jsonTag, true);
-
                 $user_id = $request->user()->id;
+                $id = Generator::getUUID();
+                $clean_name = strtolower(str_replace(' ','',$request->consume_name));
+                $name_ava = Consume::searchConsumeNameAvailable($user_id, $clean_name);
+                $payment_only = true;
 
-                $csm = Consume::create([
-                    'id' => $id,
-                    'slug_name' => $slug,
-                    'firebase_id' => $request->firebase_id,
-                    'consume_type' => $request->consume_type,
-                    'consume_name' => $request->consume_name,
-                    'consume_detail' => $detail,
-                    'consume_from' => $request->consume_from,
-                    'is_favorite' => $request->is_favorite,
-                    'consume_tag' => $tag,
-                    'consume_comment' => $request->consume_comment,
-                    'created_at' => date("Y-m-d H:i:s"),
-                    'updated_at' => null,
-                    'deleted_at' => null,
-                    'created_by' => $user_id,
-                    'updated_by' => null,
-                    'deleted_by' => null,
-                ]);
+                if(!$name_ava){
+                    $payment_only = false;
+                    $slug = Generator::getSlug($request->consume_name, "consume");
+                    $jsonDetail = Converter::getEncoded($request->consume_detail);
+                    $jsonTag = Converter::getEncoded($request->consume_tag);
+                    // $jsonDetail = json_encode($request->consume_detail);
+                    // $jsonTag =  json_encode($request->consume_tag);
+                    $detail = json_decode($jsonDetail, true);
+                    $tag = json_decode($jsonTag, true);
+
+                    $csm = Consume::create([
+                        'id' => $id,
+                        'slug_name' => $slug,
+                        'firebase_id' => $request->firebase_id,
+                        'consume_type' => $request->consume_type,
+                        'consume_name' => $request->consume_name,
+                        'consume_detail' => $detail,
+                        'consume_from' => $request->consume_from,
+                        'is_favorite' => $request->is_favorite,
+                        'consume_tag' => $tag,
+                        'consume_comment' => $request->consume_comment,
+                        'created_at' => date("Y-m-d H:i:s"),
+                        'updated_at' => null,
+                        'deleted_at' => null,
+                        'created_by' => $user_id,
+                        'updated_by' => null,
+                        'deleted_by' => null,
+                    ]);
+                } else {
+                    $id = $name_ava;
+                }
 
                 $pym = Payment::create([
                     'id' => Generator::getUUID(),
@@ -164,11 +170,6 @@ class Commands extends Controller
                     'updated_at' => null,
                     'created_by' => $user_id,
                     'updated_by' => null,
-                ]);
-
-                $res = collect([
-                    'consume' => $csm,
-                    'payment' => $pym,
                 ]);
 
                 $user = User::getProfile($user_id);
@@ -186,8 +187,7 @@ class Commands extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'Consume created',
-                    'data' => $response
+                    'message' => $payment_only ? 'You have add new payment' : 'You have add new payment and consume',
                 ], Response::HTTP_OK);
             }
         } catch(\Exception $err) {
