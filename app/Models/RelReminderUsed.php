@@ -12,5 +12,5 @@ class RelReminderUsed extends Model
 
     protected $table = 'rel_reminder_used';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'reminder_id', 'user_id', 'created_at'];
+    protected $fillable = ['id', 'reminder_id', 'created_by', 'created_at'];
 }

@@ -9,6 +9,7 @@ use Laravel\ScheduleMonitor\ScheduleHealth;
 use App\Schedule\ConsumeSchedule;
 use App\Schedule\PersonalAccessTokenSchedule;
 use App\Schedule\UserSchedule;
+use App\Schedule\ReminderSchedule;
 
 class Kernel extends ConsoleKernel
 {
@@ -21,18 +22,20 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // In staging
-        // $schedule->call([new ConsumeSchedule, 'remind_consume_schedule'])->hourly();
+        // $schedule->call([new ConsumeSchedule, 'remind_consume_schedule'])->hourlyAt(5);
         // $schedule->call([new PersonalAccessTokenSchedule, 'clean'])->dailyAt('01:00');
         // $schedule->call([new UserSchedule, 'remind_clean'])->dailyAt('04:00');
         // $schedule->call([new ConsumeSchedule, 'summary_day'])->dailyAt('02:00');
         // $schedule->call([new ConsumeSchedule, 'summary_weekly'])->dailyAt('05:00');
+        // $schedule->call([new ReminderSchedule, 'remind_user'])->hourlyAt(20);
 
         // In development
-        $schedule->command(ConsumeSchedule::remind_consume_schedule())->everyMinute();
-        $schedule->command(PersonalAccessTokenSchedule::clean())->everyMinute();
-        $schedule->command(UserSchedule::remind_clean())->everyMinute();
-        $schedule->command(ConsumeSchedule::summary_day())->everyMinute();
-        $schedule->command(ConsumeSchedule::summary_weekly())->everyMinute();
+        // $schedule->command(ConsumeSchedule::remind_consume_schedule())->everyMinute();
+        // $schedule->command(PersonalAccessTokenSchedule::clean())->everyMinute();
+        // $schedule->command(UserSchedule::remind_clean())->everyMinute();
+        // $schedule->command(ConsumeSchedule::summary_day())->everyMinute();
+        // $schedule->command(ConsumeSchedule::summary_weekly())->everyMinute();
+        $schedule->command(ReminderSchedule::remind_user())->everyMinute();
     }
 
     /**

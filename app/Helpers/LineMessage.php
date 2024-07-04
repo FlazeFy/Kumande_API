@@ -15,13 +15,24 @@ class LineMessage
 
         $message = [
             'to' => $user_id,
-            'messages' => [
-                [
-                    'type' => $type,
-                    'text' => $text
-                ]
-            ]
+            'messages' => []
         ];
+    
+        if ($type == 'text') {
+            $message['messages'][] = [
+                'type' => 'text',
+                'text' => $text
+            ];
+        }
+        if ($type == 'location') {
+            $message['messages'][] = [
+                'type' => 'location',
+                'title' => $text['title'] ?: 'Location',
+                'address' => $text['title'],
+                'latitude' => $text['lat'],
+                'longitude' => $text['long']
+            ];
+        }
 
         $response = $httpClient->post('https://api.line.me/v2/bot/message/push', [
             'headers' => $headers,
