@@ -482,7 +482,7 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $consume = Consume::select('slug_name', 'consume_name')
+            $consume = Consume::select('slug_name', 'consume_name','consume_type')
                 ->where('created_by',$user_id)
                 ->orderby('consume_name','asc')
                 ->get();
