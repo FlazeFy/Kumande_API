@@ -78,6 +78,12 @@ class Validation
         ]);
     }
 
+    public static function getValidateAddReminder($request){ 
+        return Validator::make($request->all(), [
+            'reminder_id' => 'required|min:36|max:36|string',
+        ]);
+    }
+
     public static function getValidateUpdateUserTimezone($request){ 
         return Validator::make($request->all(), [
             'timezone' => 'nullable|min:6|max:6|string',

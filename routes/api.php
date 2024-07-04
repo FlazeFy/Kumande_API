@@ -22,23 +22,10 @@ use App\Http\Controllers\UserApi\Commands as CommandUserApi;
 use App\Http\Controllers\TagApi\Queries as QueryTagApi;
 use App\Http\Controllers\TagApi\Commands as CommandTagApi;
 use App\Http\Controllers\ReminderApi\Queries as QueryReminderApi;
+use App\Http\Controllers\ReminderApi\Commands as CommandReminderApi;
+
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ConsumeListController;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
 
 Route::post('/v1/login', [CommandAuthApi::class, 'login']);
 Route::post('/v1/logout', [QueryAuthApi::class, 'logout'])->middleware(['auth:sanctum']);
@@ -79,6 +66,8 @@ Route::prefix('/v1/tag')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('/v1/reminder')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueryReminderApi::class, 'getListReminder']);
+    Route::post('/rel', [CommandReminderApi::class, 'createReminderRel']);
+    Route::delete('/rel/{id}', [CommandReminderApi::class, 'deleteReminderRel']);
 });
 
 Route::prefix('/v1/count')->middleware(['auth:sanctum'])->group(function () {
