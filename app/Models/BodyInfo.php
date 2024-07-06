@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RelReminderUsed extends Model
+class BodyInfo extends Model
 {
     use HasFactory;
     public $incrementing = false;
     public $timestamps = false;
 
-    protected $table = 'rel_reminder_used';
+    protected $table = 'body_info';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'reminder_id', 'created_by', 'created_at'];
+    protected $fillable = ['id', 'blood_pressure', 'blood_glucose', 'gout', 'cholesterol', 'created_at', 'created_by'];
 }

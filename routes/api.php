@@ -18,6 +18,7 @@ use App\Http\Controllers\BudgetApi\Commands as CommandsBudgetApi;
 use App\Http\Controllers\CountApi\QueriesCalorie as QueryCountApi;
 use App\Http\Controllers\CountApi\CommandsCalorie as CommandsCountCalorie;
 use App\Http\Controllers\UserApi\Queries as QueryUserApi;
+use App\Http\Controllers\UserApi\QueriesBodyInfo as QueryBodyInfoApi;
 use App\Http\Controllers\UserApi\Commands as CommandUserApi;
 use App\Http\Controllers\TagApi\Queries as QueryTagApi;
 use App\Http\Controllers\TagApi\Commands as CommandTagApi;
@@ -100,6 +101,8 @@ Route::prefix('/v1/schedule')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('/v1/user')->group(function () {
     Route::get('/', [QueryUserApi::class, 'getMyProfile'])->middleware(['auth:sanctum']);
+    Route::get('/body_info', [QueryBodyInfoApi::class, 'getMyLatestBodyInfo'])->middleware(['auth:sanctum']);
+
     Route::put('/edit', [CommandUserApi::class, 'updateUser'])->middleware(['auth:sanctum']);
     Route::put('/edit_telegram_id', [CommandUserApi::class, 'updateTelegramId'])->middleware(['auth:sanctum']);
     Route::put('/edit_timezone', [CommandUserApi::class, 'updateTimezone'])->middleware(['auth:sanctum']);

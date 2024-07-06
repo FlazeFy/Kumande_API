@@ -36,7 +36,7 @@ class Commands extends Controller
                 if ($res) {
                     return response()->json([
                         'status' => 'success',
-                        'message' => "Reminder created", 
+                        'message' => "Reminder turned on!", 
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
@@ -63,7 +63,7 @@ class Commands extends Controller
             if ($res) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Reminder deleted", 
+                    'message' => "Reminder turned off!", 
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
