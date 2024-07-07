@@ -116,6 +116,15 @@ class Validation
         ]);
     }
 
+    public static function getValidateBodyInfo($request){ 
+        return Validator::make($request->all(), [
+            'blood_pressure' => 'required|string|min:5|max:7',
+            'blood_glucose' => 'required|numeric|min:0|max:400',
+            'gout' => 'required|double|min:0|max:10',
+            'cholesterol' => 'required|numeric|min:0|max:400',
+        ]);
+    }
+
     public static function isValidUTCOffset($val) {
         $pattern = '/^([+-](?:0[0-9]|1[0-4]):[0-5][0-9])$/';
         

@@ -107,5 +107,9 @@ Route::prefix('/v1/user')->group(function () {
     Route::put('/edit_telegram_id', [CommandUserApi::class, 'updateTelegramId'])->middleware(['auth:sanctum']);
     Route::put('/edit_timezone', [CommandUserApi::class, 'updateTimezone'])->middleware(['auth:sanctum']);
     Route::put('/image', [CommandUserApi::class, 'updateImage'])->middleware(['auth:sanctum']);
+    
     Route::post('/create', [CommandUserApi::class, 'createUser']);
+    Route::post('/body_info/create', [QueryBodyInfoApi::class, 'createBodyInfo'])->middleware(['auth:sanctum']);;
+
+    Route::delete('/body_info/delete/{id}', [QueryBodyInfoApi::class, 'deleteBodyInfo'])->middleware(['auth:sanctum']);;
 });
