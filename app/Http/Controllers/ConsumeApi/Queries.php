@@ -366,7 +366,7 @@ class Queries extends Controller
                 $cal = Query::querySelect("get_from_json_col","consume_detail","calorie");
 
                 $csm = Consume::selectRaw("
-                    SUM($cal) as calorie, consume_type
+                    CAST(SUM($cal)as UNSIGNED) as calorie, consume_type
                 ")
                 ->where('created_by', $user_id)
                 ->groupby('consume_type');

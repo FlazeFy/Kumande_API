@@ -125,6 +125,7 @@ class Queries extends Controller
                     }
 
                     $bdt[$idx]->payment_history = $pyt;
+                    $bdt[$idx]->remain_budget = $dt->budget_total - $pyt->total_price;
                 }
 
                 return response()->json([
