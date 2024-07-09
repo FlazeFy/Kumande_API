@@ -62,6 +62,11 @@ class GetStatsApiTest extends TestCase
         $this->templateTest->templateValidateColumn($data['data'], $stringNullableFields, 'string', true);
         $this->templateTest->templateValidateColumn($data['data'], $arrayFields, 'array', false);
         $this->templateTest->templateValidateColumn($data['data'], $arrayNullableFields, 'array', true);
+
+        // Validate contain
+        $consumeTypeRule = ['Food','Snack','Drink'];
+
+        $this->templateTest->templateValidateContain($data['data'], $consumeTypeRule, 'consume_type');
     }
 
     // TC-S002
@@ -135,6 +140,11 @@ class GetStatsApiTest extends TestCase
         // Validate column
         $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
         $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
+
+        // Validate contain
+        $consumeTypeRule = ['Food','Snack','Drink'];
+
+        $this->templateTest->templateValidateContain($data['data'], $consumeTypeRule, 'context');
     }
 
     // TC-S005
@@ -157,6 +167,11 @@ class GetStatsApiTest extends TestCase
         // Validate column
         $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
         $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
+
+        // Validate contain
+        $consumeFromRule = ['GoFood','GrabFood','ShopeeFood','Dine-In','Take Away'];
+
+        $this->templateTest->templateValidateContain($data['data'], $consumeFromRule, 'context');
     }
 
     // TC-S006
@@ -227,6 +242,10 @@ class GetStatsApiTest extends TestCase
         // Validate column
         $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
         $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
+
+        // Validate contain
+        $monthNameShort = Generator::getMonthName('all','short');
+        $this->templateTest->templateValidateContain($data['data'], $monthNameShort, 'context');
     }
 
     // TC-S011
@@ -294,6 +313,10 @@ class GetStatsApiTest extends TestCase
         // Validate column
         $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
         $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
+
+        // Validate contain
+        $monthNameShort = Generator::getMonthName('all','short');
+        $this->templateTest->templateValidateContain($data['data'], $monthNameShort, 'context');
     }
  
     // TC-C001
@@ -314,6 +337,13 @@ class GetStatsApiTest extends TestCase
 
         // Validate column
         $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
+
+        // Validate contain
+        $timeRule = ['Breakfast','Lunch','Dinner'];
+        $dayName = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+        $this->templateTest->templateValidateContain($data['data'], $timeRule, 'time');
+        $this->templateTest->templateValidateContain($data['data'], $dayName, 'day');
     }
  
     // TC-C002
@@ -393,6 +423,11 @@ class GetStatsApiTest extends TestCase
         // Validate column
         $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
         $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
+
+        // Validate contain
+        $consumeTypeRule = ['Food','Snack','Drink'];
+
+        $this->templateTest->templateValidateContain($data['data'], $consumeTypeRule, 'consume_type');
     }
 
     public function test_get_calorie_max_min(): void

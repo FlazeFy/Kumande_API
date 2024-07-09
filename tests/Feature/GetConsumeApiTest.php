@@ -81,6 +81,11 @@ class GetConsumeApiTest extends TestCase
         $stringFields = ['slug_name','consume_name','consume_type'];
 
         $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
+
+        // Validate contain
+        $consumeTypeRule = ['Food','Snack','Drink'];
+
+        $this->templateTest->templateValidateContain($data['data'], $consumeTypeRule, 'consume_type');
     }
 
     public function test_get_all_consume(): void
@@ -111,5 +116,15 @@ class GetConsumeApiTest extends TestCase
         $this->templateTest->templateValidateColumn($data['data']['data'], $stringNullableFields, 'string', true);
         $this->templateTest->templateValidateColumn($data['data']['data'], $arrayFields, 'array', false);
         $this->templateTest->templateValidateColumn($data['data']['data'], $integerFields, 'integer', false);
+
+        // Validate contain
+        $consumeFromRule = ['GoFood','GrabFood','ShopeeFood','Dine-In','Take Away'];
+        $isFavoriteRule = [1,0];
+        $consumeTypeRule = ['Food','Snack','Drink'];
+
+        $this->templateTest->templateValidateContain($data['data']['data'], $consumeFromRule, 'consume_from');
+        $this->templateTest->templateValidateContain($data['data']['data'], $isFavoriteRule, 'is_favorite');
+        $this->templateTest->templateValidateContain($data['data']['data'], $isFavoriteRule, 'is_payment');
+        $this->templateTest->templateValidateContain($data['data']['data'], $consumeTypeRule, 'consume_type');
     }
 }

@@ -58,5 +58,10 @@ class GetReminderApiTest extends TestCase
         $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
         $this->templateTest->templateValidateColumn($data['data'], $stringNullableFields, 'string', true);
         $this->templateTest->templateValidateColumn($data['data'], $arrayNullableFields, 'array', true);
+
+        // Validate contain
+        $reminderTypeRule = ['Every Day','Every Week','Every Month','Every Year','Custom'];
+
+        $this->templateTest->templateValidateContain($data['data'], $reminderTypeRule, 'reminder_type');
     }
 }

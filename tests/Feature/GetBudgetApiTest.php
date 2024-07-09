@@ -49,6 +49,10 @@ class GetBudgetApiTest extends TestCase
 
         $this->templateTest->templateGet($response, $is_paginate);
 
+        // Validate contain
+        $monthNameShort = Generator::getMonthName('all','short');
+        $this->templateTest->templateValidateContain($data['data'], $monthNameShort, 'month');
+
         // Get list key / column
         $stringFields = ['month','year'];
         $intFields = ['budget_total'];
