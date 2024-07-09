@@ -26,22 +26,37 @@ class GetReminderApiTest extends TestCase
             'http_errors' => false
         ]);
 
+        // Auth API Token
         $this->authTest = new AuthApiTest();
         $this->authTest->setUp();
-
         $this->token = $this->authTest->test_post_login();
+
+        // Template
+        $this->templateTest = new TestTemplate();
     }
 
     public function test_get_my_reminder(): void
     {
+        $is_paginate = false;
+
         $token = $this->authTest->test_post_login();
         $response = $this->httpClient->get("/api/v1/reminder", [
             'headers' => [
                 'Authorization' => "Bearer {$this->token}"
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);
-        $this->assertArrayHasKey('message', $data);
+
+        $this->templateTest->templateGet($response, $is_paginate);
+
+        // Get list key / column
+        $stringFields = ['reminder_id','reminder_name','reminder_type','reminder_body'];
+        $stringNullableFields = ['id_rel_reminder'];
+        $arrayNullableFields = ['reminder_context','reminder_attachment'];
+
+        // Validate column
+        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
+        $this->templateTest->templateValidateColumn($data['data'], $stringNullableFields, 'string', true);
+        $this->templateTest->templateValidateColumn($data['data'], $arrayNullableFields, 'array', true);
     }
 }

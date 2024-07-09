@@ -209,4 +209,27 @@ class Generator
 
         return $res;
     }
+
+    public static function getMonthName($idx, $type){
+        $monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        $res = null;
+    
+        if ($idx !== 'all') {
+            if ($type == 'full') {
+                $res = $monthNames[$idx];
+            } elseif ($type == 'short') {
+                $res = substr($monthNames[$idx], 0, 3);
+            }
+        } else {
+            if ($type == 'full') {
+                $res = $monthNames;
+            } else {
+                $res = array_map(function($name) {
+                    return substr($name, 0, 3);
+                }, $monthNames);
+            }
+        }
+    
+        return $res;
+    }
 }

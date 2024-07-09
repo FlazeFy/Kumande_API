@@ -26,22 +26,35 @@ class GetTagApiTest extends TestCase
             'http_errors' => false
         ]);
 
+        // Auth API Token
         $this->authTest = new AuthApiTest();
         $this->authTest->setUp();
-
         $this->token = $this->authTest->test_post_login();
+
+        // Template
+        $this->templateTest = new TestTemplate();
     }
 
     public function test_get_all_tag(): void
     {
+        $is_paginate = false;
+        
         $token = $this->authTest->test_post_login();
         $response = $this->httpClient->get("/api/v1/tag", [
             'headers' => [
                 'Authorization' => "Bearer {$this->token}"
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);
-        $this->assertArrayHasKey('message', $data);
+       
+        $this->templateTest->templateGet($response, $is_paginate);
+
+        // Get list key / column
+        $stringFields = ['tag_slug','tag_name'];
+        $stringNullableFields = ['created_by'];
+
+        // Validate column
+        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
+        $this->templateTest->templateValidateColumn($data['data'], $stringNullableFields, 'string', true);
     }
 }

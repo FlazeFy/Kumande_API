@@ -17,6 +17,7 @@ class GetStatsApiTest extends TestCase
     protected $httpClient;
 
     private $authTest;
+    private $is_paginate;
 
     protected function setUp(): void
     {
@@ -26,10 +27,15 @@ class GetStatsApiTest extends TestCase
             'http_errors' => false
         ]);
 
+        // Auth API Token
         $this->authTest = new AuthApiTest();
         $this->authTest->setUp();
-
         $this->token = $this->authTest->test_post_login();
+
+        // Template
+        $this->templateTest = new TestTemplate();
+
+        $this->is_paginate = false;
     }
 
     // TC-S001
@@ -41,9 +47,21 @@ class GetStatsApiTest extends TestCase
                 'Authorization' => "Bearer {$this->token}"
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);
-        $this->assertArrayHasKey('message', $data);
+
+        $this->templateTest->templateGet($response, $this->is_paginate);
+
+        // Get list key / column
+        $arrayFields = ['consume_detail','schedule_time'];
+        $arrayNullableFields = ['schedule_tag'];
+        $stringFields = ['id','schedule_consume','consume_type','created_at','created_by'];
+        $stringNullableFields = ['firebase_id','consume_id','schedule_desc'];
+
+        // Validate column
+        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
+        $this->templateTest->templateValidateColumn($data['data'], $stringNullableFields, 'string', true);
+        $this->templateTest->templateValidateColumn($data['data'], $arrayFields, 'array', false);
+        $this->templateTest->templateValidateColumn($data['data'], $arrayNullableFields, 'array', true);
     }
 
     // TC-S002
@@ -61,9 +79,15 @@ class GetStatsApiTest extends TestCase
                 'Authorization' => "Bearer {$this->token}"
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);
-        $this->assertArrayHasKey('message', $data);
+        
+        $this->templateTest->templateGet($response, $this->is_paginate);
+
+        // Get list key / column
+        $intFields = ['average','max','min','total'];
+
+        // Validate column
+        $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
     }
 
     // TC-S003
@@ -80,12 +104,18 @@ class GetStatsApiTest extends TestCase
                 'Authorization' => "Bearer {$this->token}"
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);
-        $this->assertArrayHasKey('message', $data);
+       
+        $this->templateTest->templateGet($response, $this->is_paginate);
+
+        // Get list key / column
+        $intFields = ['total','target'];
+
+        // Validate column
+        $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
     }
 
-    // TC-S004
+    // TC-S004 && TC-S013
     public function test_get_most_consume_type(): void
     {
         $token = $this->authTest->test_post_login();
@@ -94,9 +124,17 @@ class GetStatsApiTest extends TestCase
                 'Authorization' => "Bearer {$this->token}"
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);
-        $this->assertArrayHasKey('message', $data);
+        
+        $this->templateTest->templateGet($response, $this->is_paginate);
+
+        // Get list key / column
+        $stringFields = ['context'];
+        $intFields = ['total'];
+
+        // Validate column
+        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
+        $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
     }
 
     // TC-S005
@@ -108,9 +146,17 @@ class GetStatsApiTest extends TestCase
                 'Authorization' => "Bearer {$this->token}"
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);
-        $this->assertArrayHasKey('message', $data);
+        
+        $this->templateTest->templateGet($response, $this->is_paginate);
+
+        // Get list key / column
+        $intFields = ['total'];
+        $stringFields = ['context'];
+
+        // Validate column
+        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
+        $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
     }
 
     // TC-S006
@@ -122,9 +168,18 @@ class GetStatsApiTest extends TestCase
                 'Authorization' => "Bearer {$this->token}"
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);
-        $this->assertArrayHasKey('message', $data);
+        
+        $this->templateTest->templateGet($response, $this->is_paginate);
+
+        // Get list key / column
+        $intFields = ['total'];
+        $stringFields = ['context'];
+
+        // Validate column
+        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
+        $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
+
     }
 
     // TC-S007
@@ -136,16 +191,17 @@ class GetStatsApiTest extends TestCase
                 'Authorization' => "Bearer {$this->token}"
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);
-        $this->assertArrayHasKey('message', $data);
-    }
+        
+        $this->templateTest->templateGet($response, $this->is_paginate);
 
-    // TC-S009
-    public function test_get_total_daily_calorie_this_month(): void
-    {
-        // Notes : Same api with TC-C003
-        $this->test_get_calendar_daily_calorie(); 
+        // Get list key / column
+        $intFields = ['total'];
+        $stringFields = ['context'];
+
+        // Validate column
+        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
+        $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
     }
 
     // TC-S010
@@ -160,9 +216,17 @@ class GetStatsApiTest extends TestCase
                 'Authorization' => "Bearer {$this->token}"
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);
-        $this->assertArrayHasKey('message', $data);
+        
+        $this->templateTest->templateGet($response, $this->is_paginate);
+
+        // Get list key / column
+        $stringFields = ['context'];
+        $intFields = ['total'];
+
+        // Validate column
+        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
+        $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
     }
 
     // TC-S011
@@ -174,9 +238,15 @@ class GetStatsApiTest extends TestCase
                 'Authorization' => "Bearer {$this->token}"
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);
-        $this->assertArrayHasKey('message', $data);
+        
+        $this->templateTest->templateGet($response, $this->is_paginate);
+
+        // Get list key / column
+        $intFields = ['total_days','total_payment'];
+
+        // Validate column
+        $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
     }
 
     // TC-S012
@@ -188,9 +258,17 @@ class GetStatsApiTest extends TestCase
                 'Authorization' => "Bearer {$this->token}"
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);
-        $this->assertArrayHasKey('message', $data);
+        
+        $this->templateTest->templateGet($response, $this->is_paginate);
+
+        // Get list key / column
+        $intFields = ['weight','height','result'];
+        $stringFields = ['created_at'];
+
+        // Validate column
+        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
+        $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
     }
 
     // TC-S008
@@ -205,23 +283,17 @@ class GetStatsApiTest extends TestCase
                 'Authorization' => "Bearer {$this->token}"
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);
-        $this->assertArrayHasKey('message', $data);
-    }
- 
-    // TC-S013
-    public function test_get_consume_total(): void
-    {
-        $token = $this->authTest->test_post_login();
-        $response = $this->httpClient->get("/api/v1/consume/total/bytype", [
-            'headers' => [
-                'Authorization' => "Bearer {$this->token}"
-            ]
-        ]);
-        $this->assertEquals(200, $response->getStatusCode());
-        $data = json_decode($response->getBody(), true);
-        $this->assertArrayHasKey('message', $data);
+        
+        $this->templateTest->templateGet($response, $this->is_paginate);
+
+        // Get list key / column
+        $intFields = ['total'];
+        $stringFields = ['context'];
+
+        // Validate column
+        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
+        $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
     }
  
     // TC-C001
@@ -233,9 +305,15 @@ class GetStatsApiTest extends TestCase
                 'Authorization' => "Bearer {$this->token}"
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);
-        $this->assertArrayHasKey('message', $data);
+        
+        $this->templateTest->templateGet($response, $this->is_paginate);
+
+        // Get list key / column
+        $stringFields = ['day','time','schedule_consume'];
+
+        // Validate column
+        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
     }
  
     // TC-C002
@@ -253,12 +331,20 @@ class GetStatsApiTest extends TestCase
                 'Authorization' => "Bearer {$this->token}"
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);
-        $this->assertArrayHasKey('message', $data);
+        
+        $this->templateTest->templateGet($response, $this->is_paginate);
+
+        // Get list key / column
+        $intFields = ['total'];
+        $stringFields = ['context'];
+
+        // Validate column
+        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
+        $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);        
     }
  
-    // TC-C003
+    // TC-C003 && TC-S009
     public function test_get_calendar_daily_calorie(): void
     {
         $randDate = Generator::getRandDate();
@@ -273,8 +359,58 @@ class GetStatsApiTest extends TestCase
                 'Authorization' => "Bearer {$this->token}"
             ]
         ]);
-        $this->assertEquals(200, $response->getStatusCode());
         $data = json_decode($response->getBody(), true);
-        $this->assertArrayHasKey('message', $data);
+        
+        $this->templateTest->templateGet($response, $this->is_paginate);
+
+        // Get list key / column
+        $intFields = ['total'];
+        $stringFields = ['context'];
+
+        // Validate column
+        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
+        $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
+    }
+
+    public function test_get_calorie_total_by_consume_type(): void
+    {
+        $type = "all";
+
+        $token = $this->authTest->test_post_login();
+        $response = $this->httpClient->get("/api/v1/consume/calorie/bytype/$type", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ]
+        ]);
+        $data = json_decode($response->getBody(), true);
+        
+        $this->templateTest->templateGet($response, $this->is_paginate);
+
+        // Get list key / column
+        $intFields = ['calorie'];
+        $stringFields = ['consume_type'];
+
+        // Validate column
+        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
+        $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
+    }
+
+    public function test_get_calorie_max_min(): void
+    {
+        $token = $this->authTest->test_post_login();
+        $response = $this->httpClient->get("/api/v1/consume/calorie/maxmin", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ]
+        ]);
+        $data = json_decode($response->getBody(), true);
+        
+        $this->templateTest->templateGet($response, $this->is_paginate);
+
+        // Get list key / column
+        $intFields = ['max_calorie','min_calorie','avg_calorie'];
+
+        // Validate column
+        $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
     }
 }
