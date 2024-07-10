@@ -69,7 +69,9 @@ Route::prefix('/v1/tag')->middleware(['auth:sanctum'])->group(function () {
 Route::prefix('/v1/reminder')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueryReminderApi::class, 'getListReminder']);
     Route::post('/rel', [CommandReminderApi::class, 'createReminderRel']);
+    Route::post('/add', [CommandReminderApi::class, 'createReminder']);
     Route::delete('/rel/{id}', [CommandReminderApi::class, 'deleteReminderRel']);
+    Route::delete('/delete/{id}', [CommandReminderApi::class, 'deleteReminder']);
 });
 
 Route::prefix('/v1/count')->middleware(['auth:sanctum'])->group(function () {

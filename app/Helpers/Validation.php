@@ -78,9 +78,18 @@ class Validation
         ]);
     }
 
-    public static function getValidateAddReminder($request){ 
+    public static function getValidateAddReminderRel($request){ 
         return Validator::make($request->all(), [
             'reminder_id' => 'required|min:36|max:36|string',
+        ]);
+    }
+
+    public static function getValidateAddReminder($request){ 
+        return Validator::make($request->all(), [
+            'reminder_name' => 'required|string|min:2|max:75',
+            'reminder_body' =>  'required|string|min:2|max:255',
+            'reminder_context' => 'nullable|json',
+            'reminder_attachment' => 'nullable|json'
         ]);
     }
 
