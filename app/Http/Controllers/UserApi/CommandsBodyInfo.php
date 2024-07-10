@@ -39,7 +39,6 @@ class CommandsBodyInfo extends Controller
                     return response()->json([
                         'status' => 'success',
                         'message' => 'Body info created',
-                        'data' => $user
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
@@ -59,21 +58,39 @@ class CommandsBodyInfo extends Controller
     public function deleteBodyInfo(Request $request, $id){
         try {
             $user_id = $request->user()->id;
+            $success = 0;
+            $failed = 0;
+            $ids = explode(",", $id);
 
-            $res = BodyInfo::where('created_by',$user_id)
-                ->where('id',$id)
-                ->delete();
+            foreach($ids as $dt){
+                $res = BodyInfo::where('created_by',$user_id)
+                    ->where('id',$dt)
+                    ->delete();
 
-            if($res){
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Body info deleted',
-                ], Response::HTTP_OK);
+                if($res){
+                    $success++;
+                } else {
+                    $failed++;
+                }
+            }
+
+            if(count($ids) > 0){
+                if($success > 0){
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => "$success Body info deleted",
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'Body info not found',
+                    ], Response::HTTP_NOT_FOUND);
+                }
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Body info not found',
-                ], Response::HTTP_NOT_FOUND);
+                    'message' => 'id not valid'
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         } catch(\Exception $err) {
             return response()->json([

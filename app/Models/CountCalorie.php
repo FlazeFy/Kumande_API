@@ -15,6 +15,6 @@ class CountCalorie extends Model
     protected $table = 'count_calorie';
     protected $primaryKey = 'id';
     public $timestamps = false;
-    protected $fillable = ['id', 'firebase_id', 'weight', 'height', 'result', 'created_at', 'created_by', 'deleted_at', 'deleted_by'];
+    protected $fillable = ['id', 'firebase_id', 'weight', 'height', 'result', 'created_at', 'created_by'];
 
 }

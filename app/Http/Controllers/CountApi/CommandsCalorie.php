@@ -60,4 +60,49 @@ class CommandsCalorie extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function deleteCountCalorie(Request $request, $id){
+        try {
+            $user_id = $request->user()->id;
+            $success = 0;
+            $failed = 0;
+            $ids = explode(",", $id);
+
+            foreach($ids as $dt){
+                $res = CountCalorie::where('created_by',$user_id)
+                    ->where('id',$dt)
+                    ->delete();
+
+                if($res){
+                    $success++;
+                } else {
+                    $failed++;
+                }
+            }
+
+            if(count($ids) > 0){
+                if($success > 0){
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => "$success Calorie data deleted",
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'Calorie data not found',
+                    ], Response::HTTP_NOT_FOUND);
+                }
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'id not valid'
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
+        } catch(\Exception $err) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $err->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -19,6 +19,7 @@ use App\Http\Controllers\CountApi\QueriesCalorie as QueryCountApi;
 use App\Http\Controllers\CountApi\CommandsCalorie as CommandsCountCalorie;
 use App\Http\Controllers\UserApi\Queries as QueryUserApi;
 use App\Http\Controllers\UserApi\QueriesBodyInfo as QueryBodyInfoApi;
+use App\Http\Controllers\UserApi\CommandsBodyInfo as CommandBodyInfoApi;
 use App\Http\Controllers\UserApi\Commands as CommandUserApi;
 use App\Http\Controllers\TagApi\Queries as QueryTagApi;
 use App\Http\Controllers\TagApi\Commands as CommandTagApi;
@@ -76,6 +77,8 @@ Route::prefix('/v1/count')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/calorie', [CommandsCountCalorie::class, 'createCountCalorie']);
     Route::get('/calorie/fulfill/{date}', [QueryCountApi::class, 'getFulfillCalorie']);
     Route::get('/payment', [QueryPaymentApi::class, 'getLifetimeSpend']);
+
+    Route::delete('/calorie/{id}', [CommandsCountCalorie::class, 'deleteCountCalorie']);
 });
 
 Route::prefix('/v1/budget')->middleware(['auth:sanctum'])->group(function () {
@@ -102,6 +105,7 @@ Route::prefix('/v1/schedule')->middleware(['auth:sanctum'])->group(function () {
 Route::prefix('/v1/user')->group(function () {
     Route::get('/', [QueryUserApi::class, 'getMyProfile'])->middleware(['auth:sanctum']);
     Route::get('/body_info', [QueryBodyInfoApi::class, 'getMyLatestBodyInfo'])->middleware(['auth:sanctum']);
+    Route::get('/my_body_history', [QueryBodyInfoApi::class, 'getMyBodyHistory'])->middleware(['auth:sanctum']);
 
     Route::put('/edit', [CommandUserApi::class, 'updateUser'])->middleware(['auth:sanctum']);
     Route::put('/edit_telegram_id', [CommandUserApi::class, 'updateTelegramId'])->middleware(['auth:sanctum']);
@@ -109,7 +113,7 @@ Route::prefix('/v1/user')->group(function () {
     Route::put('/image', [CommandUserApi::class, 'updateImage'])->middleware(['auth:sanctum']);
     
     Route::post('/create', [CommandUserApi::class, 'createUser']);
-    Route::post('/body_info/create', [QueryBodyInfoApi::class, 'createBodyInfo'])->middleware(['auth:sanctum']);;
+    Route::post('/body_info/create', [CommandBodyInfoApi::class, 'createBodyInfo'])->middleware(['auth:sanctum']);;
 
-    Route::delete('/body_info/delete/{id}', [QueryBodyInfoApi::class, 'deleteBodyInfo'])->middleware(['auth:sanctum']);;
+    Route::delete('/body_info/delete/{id}', [CommandBodyInfoApi::class, 'deleteBodyInfo'])->middleware(['auth:sanctum']);;
 });

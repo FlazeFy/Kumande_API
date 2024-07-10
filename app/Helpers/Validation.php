@@ -120,7 +120,7 @@ class Validation
         return Validator::make($request->all(), [
             'blood_pressure' => 'required|string|min:5|max:7',
             'blood_glucose' => 'required|numeric|min:0|max:400',
-            'gout' => 'required|double|min:0|max:10',
+            'gout' => 'required|numeric|min:0|max:10',
             'cholesterol' => 'required|numeric|min:0|max:400',
         ]);
     }
