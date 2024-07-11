@@ -5,6 +5,7 @@ use App\Models\Budget;
 use App\Models\Consume;
 use App\Models\User;
 use App\Models\Schedule;
+use App\Models\Tag;
 
 class Generator
 {
@@ -72,44 +73,6 @@ class Generator
         return $res;
     }
 
-    public static function getConsumeFromCode($from){
-        if($from == "GoFood"){
-            return "GFD";
-        } else if($from == "GrabFood"){
-            return "GBF";
-        } else if($from == "ShopeeFood"){
-            return "SPF";
-        } else if($from == "Others"){
-            return "OTH";
-        } else if($from == "Home"){
-            return "HOM";
-        }
-    }
-
-    public static function getConsumeTimeCode(){
-        $now = date("Y-m-d H:i:s");
-        $hour = date("h", strtotime($now));
-
-        if($hour > 5 && $hour <= 10){
-            $res = "B"; //Breakfast
-        } else if($hour > 10 && $hour <= 15){
-            $res = "L"; //Lunch
-        } else if($hour > 15 && $hour <= 22){
-            $res = "D"; //Dinner
-        } else {
-            $res = "S"; //Snack
-        }
-        return $res;
-    }
-
-    public static function getConsumeCode($type){
-        if($type == "Food"){
-            return "FD";
-        } else { //Drink
-            return "DR";
-        }
-    }
-
     public static function getSlug($val, $type){ 
         $replace = str_replace(" ","-", $val);
         $replace = str_replace("_","-", $replace);
@@ -132,6 +95,11 @@ class Generator
                 ->get();
         } else if($type == "schedule"){
             $check = Schedule::select('slug_name')
+                ->where('slug_name', $replace)
+                ->limit(1)
+                ->get();
+        } else if($type == "tag"){
+            $check = Tag::select('slug_name')
                 ->where('slug_name', $replace)
                 ->limit(1)
                 ->get();

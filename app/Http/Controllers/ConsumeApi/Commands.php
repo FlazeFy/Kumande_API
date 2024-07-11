@@ -138,6 +138,12 @@ class Commands extends Controller
                     $detail = json_decode($jsonDetail, true);
                     $tag = json_decode($jsonTag, true);
 
+                    if($request->created_at){
+                        $created_at = $request->created_at;
+                    } else {
+                        $created_at = date("Y-m-d H:i:s");
+                    }
+
                     $csm = Consume::create([
                         'id' => $id,
                         'slug_name' => $slug,
@@ -149,7 +155,7 @@ class Commands extends Controller
                         'is_favorite' => $request->is_favorite,
                         'consume_tag' => $tag,
                         'consume_comment' => $request->consume_comment,
-                        'created_at' => date("Y-m-d H:i:s"),
+                        'created_at' => $created_at,
                         'updated_at' => null,
                         'deleted_at' => null,
                         'created_by' => $user_id,
@@ -160,17 +166,20 @@ class Commands extends Controller
                     $id = $name_ava;
                 }
 
-                $pym = Payment::create([
-                    'id' => Generator::getUUID(),
-                    'consume_id' => $id,
-                    'payment_method' => $request->payment_method,  
-                    'payment_price' => $request->payment_price,
-                    'is_payment' => $request->is_payment,
-                    'created_at' => date("Y-m-d H:i:s"),
-                    'updated_at' => null,
-                    'created_by' => $user_id,
-                    'updated_by' => null,
-                ]);
+                if($request->payment_price != 0 && ($request->payment_method != "Free" || $request->payment_method != "Gift")){
+                    $pym = Payment::create([
+                        'id' => Generator::getUUID(),
+                        'consume_id' => $id,
+                        'payment_method' => $request->payment_method,  
+                        'payment_price' => $request->payment_price,
+                        'is_payment' => $request->is_payment,
+                        'created_at' => $created_at,
+                        'updated_at' => null,
+                        'created_by' => $user_id,
+                        'updated_by' => null,
+                    ]);
+                    $payment_only = false;
+                }
 
                 $user = User::getProfile($user_id);
                 $fcm_token = $user->firebase_fcm_token;

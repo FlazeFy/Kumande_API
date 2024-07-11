@@ -32,7 +32,7 @@ class Queries extends Controller
             $user_id = $request->user()->id;
 
             $csm = Consume::selectRaw('consume.id, slug_name, consume_type, consume_name, consume_detail, consume_from, is_favorite, consume_tag, consume_comment, consume.created_at, payment_method, payment_price, is_payment')
-                ->join('payment', 'payment.consume_id', '=', 'consume.id')
+                ->leftjoin('payment', 'payment.consume_id', '=', 'consume.id')
                 ->whereNull('deleted_at')
                 ->where('consume.created_by', $user_id);
 
@@ -53,6 +53,7 @@ class Queries extends Controller
 
             $csm = $csm->orderBy('consume.created_at', $order)
                 ->orderBy('slug_name', $order)
+                ->groupby('consume.id')
                 ->paginate($page_limit);
         
             if ($csm->count() > 0) {
@@ -157,7 +158,7 @@ class Queries extends Controller
                 ->where('slug_name', $slug)
                 ->first();
 
-            if ($consume->count() > 0) {
+            if ($consume) {
                 $payment = Payment::select('payment_method','payment_price','payment.created_at','payment.updated_at')
                     ->join('consume','consume.id','=','payment.consume_id')
                     ->where('payment.created_by', $user_id)
@@ -199,6 +200,7 @@ class Queries extends Controller
             $csm = DB::select(DB::raw("SELECT 
                     REPLACE(JSON_EXTRACT(consume_detail, '$[0].main_ing'), '\"', '') as context, count(1) as total
                     FROM consume
+                    WHERE created_by = '$user_id'
                     GROUP BY 1
                     ORDER BY 2 DESC
                     LIMIT 8
@@ -237,6 +239,7 @@ class Queries extends Controller
             $csm = DB::select(DB::raw("SELECT 
                     REPLACE(JSON_EXTRACT(consume_detail, '$[0].provide'), '\"', '') as context, count(1) as total
                     FROM consume
+                    WHERE created_by = '$user_id'
                     GROUP BY 1
                     ORDER BY 2 DESC
                     LIMIT 8
@@ -276,6 +279,7 @@ class Queries extends Controller
                     DAY(created_at) as context, SUM(REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '')) as total 
                     FROM consume
                     WHERE MONTH(created_at) = ".$month."
+                    AND created_by = '$user_id'
                     AND YEAR(created_at) = ".$year."
                     GROUP BY 1
                     ORDER BY 2 DESC
@@ -414,42 +418,52 @@ class Queries extends Controller
             $user_id = $request->user()->id;
             $is_ctx_valid = true;
 
-            $consume = Consume::selectRaw('slug_name, consume_type, consume_name, consume_detail, consume_from, is_favorite, consume_tag')
+            $consume = Consume::selectRaw('id, slug_name, consume_type, consume_name, consume_detail, consume_from, is_favorite, consume_tag')
                 ->where('created_by',$user_id)
                 ->orderby('created_at','desc');
 
-            if ($ctx == 'provide' || $ctx == 'main_ing') {
-                $consume->whereRaw("REPLACE(JSON_UNQUOTE(JSON_EXTRACT(consume_detail, '$[0].$ctx')), '\"', '') = ?", $target);
-            } else if($ctx == 'consume_from' || $ctx == 'consume_type'){
-                $consume->where($ctx,$target);
-            } else if($ctx == 'month'){
-                $consume->whereRaw("MONTH(created_at) = ?",$target);
-            } else if($ctx == 'month_year'){
-                $date = explode("_", $target);
-                $consume->whereRaw("MONTH(created_at) = ?",$date[0])
-                    ->whereRaw("YEAR(created_at) = ?",$date[1]);
-            } else {
-                $is_ctx_valid = false;
-            }
+            if($ctx != "all"){
+                if ($ctx == 'provide' || $ctx == 'main_ing') {
+                    $consume->whereRaw("REPLACE(JSON_UNQUOTE(JSON_EXTRACT(consume_detail, '$[0].$ctx')), '\"', '') = ?", $target);
+                } else if($ctx == 'consume_from' || $ctx == 'consume_type'){
+                    $consume->where($ctx,$target);
+                } else if($ctx == 'month'){
+                    $consume->whereRaw("MONTH(created_at) = ?",$target);
+                } else if($ctx == 'month_year'){
+                    $date = explode("_", $target);
+                    $consume->whereRaw("MONTH(created_at) = ?",$date[0])
+                        ->whereRaw("YEAR(created_at) = ?",$date[1]);
+                } else {
+                    $is_ctx_valid = false;
+                }
 
-            if($request->limit){
-                $consume = $consume->limit($request->limit)
-                    ->get();
+                if($request->limit){
+                    $consume = $consume->limit($request->limit)
+                        ->get();
+                } 
             } else {
-                $consume = $consume->get();
+                $date = explode("_", $request->date);
+
+                $consume->where(function ($query) use ($request, $date) {
+                    $query->whereRaw("REPLACE(JSON_UNQUOTE(JSON_EXTRACT(consume_detail, '$[0].provide')), '\"', '') = ?", [$request->provide])
+                        ->orWhereRaw("REPLACE(JSON_UNQUOTE(JSON_EXTRACT(consume_detail, '$[0].main_ing')), '\"', '') = ?", [$request->main_ing])
+                        ->orWhere('consume_from', $request->consume_from)
+                        ->orWhere('consume_type', $request->consume_type)
+                        ->orWhereRaw("MONTH(created_at) = ?", [$date[0]])
+                        ->orWhereRaw("YEAR(created_at) = ?", [$date[1]]);
+                    });
             }
+            $consume = $consume->get();
 
             if($is_ctx_valid){
                 if ($consume->count() > 0) {
                     foreach ($consume as $idx => $csm) {
                         $schedule = Schedule::select('schedule_time')
-                            ->where('slug_name', $csm->slug_name)
+                            ->where('id', $csm['id'])
                             ->get();
     
                         $consume[$idx]->schedule = $schedule;
                     }
-    
-                    $consume->schedule = $schedule;
                     
                     return response()->json([
                         'status' => 'success',

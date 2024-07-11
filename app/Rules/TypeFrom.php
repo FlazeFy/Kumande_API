@@ -18,7 +18,7 @@ class TypeFrom implements Rule
 
     public function passes($attribute, $value)
     {
-        $type = ['GoFood','GrabFood','ShopeeFood','Dine-In','Take Away'];
+        $type = ['GoFood','GrabFood','ShopeeFood','Dine-In','Take Away','Cooking'];
 
         foreach ($type as $format) {
             if ($format === $value) {

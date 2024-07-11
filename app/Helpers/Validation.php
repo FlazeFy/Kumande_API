@@ -105,6 +105,12 @@ class Validation
         ]);
     }
 
+    public static function getValidateAddTag($request){ 
+        return Validator::make($request->all(), [
+            'tag_name' => 'required|min:2|max:36|string',
+        ]);
+    }
+
     public static function getValidateCreateSchedule($request){ 
         return Validator::make($request->all(), [
             'schedule_consume' => 'required|string|min:4|max:75',

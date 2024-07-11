@@ -18,7 +18,7 @@ class TypePayment implements Rule
 
     public function passes($attribute, $value)
     {
-        $type = ['GoPay','Ovo','Dana','Link Aja','MBanking','Cash','Gift','Cuppon'];
+        $type = ['GoPay','Ovo','Dana','Link Aja','MBanking','Cash','Gift','Cuppon','Free'];
 
         foreach ($type as $format) {
             if ($format === $value) {

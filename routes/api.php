@@ -62,7 +62,9 @@ Route::prefix('/v1/analytic')->middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::prefix('/v1/tag')->middleware(['auth:sanctum'])->group(function () {
-    Route::get('/', [QueryTagApi::class, 'getMyTag']);
+    Route::get('/', [QueryTagApi::class, 'getAllTag']);
+    Route::get('/my', [QueryTagApi::class, 'getMyTag']);
+    Route::post('/add', [CommandTagApi::class, 'createMyTag']);
     Route::delete('/{id}', [CommandTagApi::class, 'deleteTagById']);
 });
 
