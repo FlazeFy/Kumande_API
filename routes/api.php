@@ -63,6 +63,8 @@ Route::prefix('/v1/analytic')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/payment/month/{month}/year/{year}', [QueryPaymentApi::class, 'getAnalyticSpendMonth']);
     Route::get('/allergic', [QueryAllergicApi::class, 'getAllAllergic']);
     Route::put('/allergic/{id}', [CommandAllergicApi::class, 'updateAllergic']);
+    Route::post('/allergic', [CommandAllergicApi::class, 'createAllergic']);
+    Route::delete('/allergic/{id}', [CommandAllergicApi::class, 'deleteAllergic']);
 });
 
 Route::prefix('/v1/tag')->middleware(['auth:sanctum'])->group(function () {
