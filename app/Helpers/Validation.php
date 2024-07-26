@@ -93,6 +93,13 @@ class Validation
         ]);
     }
 
+    public static function getValidateAllergic($request) {
+        return Validator::make($request->all(), [
+            'allergic_context' => 'required|string|min:2|max:75',
+            'allergic_desc' =>  'nullable|string|min:2|max:255'
+        ]);
+    }
+
     public static function getValidateUpdateUserTimezone($request){ 
         return Validator::make($request->all(), [
             'timezone' => 'nullable|min:6|max:6|string',

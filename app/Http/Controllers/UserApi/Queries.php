@@ -25,7 +25,7 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $usr = User::select('fullname','password','email','gender','born_at','created_at','updated_at')
+            $usr = User::select('id','fullname','password','email','gender','born_at','created_at','updated_at')
                 ->where('id', $user_id)
                 ->limit(1)
                 ->get();

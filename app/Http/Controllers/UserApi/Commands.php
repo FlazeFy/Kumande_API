@@ -155,6 +155,53 @@ class Commands extends Controller
         }
     }
 
+    public function updateTelegramIdQRCode(Request $request){
+        try{
+            $validator = Validation::getValidateUpdateTelegramID($request);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'result' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {        
+                $user_id = $request->id;
+                $user_data = User::getProfile($user_id);
+                $telegram_user_id_old = $user_data->telegram_user_id;
+
+                $user = User::where('id',$user_id)->update([
+                    'telegram_user_id' => $request->telegram_user_id,
+                ]);
+
+                if($user > 0){
+                    if($telegram_user_id_old != null){
+                        $response = Telegram::sendMessage([
+                            'chat_id' => $telegram_user_id_old,
+                            'text' => "Hello $user_data->username,\nYour account has been signout from this device",
+                            'parse_mode' => 'HTML'
+                        ]);
+                    }
+                    
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'User telegram id updated',
+                        'data' => $user." rows affected"
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'User telegram id failed to update',
+                    ], Response::HTTP_NOT_FOUND);
+                }
+            }
+        } catch(\Exception $err) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $err->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public function updateTimezone(Request $request){
         try{
             $validator = Validation::getValidateUpdateUserTimezone($request);

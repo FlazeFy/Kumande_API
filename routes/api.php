@@ -9,6 +9,8 @@ use App\Http\Controllers\ConsumeApi\Commands as CommandConsumeApi;
 use App\Http\Controllers\ConsumeApi\Queries as QueryConsumeApi;
 use App\Http\Controllers\ConsumeApi\CommandsList as CommandConsumeListApi;
 use App\Http\Controllers\ConsumeApi\QueriesList as QueryConsumeListApi;
+use App\Http\Controllers\ConsumeApi\QueriesAllergic as QueryAllergicApi;
+use App\Http\Controllers\ConsumeApi\CommandsAllergic as CommandAllergicApi;
 use App\Http\Controllers\PaymentApi\Commands as CommandPaymentApi;
 use App\Http\Controllers\PaymentApi\Queries as QueryPaymentApi;
 use App\Http\Controllers\ScheduleApi\Commands as CommandScheduleApi;
@@ -59,6 +61,8 @@ Route::prefix('/v1/payment')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('/v1/analytic')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/payment/month/{month}/year/{year}', [QueryPaymentApi::class, 'getAnalyticSpendMonth']);
+    Route::get('/allergic', [QueryAllergicApi::class, 'getAllAllergic']);
+    Route::put('/allergic/{id}', [CommandAllergicApi::class, 'updateAllergic']);
 });
 
 Route::prefix('/v1/tag')->middleware(['auth:sanctum'])->group(function () {
@@ -113,6 +117,7 @@ Route::prefix('/v1/user')->group(function () {
 
     Route::put('/edit', [CommandUserApi::class, 'updateUser'])->middleware(['auth:sanctum']);
     Route::put('/edit_telegram_id', [CommandUserApi::class, 'updateTelegramId'])->middleware(['auth:sanctum']);
+    Route::put('/edit_telegram_id_qrcode', [CommandUserApi::class, 'updateTelegramIdQRCode']);
     Route::put('/edit_timezone', [CommandUserApi::class, 'updateTimezone'])->middleware(['auth:sanctum']);
     Route::put('/image', [CommandUserApi::class, 'updateImage'])->middleware(['auth:sanctum']);
     
