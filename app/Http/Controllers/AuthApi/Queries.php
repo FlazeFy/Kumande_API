@@ -7,8 +7,29 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * @OA\Info(
+ *     title="Kumande API Docs",
+ *     version="1.0.0",
+ *     description="API Documentation for Kumande Mobile & Web Apps",
+ *     @OA\Contact(
+ *         email="flazen.edu@gmail.com"
+ *     )
+ * )
+*/
 class Queries extends Controller
 {
+    /**
+     * @OA\POST(
+     *     path="/api/v1/logout",
+     *     summary="Sign out from Apps",
+     *     tags={"Auth"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Logout success"
+     *     )
+     * )
+     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

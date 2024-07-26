@@ -11,6 +11,25 @@ use App\Models\Tag;
 
 class Queries extends Controller
 {
+    /**
+     * @OA\GET(
+     *     path="/api/v1/tag/my",
+     *     summary="Get all of my tag",
+     *     tags={"Tag"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Tag found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Tag not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function getMyTag(Request $request){
         try{
             $user_id = $request->user()->id;
@@ -41,6 +60,25 @@ class Queries extends Controller
         }
     }
 
+    /**
+     * @OA\GET(
+     *     path="/api/v1/tag",
+     *     summary="Get all of my tag and public tag",
+     *     tags={"Tag"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Tag found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Tag not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function getAllTag(Request $request){
         try{
             $user_id = $request->user()->id;

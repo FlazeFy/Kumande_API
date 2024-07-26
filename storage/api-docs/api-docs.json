@@ -1,0 +1,330 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Kumande API Docs",
+        "description": "API Documentation for Kumande Mobile & Web Apps",
+        "contact": {
+            "email": "flazen.edu@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Sign out from Apps",
+                "operationId": "07899a32b24cb9c04ddd5dcfbaf48869",
+                "responses": {
+                    "200": {
+                        "description": "Logout success"
+                    }
+                }
+            }
+        },
+        "/api/v1/count/calorie": {
+            "get": {
+                "tags": [
+                    "Count"
+                ],
+                "summary": "Get latest count calorie data",
+                "operationId": "8ea491c93b15936f65f6e54cb7dc8249",
+                "responses": {
+                    "200": {
+                        "description": "Count data found"
+                    },
+                    "404": {
+                        "description": "Count data not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/count/calorie/fulfill/{date}": {
+            "get": {
+                "tags": [
+                    "Count"
+                ],
+                "summary": "Get total calorie and fullfiled from date",
+                "operationId": "1cf2e54d32700ef37a00c6038b3602c8",
+                "responses": {
+                    "200": {
+                        "description": "Count data found"
+                    },
+                    "404": {
+                        "description": "Count data not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/tag/my": {
+            "get": {
+                "tags": [
+                    "Tag"
+                ],
+                "summary": "Get all of my tag",
+                "operationId": "ce9839b64429904713265d33ad825b57",
+                "responses": {
+                    "200": {
+                        "description": "Tag found"
+                    },
+                    "404": {
+                        "description": "Tag not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/tag": {
+            "get": {
+                "tags": [
+                    "Tag"
+                ],
+                "summary": "Get all of my tag and public tag",
+                "operationId": "e2f5f57acd44ef0a8a0748f81a70de47",
+                "responses": {
+                    "200": {
+                        "description": "Tag found"
+                    },
+                    "404": {
+                        "description": "Tag not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Allergic": {
+                "required": [
+                    "id",
+                    "allergic_context",
+                    "created_at",
+                    "created_by"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "allergic_context": {
+                        "description": "User's Allergic for Consume Analyze",
+                        "type": "string"
+                    },
+                    "allergic_desc": {
+                        "description": "User's Allergic description for Consume Analyze",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the allergic was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Timestamp when the allergic was updated",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who created the allergic",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "BodyInfo": {
+                "required": [
+                    "id",
+                    "blood_pressure",
+                    "blood_glucose",
+                    "gout",
+                    "cholesterol",
+                    "created_at",
+                    "created_by"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "blood_pressure": {
+                        "description": "SmartDoc Health Monitoring",
+                        "type": "string"
+                    },
+                    "blood_glucose": {
+                        "description": "SmartDoc Health Monitoring",
+                        "type": "string"
+                    },
+                    "gout": {
+                        "description": "SmartDoc Health Monitoring",
+                        "type": "string"
+                    },
+                    "cholesterol": {
+                        "description": "SmartDoc Health Monitoring",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the body info was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who created the body info",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Tag": {
+                "required": [
+                    "id",
+                    "tag_slug",
+                    "tag_name",
+                    "created_at",
+                    "created_by"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "tag_slug": {
+                        "description": "Slug of the tag",
+                        "type": "string"
+                    },
+                    "tag_name": {
+                        "description": "Name of the tag",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the tag was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who created the tag",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "required": [
+                    "id",
+                    "firebase_id",
+                    "slug_name",
+                    "fullname",
+                    "username",
+                    "email",
+                    "password",
+                    "gender",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "firebase_id": {
+                        "description": "Firebase Firestore Doc ID",
+                        "type": "string"
+                    },
+                    "telegram_user_id": {
+                        "description": "Telegram Account ID for Bot Apps",
+                        "type": "string"
+                    },
+                    "firebase_fcm_token": {
+                        "description": "FCM Notification Token for Mobile Apps",
+                        "type": "string"
+                    },
+                    "line_user_id": {
+                        "description": "Line Account ID for Bot Apps",
+                        "type": "string"
+                    },
+                    "slug_name": {
+                        "description": "Unique Identifier for user",
+                        "type": "string"
+                    },
+                    "fullname": {
+                        "description": "Full name of user",
+                        "type": "string"
+                    },
+                    "username": {
+                        "description": "Unique Identifier for user",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "Email for Auth and Task Scheduling",
+                        "type": "string"
+                    },
+                    "password": {
+                        "description": "Sanctum Hashed Password",
+                        "type": "string"
+                    },
+                    "gender": {
+                        "description": "Gender of user",
+                        "type": "string"
+                    },
+                    "image_url": {
+                        "description": "Firebase Downloadable URL for profile image",
+                        "type": "string"
+                    },
+                    "born_at": {
+                        "description": "Date born for count age",
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "timezone": {
+                        "description": "UTC timezone for Task Scheduling",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the user was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Timestamp when the user was updated",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted_at": {
+                        "description": "Timestamp when the user was deleted",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Count",
+            "description": "Count"
+        },
+        {
+            "name": "Tag",
+            "description": "Tag"
+        }
+    ]
+}
