@@ -12,15 +12,24 @@ use App\Models\Schedule;
 class Queries extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\GET(
+     *     path="/api/v1/schedule",
+     *     summary="Get list schedule consume in a week",
+     *     tags={"Schedule"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Schedule found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Schedule not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
      */
-    public function index()
-    {
-        //
-    }
-
     public function getMySchedule(Request $request){
         try{
             $user_id = $request->user()->id;
@@ -60,6 +69,25 @@ class Queries extends Controller
         }
     }
 
+     /**
+     * @OA\GET(
+     *     path="/api/v1/schedule/day/{day}",
+     *     summary="Get schedule consume in a day",
+     *     tags={"Schedule"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Schedule found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Schedule not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function getTodaySchedule(Request $request, $day){
         try{
             $user_id = $request->user()->id;
@@ -70,11 +98,19 @@ class Queries extends Controller
                 ->orderByRaw("JSON_EXTRACT(schedule_time, '$[0].time') ASC")
                 ->get();
 
-            return response()->json([
-                "message"=> "Data retrived", 
-                "status"=> 'success',
-                "data"=> $sch
-            ]);
+            if($sch){
+                return response()->json([
+                    "message"=> "Schedule found", 
+                    "status"=> 'success',
+                    "data"=> $sch
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    "message"=> "Schedule not found", 
+                    "status"=> 'failed',
+                    "data"=> null
+                ], Response::HTTP_NOT_FOUND);
+            }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',

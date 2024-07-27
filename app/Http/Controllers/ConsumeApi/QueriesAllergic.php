@@ -14,6 +14,25 @@ use App\Models\Consume;
 
 class QueriesAllergic extends Controller
 {
+    /**
+     * @OA\GET(
+     *     path="/api/v1/analytic/allergic",
+     *     summary="Get my allergic",
+     *     tags={"Analytic"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Allergic found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Allergic not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function getAllAllergic(Request $request){
         try{
             $user_id = $request->user()->id;
@@ -39,7 +58,7 @@ class QueriesAllergic extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Data retrived", 
+                    'message' => "Allergic found", 
                     'data' => $csl
                 ], Response::HTTP_OK);
             } else {

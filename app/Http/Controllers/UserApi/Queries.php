@@ -12,15 +12,24 @@ use App\Models\User;
 class Queries extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\GET(
+     *     path="/api/v1/user",
+     *     summary="Get my profile info",
+     *     tags={"User"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="User found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
      */
-    public function index()
-    {
-        //
-    }
-
     public function getMyProfile(Request $request){
         try{
             $user_id = $request->user()->id;
@@ -30,11 +39,19 @@ class Queries extends Controller
                 ->limit(1)
                 ->get();
 
-            return response()->json([
-                "message"=> "User Data retrived", 
-                "status"=> 'success',
-                "data"=> $usr
-            ]);
+            if($usr){
+                return response()->json([
+                    "message"=> "User found", 
+                    "status"=> 'success',
+                    "data"=> $usr
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    "message"=> "User not found", 
+                    "status"=> 'success',
+                    "data"=> null
+                ], Response::HTTP_NOT_FOUND);
+            }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',

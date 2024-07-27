@@ -6,6 +6,31 @@ use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @OA\Schema(
+ *     schema="Consume",
+ *     type="object",
+ *     required={"id", "firebase_id", "slug_name", "consume_type", "consume_name", "consume_detail", "consume_from", "is_favorite", "created_at", "created_by"},
+ * 
+ *     @OA\Property(property="id", type="string", format="uuid", description="Primary Key"),
+ *     @OA\Property(property="firebase_id", type="string", description="Firebase Firestore Doc ID"),
+ *     @OA\Property(property="slug_name", type="string", description="Unique Identifier for consume from consume name"),
+ *     @OA\Property(property="consume_type", type="string", description="Type of the consume"),
+ *     @OA\Property(property="consume_name", type="string", description="Name of the consume"),
+ *     @OA\Property(property="consume_detail", type="json", description="Detail of the consume. Contain calorie, provide, main ingredient, provide latitude, and provide longitude"),
+ *     @OA\Property(property="consume_from", type="string", description="Source of the consume"),
+ *     @OA\Property(property="is_favorite", type="boolean", description="Indicates if the consume is a favorite"),
+ *     @OA\Property(property="consume_tag", type="json", description="Tags associated with the consume"),
+ *     @OA\Property(property="consume_comment", type="string", description="Comments about the consume for analyze"),
+ *     @OA\Property(property="created_at", type="string", format="date-time", description="Timestamp when the consume was created"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time", description="Timestamp when the consume was updated"),
+ *     @OA\Property(property="deleted_at", type="string", format="date-time", description="Timestamp when the consume was deleted"),
+ *     @OA\Property(property="created_by", type="string", description="ID of the user who created the consume"),
+ *     @OA\Property(property="updated_by", type="string", description="ID of the user who updated the consume"),
+ *     @OA\Property(property="deleted_by", type="string", description="ID of the user who deleted the consume")
+ * )
+ */
+
 class Consume extends Model
 {
     use HasFactory;

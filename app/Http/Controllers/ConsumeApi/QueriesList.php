@@ -17,15 +17,24 @@ use App\Models\RelConsumeList;
 class QueriesList extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\GET(
+     *     path="/api/v1/list/limit/{page_limit}/order/{order}",
+     *     summary="Get all consume list with limit, pagination, and ordering",
+     *     tags={"Consume"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume List found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume List not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
      */
-    public function index()
-    {
-        //
-    }
-
     public function getAllList(Request $request, $page_limit, $order){
         try{
             $user_id = $request->user()->id;
@@ -64,7 +73,7 @@ class QueriesList extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Data retrived", 
+                    'message' => "Consume List found", 
                     'data' => $csl
                 ], Response::HTTP_OK);
             } else {

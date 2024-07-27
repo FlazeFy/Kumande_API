@@ -11,6 +11,25 @@ use App\Models\Reminder;
 
 class Queries extends Controller
 {
+    /**
+     * @OA\GET(
+     *     path="/api/v1/reminder",
+     *     summary="Get list available reminder",
+     *     tags={"Reminder"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Reminder found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Reminder not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function getListReminder(Request $request){
         try{
             $user_id = $request->user()->id;
@@ -25,7 +44,7 @@ class Queries extends Controller
             if (count($res) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Reminder data retrived", 
+                    'message' => "Reminder found", 
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {

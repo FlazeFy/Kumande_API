@@ -18,15 +18,24 @@ use App\Models\Schedule;
 class Queries extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\GET(
+     *     path="/api/v1/consume/limit/{page_limit}/order/{order}/favorite/{favorite}/type/{type}/provide/{provide}/calorie/{calorie}",
+     *     summary="Get all my consume history with pagination, ordering, and some filtering",
+     *     tags={"Consume"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
      */
-    public function index()
-    {
-        //
-    }
-
     public function getAllConsume(Request $request, $page_limit, $order, $favorite, $type, $provide, $calorie){
         try{
             $user_id = $request->user()->id;
@@ -59,7 +68,7 @@ class Queries extends Controller
             if ($csm->count() > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Data retrived", 
+                    'message' => "Consume found", 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
@@ -77,6 +86,25 @@ class Queries extends Controller
         }
     }
 
+    /**
+     * @OA\GET(
+     *     path="/api/v1/consume/total/byfrom",
+     *     summary="Get stats total consume by consume from",
+     *     tags={"Consume"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function getTotalConsumeByFrom(Request $request){
         try{
             $user_id = $request->user()->id;
@@ -95,7 +123,7 @@ class Queries extends Controller
             if ($csm->count() > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Data retrived", 
+                    'message' => "Consume found", 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
@@ -113,6 +141,25 @@ class Queries extends Controller
         }
     }
 
+    /**
+     * @OA\GET(
+     *     path="/api/v1/consume/total/bytype",
+     *     summary="Get stats total consume by consume type",
+     *     tags={"Consume"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function getTotalConsumeByType(Request $request){
         try{
             $user_id = $request->user()->id;
@@ -131,7 +178,7 @@ class Queries extends Controller
             if ($csm->count() > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Data retrived", 
+                    'message' => "Consume found", 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
@@ -149,6 +196,25 @@ class Queries extends Controller
         }
     }
 
+    /**
+     * @OA\GET(
+     *     path="/api/v1/consume/detail/{slug}",
+     *     summary="Get consume detail by slug",
+     *     tags={"Consume"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function getConsumeDetailBySlug(Request $request, $slug){
         try{
             $user_id = $request->user()->id;
@@ -175,7 +241,7 @@ class Queries extends Controller
                 
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Data retrived", 
+                    'message' => "Consume found", 
                     'data' => $consume
                 ], Response::HTTP_OK);
             } else {
@@ -193,6 +259,25 @@ class Queries extends Controller
         }
     }
 
+    /**
+     * @OA\GET(
+     *     path="/api/v1/consume/total/bymain",
+     *     summary="Get stats total consume by consume main ingredient",
+     *     tags={"Consume"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function getTotalConsumeByMainIng(Request $request){
         try{
             $user_id = $request->user()->id;
@@ -214,7 +299,7 @@ class Queries extends Controller
             if (count($csm) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Data retrived", 
+                    'message' => "Consume found", 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
@@ -232,6 +317,25 @@ class Queries extends Controller
         }
     }
 
+     /**
+     * @OA\GET(
+     *     path="/api/v1/consume/total/byprovide",
+     *     summary="Get stats total consume by consume provide",
+     *     tags={"Consume"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function getTotalConsumeByProvide(Request $request){
         try{
             $user_id = $request->user()->id;
@@ -253,7 +357,7 @@ class Queries extends Controller
             if (count($csm) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Data retrived", 
+                    'message' => "Consume found", 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
@@ -271,6 +375,25 @@ class Queries extends Controller
         }
     }
 
+     /**
+     * @OA\GET(
+     *     path="/api/v1/consume/total/day/cal/month/{month}/year/{year}",
+     *     summary="Get total calorie consumed by day",
+     *     tags={"Consume"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function getDailyConsumeCal(Request $request, $month, $year){
         try{
             $user_id = $request->user()->id;
@@ -310,7 +433,7 @@ class Queries extends Controller
             if ($collection->count() > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Data retrived", 
+                    'message' => "Consume found", 
                     'data' => $collection
                 ], Response::HTTP_OK);
             } else {
@@ -328,6 +451,25 @@ class Queries extends Controller
         }
     }
 
+     /**
+     * @OA\GET(
+     *     path="/api/v1/consume/calorie/maxmin",
+     *     summary="Get maximum, minimum, and average calorie for filtering consume",
+     *     tags={"Consume"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function getMaxMinCalorie(Request $request){
         try{
             $user_id = $request->user()->id;
@@ -344,7 +486,7 @@ class Queries extends Controller
             if ($csm->count() > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Data retrived", 
+                    'message' => "Consume found", 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
@@ -362,6 +504,29 @@ class Queries extends Controller
         }
     }
 
+     /**
+     * @OA\GET(
+     *     path="/api/v1/consume/calorie/bytype/{view}",
+     *     summary="Get total calorie consumed by its type per day/week/month/year",
+     *     tags={"Consume"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume not found"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Consume view must be all, day, week, month, or year"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function getCalorieTotalByConsumeType(Request $request, $view){
         try{
             $user_id = $request->user()->id;
@@ -388,7 +553,7 @@ class Queries extends Controller
                 if ($csm->count() > 0) {
                     return response()->json([
                         'status' => 'success',
-                        'message' => "Data retrived", 
+                        'message' => "Consume found", 
                         'data' => $csm
                     ], Response::HTTP_OK);
                 } else {
@@ -403,7 +568,7 @@ class Queries extends Controller
                     'status' => 'failed',
                     'message' => 'Consume view must be all, day, week, month, or year',
                     'data' => null
-                ], Response::HTTP_NOT_FOUND);
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         } catch(\Exception $e) {
             return response()->json([
@@ -413,6 +578,29 @@ class Queries extends Controller
         }
     }
 
+     /**
+     * @OA\GET(
+     *     path="/api/v1/consume/by/context/{ctx}/{target}",
+     *     summary="Get consume (consume custom)",
+     *     tags={"Consume"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume not found"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Consume context not valid"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function getConsumeByContext(Request $request, $ctx, $target){
         try{
             $user_id = $request->user()->id;
@@ -467,7 +655,7 @@ class Queries extends Controller
                     
                     return response()->json([
                         'status' => 'success',
-                        'message' => "Data retrived", 
+                        'message' => "Consume found", 
                         'data' => $consume
                     ], Response::HTTP_OK);
                 } else {
@@ -492,6 +680,25 @@ class Queries extends Controller
         }
     }
 
+     /**
+     * @OA\GET(
+     *     path="/api/v1/consume/list/select",
+     *     summary="Get list consume)",
+     *     tags={"Consume"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function getListConsume(Request $request){
         try{
             $user_id = $request->user()->id;

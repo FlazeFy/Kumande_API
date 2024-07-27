@@ -12,6 +12,25 @@ use App\Models\CountCalorie;
 
 class QueriesBodyInfo extends Controller
 {
+     /**
+     * @OA\GET(
+     *     path="/api/v1/user/body_info",
+     *     summary="Get my body info (Medstory)",
+     *     tags={"User"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="User body info found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User body info not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function getMyLatestBodyInfo(Request $request){
         try{
             $user_id = $request->user()->id;
@@ -44,26 +63,27 @@ class QueriesBodyInfo extends Controller
                 $bodyInfo = array_merge($usrArray, $calArray);
             
                 return response()->json([
-                    "message" => "User body info retrieved",
+                    "message" => "User body info found",
                     "status" => 'success',
                     "data" => $bodyInfo
                 ], Response::HTTP_OK);
             } elseif ($usr) {
                 return response()->json([
-                    "message" => "User body info retrieved",
+                    "message" => "User body info found",
                     "status" => 'success',
                     "data" => $usr
                 ], Response::HTTP_OK);
             } elseif ($cal) {
                 return response()->json([
-                    "message" => "User body info retrieved",
+                    "message" => "User body info found",
                     "status" => 'success',
                     "data" => $cal
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
-                    "message" => "No user body info found",
-                    "status" => 'failed'
+                    "message" => "User body info not found",
+                    "status" => 'failed',
+                    "data" => null
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -74,6 +94,25 @@ class QueriesBodyInfo extends Controller
         }
     }
 
+    /**
+     * @OA\GET(
+     *     path="/api/v1/user/my_body_history",
+     *     summary="Get all my body info (Medstory) & Calorie data",
+     *     tags={"User"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="User body history found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User body history not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public static function getMyBodyHistory(Request $request){
         try{
             $user_id = $request->user()->id;
@@ -105,13 +144,14 @@ class QueriesBodyInfo extends Controller
                         "calorie" => $cal,
                         "dashboard" => $dashboard
                     ],
-                    "message" => "No user body info found",
-                    "status" => 'failed'
+                    "message" => "User body history found",
+                    "status" => 'success'
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
-                    "message" => "No user body history found",
-                    "status" => 'failed'
+                    "message" => "User body history not found",
+                    "status" => 'failed',
+                    "data" => null
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {

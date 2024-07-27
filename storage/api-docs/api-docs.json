@@ -23,6 +23,312 @@
                 }
             }
         },
+        "/api/v1/budget/by/{year}": {
+            "get": {
+                "tags": [
+                    "Budget"
+                ],
+                "summary": "Get all budget plan in whole year",
+                "operationId": "c98c97d5f4dc3ea27889df8adca21bfe",
+                "responses": {
+                    "200": {
+                        "description": "Budget found"
+                    },
+                    "404": {
+                        "description": "Budget not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/budget/dashboard": {
+            "post": {
+                "tags": [
+                    "Budget"
+                ],
+                "summary": "Get budget dashboard / summary",
+                "operationId": "4b9e2ced6915be361533abdf6f47f3cc",
+                "responses": {
+                    "200": {
+                        "description": "Budget found"
+                    },
+                    "404": {
+                        "description": "Budget not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/consume/limit/{page_limit}/order/{order}/favorite/{favorite}/type/{type}/provide/{provide}/calorie/{calorie}": {
+            "get": {
+                "tags": [
+                    "Consume"
+                ],
+                "summary": "Get all my consume history with pagination, ordering, and some filtering",
+                "operationId": "32c5be778242dc109d463a2040b63abc",
+                "responses": {
+                    "200": {
+                        "description": "Consume found"
+                    },
+                    "404": {
+                        "description": "Consume not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/consume/total/byfrom": {
+            "get": {
+                "tags": [
+                    "Consume"
+                ],
+                "summary": "Get stats total consume by consume from",
+                "operationId": "523e23899397d4165a8978a67aac459c",
+                "responses": {
+                    "200": {
+                        "description": "Consume found"
+                    },
+                    "404": {
+                        "description": "Consume not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/consume/total/bytype": {
+            "get": {
+                "tags": [
+                    "Consume"
+                ],
+                "summary": "Get stats total consume by consume type",
+                "operationId": "ccd23e40e3c8c49bd0005d03bc178df9",
+                "responses": {
+                    "200": {
+                        "description": "Consume found"
+                    },
+                    "404": {
+                        "description": "Consume not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/consume/detail/{slug}": {
+            "get": {
+                "tags": [
+                    "Consume"
+                ],
+                "summary": "Get consume detail by slug",
+                "operationId": "dfcbe93d4305706bc353525e4aa39af6",
+                "responses": {
+                    "200": {
+                        "description": "Consume found"
+                    },
+                    "404": {
+                        "description": "Consume not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/consume/total/bymain": {
+            "get": {
+                "tags": [
+                    "Consume"
+                ],
+                "summary": "Get stats total consume by consume main ingredient",
+                "operationId": "0c21f90c0b3c36ad78ec1ec3a38e8b9a",
+                "responses": {
+                    "200": {
+                        "description": "Consume found"
+                    },
+                    "404": {
+                        "description": "Consume not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/consume/total/byprovide": {
+            "get": {
+                "tags": [
+                    "Consume"
+                ],
+                "summary": "Get stats total consume by consume provide",
+                "operationId": "c20113c17694ec9f60103aadc97e91b8",
+                "responses": {
+                    "200": {
+                        "description": "Consume found"
+                    },
+                    "404": {
+                        "description": "Consume not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/consume/total/day/cal/month/{month}/year/{year}": {
+            "get": {
+                "tags": [
+                    "Consume"
+                ],
+                "summary": "Get total calorie consumed by day",
+                "operationId": "e59163259e4957e311a1fd8e75435c5f",
+                "responses": {
+                    "200": {
+                        "description": "Consume found"
+                    },
+                    "404": {
+                        "description": "Consume not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/consume/calorie/maxmin": {
+            "get": {
+                "tags": [
+                    "Consume"
+                ],
+                "summary": "Get maximum, minimum, and average calorie for filtering consume",
+                "operationId": "f24f001751a354eba0e0fcf653e9381a",
+                "responses": {
+                    "200": {
+                        "description": "Consume found"
+                    },
+                    "404": {
+                        "description": "Consume not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/consume/calorie/bytype/{view}": {
+            "get": {
+                "tags": [
+                    "Consume"
+                ],
+                "summary": "Get total calorie consumed by its type per day/week/month/year",
+                "operationId": "9e2c906bb24c95a4cfa81b7255cf8c36",
+                "responses": {
+                    "200": {
+                        "description": "Consume found"
+                    },
+                    "404": {
+                        "description": "Consume not found"
+                    },
+                    "422": {
+                        "description": "Consume view must be all, day, week, month, or year"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/consume/by/context/{ctx}/{target}": {
+            "get": {
+                "tags": [
+                    "Consume"
+                ],
+                "summary": "Get consume (consume custom)",
+                "operationId": "8f167ad8487ff817530fa3b2cc96fc2d",
+                "responses": {
+                    "200": {
+                        "description": "Consume found"
+                    },
+                    "404": {
+                        "description": "Consume not found"
+                    },
+                    "422": {
+                        "description": "Consume context not valid"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/consume/list/select": {
+            "get": {
+                "tags": [
+                    "Consume"
+                ],
+                "summary": "Get list consume)",
+                "operationId": "1082f4597d5ca2f396d7acdb5f686fe9",
+                "responses": {
+                    "200": {
+                        "description": "Consume found"
+                    },
+                    "404": {
+                        "description": "Consume not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/analytic/allergic": {
+            "get": {
+                "tags": [
+                    "Analytic"
+                ],
+                "summary": "Get my allergic",
+                "operationId": "fa0a2e7a2731f4194dbc45448c1cd0f5",
+                "responses": {
+                    "200": {
+                        "description": "Allergic found"
+                    },
+                    "404": {
+                        "description": "Allergic not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/list/limit/{page_limit}/order/{order}": {
+            "get": {
+                "tags": [
+                    "Consume"
+                ],
+                "summary": "Get all consume list with limit, pagination, and ordering",
+                "operationId": "a0a5a075b664eff0ffa044faae188991",
+                "responses": {
+                    "200": {
+                        "description": "Consume List found"
+                    },
+                    "404": {
+                        "description": "Consume List not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/api/v1/count/calorie": {
             "get": {
                 "tags": [
@@ -63,6 +369,66 @@
                 }
             }
         },
+        "/api/v1/reminder": {
+            "get": {
+                "tags": [
+                    "Reminder"
+                ],
+                "summary": "Get list available reminder",
+                "operationId": "ea180f6c13c6c6a51a734db925e6d9ef",
+                "responses": {
+                    "200": {
+                        "description": "Reminder found"
+                    },
+                    "404": {
+                        "description": "Reminder not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/schedule": {
+            "get": {
+                "tags": [
+                    "Schedule"
+                ],
+                "summary": "Get list schedule consume in a week",
+                "operationId": "90ed2dcce12d7b04af8490a5f82681af",
+                "responses": {
+                    "200": {
+                        "description": "Schedule found"
+                    },
+                    "404": {
+                        "description": "Schedule not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/schedule/day/{day}": {
+            "get": {
+                "tags": [
+                    "Schedule"
+                ],
+                "summary": "Get schedule consume in a day",
+                "operationId": "46b345164482b36af0e04ceeed65a348",
+                "responses": {
+                    "200": {
+                        "description": "Schedule found"
+                    },
+                    "404": {
+                        "description": "Schedule not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/api/v1/tag/my": {
             "get": {
                 "tags": [
@@ -96,6 +462,66 @@
                     },
                     "404": {
                         "description": "Tag not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/user": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get my profile info",
+                "operationId": "49dd6e1b545013f5874d2f557e9ec0ed",
+                "responses": {
+                    "200": {
+                        "description": "User found"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/user/body_info": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get my body info (Medstory)",
+                "operationId": "4bb6b0491b3ab0bbbf14f40f045b2fdc",
+                "responses": {
+                    "200": {
+                        "description": "User body info found"
+                    },
+                    "404": {
+                        "description": "User body info not found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/api/v1/user/my_body_history": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get all my body info (Medstory) & Calorie data",
+                "operationId": "bd92ce7a93bdb0cc3d9e10f908c9a60b",
+                "responses": {
+                    "200": {
+                        "description": "User body history found"
+                    },
+                    "404": {
+                        "description": "User body history not found"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -188,6 +614,196 @@
                 },
                 "type": "object"
             },
+            "Budget": {
+                "required": [
+                    "id",
+                    "firebase_id",
+                    "budget_total",
+                    "budget_month_year",
+                    "created_at",
+                    "created_by"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "firebase_id": {
+                        "description": "Firebase Firestore Doc ID",
+                        "type": "string"
+                    },
+                    "budget_total": {
+                        "description": "User's budget upper limit in a month. The currency is Rupiah",
+                        "type": "integer"
+                    },
+                    "budget_month_year": {
+                        "description": "User's budget plan month and year",
+                        "type": "json"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the budget was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Timestamp when the budget was updated",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who created the budget",
+                        "type": "string"
+                    },
+                    "over_at": {
+                        "description": "Timestamp when the budget plan is passed by total price of consume",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Consume": {
+                "required": [
+                    "id",
+                    "firebase_id",
+                    "slug_name",
+                    "consume_type",
+                    "consume_name",
+                    "consume_detail",
+                    "consume_from",
+                    "is_favorite",
+                    "created_at",
+                    "created_by"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "firebase_id": {
+                        "description": "Firebase Firestore Doc ID",
+                        "type": "string"
+                    },
+                    "slug_name": {
+                        "description": "Unique Identifier for consume from consume name",
+                        "type": "string"
+                    },
+                    "consume_type": {
+                        "description": "Type of the consume",
+                        "type": "string"
+                    },
+                    "consume_name": {
+                        "description": "Name of the consume",
+                        "type": "string"
+                    },
+                    "consume_detail": {
+                        "description": "Detail of the consume. Contain calorie, provide, main ingredient, provide latitude, and provide longitude",
+                        "type": "json"
+                    },
+                    "consume_from": {
+                        "description": "Source of the consume",
+                        "type": "string"
+                    },
+                    "is_favorite": {
+                        "description": "Indicates if the consume is a favorite",
+                        "type": "boolean"
+                    },
+                    "consume_tag": {
+                        "description": "Tags associated with the consume",
+                        "type": "json"
+                    },
+                    "consume_comment": {
+                        "description": "Comments about the consume for analyze",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the consume was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Timestamp when the consume was updated",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted_at": {
+                        "description": "Timestamp when the consume was deleted",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who created the consume",
+                        "type": "string"
+                    },
+                    "updated_by": {
+                        "description": "ID of the user who updated the consume",
+                        "type": "string"
+                    },
+                    "deleted_by": {
+                        "description": "ID of the user who deleted the consume",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ConsumeList": {
+                "required": [
+                    "id",
+                    "firebase_id",
+                    "slug_name",
+                    "list_name",
+                    "created_at",
+                    "created_by"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "firebase_id": {
+                        "description": "Firebase Firestore Doc ID",
+                        "type": "string"
+                    },
+                    "slug_name": {
+                        "description": "Unique Identifier for consume list from list name",
+                        "type": "string"
+                    },
+                    "list_name": {
+                        "description": "Name of the consume list",
+                        "type": "string"
+                    },
+                    "list_desc": {
+                        "description": "Description of the consume list",
+                        "type": "string"
+                    },
+                    "list_tag": {
+                        "description": "Tags associated with the consume list    ",
+                        "type": "json"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the consume was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Timestamp when the consume was updated",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who created the consume",
+                        "type": "string"
+                    },
+                    "updated_by": {
+                        "description": "ID of the user who updated the consume",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "Tag": {
                 "required": [
                     "id",
@@ -257,7 +873,7 @@
                         "type": "string"
                     },
                     "slug_name": {
-                        "description": "Unique Identifier for user",
+                        "description": "Unique Identifier for user from username",
                         "type": "string"
                     },
                     "fullname": {
@@ -319,12 +935,36 @@
             "description": "Auth"
         },
         {
+            "name": "Budget",
+            "description": "Budget"
+        },
+        {
+            "name": "Consume",
+            "description": "Consume"
+        },
+        {
+            "name": "Analytic",
+            "description": "Analytic"
+        },
+        {
             "name": "Count",
             "description": "Count"
         },
         {
+            "name": "Reminder",
+            "description": "Reminder"
+        },
+        {
+            "name": "Schedule",
+            "description": "Schedule"
+        },
+        {
             "name": "Tag",
             "description": "Tag"
+        },
+        {
+            "name": "User",
+            "description": "User"
         }
     ]
 }

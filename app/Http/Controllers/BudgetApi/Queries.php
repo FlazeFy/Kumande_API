@@ -12,6 +12,25 @@ use App\Models\Payment;
 
 class Queries extends Controller
 {
+    /**
+     * @OA\GET(
+     *     path="/api/v1/budget/by/{year}",
+     *     summary="Get all budget plan in whole year",
+     *     tags={"Budget"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Budget found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Budget not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function getAllBudgetByYear(Request $request,$year){
         try{
             $user_id = $request->user()->id;
@@ -47,7 +66,7 @@ class Queries extends Controller
             if (count($collection) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Budget retrived", 
+                    'message' => "Budget found", 
                     'data' => $collection
                 ], Response::HTTP_OK);
             } else {
@@ -65,6 +84,25 @@ class Queries extends Controller
         }
     }
 
+    /**
+     * @OA\POST(
+     *     path="/api/v1/budget/dashboard",
+     *     summary="Get budget dashboard / summary",
+     *     tags={"Budget"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Budget found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Budget not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
     public function getBudgetDashboard(Request $request){
         try{
             $user_id = $request->user()->id;
@@ -130,7 +168,7 @@ class Queries extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Budget retrived", 
+                    'message' => "Budget found", 
                     'data' => $bdt,
                     'total_all' => $total->total_all
                 ], Response::HTTP_OK);

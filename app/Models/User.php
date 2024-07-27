@@ -19,7 +19,7 @@ use Laravel\Sanctum\HasApiTokens;
  *     @OA\Property(property="firebase_fcm_token", type="string", description="FCM Notification Token for Mobile Apps"),
  *     @OA\Property(property="line_user_id", type="string", description="Line Account ID for Bot Apps"),
  * 
- *     @OA\Property(property="slug_name", type="string", description="Unique Identifier for user"),
+ *     @OA\Property(property="slug_name", type="string", description="Unique Identifier for user from username"),
  *     @OA\Property(property="fullname", type="string", description="Full name of user"),
  *     @OA\Property(property="username", type="string", description="Unique Identifier for user"),
  *     @OA\Property(property="email", type="string", description="Email for Auth and Task Scheduling"),
