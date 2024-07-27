@@ -22,12 +22,13 @@ use Illuminate\Database\Eloquent\Model;
  *     @OA\Property(property="is_favorite", type="boolean", description="Indicates if the consume is a favorite"),
  *     @OA\Property(property="consume_tag", type="json", description="Tags associated with the consume"),
  *     @OA\Property(property="consume_comment", type="string", description="Comments about the consume for analyze"),
+ * 
  *     @OA\Property(property="created_at", type="string", format="date-time", description="Timestamp when the consume was created"),
  *     @OA\Property(property="updated_at", type="string", format="date-time", description="Timestamp when the consume was updated"),
  *     @OA\Property(property="deleted_at", type="string", format="date-time", description="Timestamp when the consume was deleted"),
- *     @OA\Property(property="created_by", type="string", description="ID of the user who created the consume"),
- *     @OA\Property(property="updated_by", type="string", description="ID of the user who updated the consume"),
- *     @OA\Property(property="deleted_by", type="string", description="ID of the user who deleted the consume")
+ *     @OA\Property(property="created_by", type="string", format="uuid",description="ID of the user who created the consume"),
+ *     @OA\Property(property="updated_by", type="string", format="uuid",description="ID of the user who updated the consume"),
+ *     @OA\Property(property="deleted_by", type="string", format="uuid",description="ID of the user who deleted the consume")
  * )
  */
 

@@ -16,11 +16,12 @@ use Illuminate\Database\Eloquent\Model;
  *     @OA\Property(property="slug_name", type="string", description="Unique Identifier for consume list from list name"),
  *     @OA\Property(property="list_name", type="string", description="Name of the consume list"),
  *     @OA\Property(property="list_desc", type="string", description="Description of the consume list"),
- *     @OA\Property(property="list_tag", type="json", description="Tags associated with the consume list    "),
+ *     @OA\Property(property="list_tag", type="json", description="Tags associated with the consume list"),
+ * 
  *     @OA\Property(property="created_at", type="string", format="date-time", description="Timestamp when the consume was created"),
  *     @OA\Property(property="updated_at", type="string", format="date-time", description="Timestamp when the consume was updated"),
- *     @OA\Property(property="created_by", type="string", description="ID of the user who created the consume"),
- *     @OA\Property(property="updated_by", type="string", description="ID of the user who updated the consume")
+ *     @OA\Property(property="created_by", type="string", format="uuid",description="ID of the user who created the consume"),
+ *     @OA\Property(property="updated_by", type="string", format="uuid",description="ID of the user who updated the consume")
  * )
  */
 

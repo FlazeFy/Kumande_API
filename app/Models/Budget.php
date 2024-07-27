@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * 
  *     @OA\Property(property="created_at", type="string", format="date-time", description="Timestamp when the budget was created"),
  *     @OA\Property(property="updated_at", type="string", format="date-time", description="Timestamp when the budget was updated"),
- *     @OA\Property(property="created_by", type="string", description="ID of the user who created the budget"),
+ *     @OA\Property(property="created_by", type="string", format="uuid",description="ID of the user who created the budget"),
  *     @OA\Property(property="over_at", type="string",  format="date-time", description="Timestamp when the budget plan is passed by total price of consume")
  * )
  */

@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  *     @OA\Property(property="cholesterol", type="string", description="SmartDoc Health Monitoring"),
  * 
  *     @OA\Property(property="created_at", type="string", format="date-time", description="Timestamp when the body info was created"),
- *     @OA\Property(property="created_by", type="string", description="ID of the user who created the body info")
+ *     @OA\Property(property="created_by", type="string", format="uuid",description="ID of the user who created the body info")
  * )
  */
 

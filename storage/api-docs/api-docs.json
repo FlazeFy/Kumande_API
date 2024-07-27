@@ -565,7 +565,8 @@
                     },
                     "created_by": {
                         "description": "ID of the user who created the allergic",
-                        "type": "string"
+                        "type": "string",
+                        "format": "uuid"
                     }
                 },
                 "type": "object"
@@ -609,7 +610,8 @@
                     },
                     "created_by": {
                         "description": "ID of the user who created the body info",
-                        "type": "string"
+                        "type": "string",
+                        "format": "uuid"
                     }
                 },
                 "type": "object"
@@ -653,7 +655,8 @@
                     },
                     "created_by": {
                         "description": "ID of the user who created the budget",
-                        "type": "string"
+                        "type": "string",
+                        "format": "uuid"
                     },
                     "over_at": {
                         "description": "Timestamp when the budget plan is passed by total price of consume",
@@ -735,15 +738,18 @@
                     },
                     "created_by": {
                         "description": "ID of the user who created the consume",
-                        "type": "string"
+                        "type": "string",
+                        "format": "uuid"
                     },
                     "updated_by": {
                         "description": "ID of the user who updated the consume",
-                        "type": "string"
+                        "type": "string",
+                        "format": "uuid"
                     },
                     "deleted_by": {
                         "description": "ID of the user who deleted the consume",
-                        "type": "string"
+                        "type": "string",
+                        "format": "uuid"
                     }
                 },
                 "type": "object"
@@ -780,7 +786,7 @@
                         "type": "string"
                     },
                     "list_tag": {
-                        "description": "Tags associated with the consume list    ",
+                        "description": "Tags associated with the consume list",
                         "type": "json"
                     },
                     "created_at": {
@@ -795,11 +801,415 @@
                     },
                     "created_by": {
                         "description": "ID of the user who created the consume",
-                        "type": "string"
+                        "type": "string",
+                        "format": "uuid"
                     },
                     "updated_by": {
                         "description": "ID of the user who updated the consume",
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "type": "object"
+            },
+            "CountCalorie": {
+                "required": [
+                    "id",
+                    "firebase_id",
+                    "weight",
+                    "height",
+                    "result",
+                    "created_at",
+                    "created_by"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "firebase_id": {
+                        "description": "Firebase Firestore Doc ID",
                         "type": "string"
+                    },
+                    "weight": {
+                        "description": "Weight of user in kg",
+                        "type": "integer"
+                    },
+                    "height": {
+                        "description": "Height of user in cm",
+                        "type": "integer"
+                    },
+                    "result": {
+                        "description": "Daily calorie needed for the user in cal, can input manually or count in the FE",
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the count calorie was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who created the count calorie",
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "type": "object"
+            },
+            "Error": {
+                "required": [
+                    "id",
+                    "message",
+                    "stack_trace",
+                    "file",
+                    "line",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "integer"
+                    },
+                    "message": {
+                        "description": "Message or description of the error",
+                        "type": "string"
+                    },
+                    "stack_trace": {
+                        "description": "Trail of function calls leading up to the error",
+                        "type": "string"
+                    },
+                    "file": {
+                        "description": "Path of the file where the error is faced",
+                        "type": "string"
+                    },
+                    "line": {
+                        "description": "Line of code in specific file where the error is faced",
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the error was faced",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "fixed_at": {
+                        "description": "Timestamp when the dev team finally fix and deploy the bug / error fix",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "faced_by": {
+                        "description": "ID of the user who specific faced the error",
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "type": "object"
+            },
+            "Payment": {
+                "required": [
+                    "id",
+                    "consume_id",
+                    "payment_method",
+                    "is_payment",
+                    "created_at",
+                    "created_by"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "consume_id": {
+                        "description": "Consume ID",
+                        "type": "string"
+                    },
+                    "payment_method": {
+                        "description": "Method of the payment",
+                        "type": "string"
+                    },
+                    "payment_price": {
+                        "description": "Ammount of the consume price in Rupiah",
+                        "type": "integer"
+                    },
+                    "is_payment": {
+                        "description": "Indicates if the consume is come with payment",
+                        "type": "boolean"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the payment was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Timestamp when the payment was updated",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who created the payment",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "updated_by": {
+                        "description": "ID of the user who updated the payment",
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "type": "object"
+            },
+            "PersonalAccessToken": {
+                "required": [
+                    "id",
+                    "tokenable_type",
+                    "tokenable_id",
+                    "name",
+                    "token",
+                    "abilities",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "integer"
+                    },
+                    "tokenable_type": {
+                        "description": "Model / Role who generated the auth token",
+                        "type": "string"
+                    },
+                    "tokenable_id": {
+                        "description": "ID of the user who generated the auth token",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "Source of the auth token generated",
+                        "type": "string"
+                    },
+                    "token": {
+                        "description": "Auth token that will be used for Auth Bearer all the protected API",
+                        "type": "string"
+                    },
+                    "abilities": {
+                        "description": "Ability of auth token",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the auth token was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Timestamp when the auth token was updated",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "expires_at": {
+                        "description": "Timestamp when the auth token will expired",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "last_used_at": {
+                        "description": "Timestamp when the last time token was used for calling other protected API",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "RelConsumeList": {
+                "required": [
+                    "id",
+                    "consume_id",
+                    "list_id",
+                    "created_at",
+                    "created_by"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "consume_id": {
+                        "description": "Consume ID",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "list_id": {
+                        "description": "List ID",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the relation was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who created the relation",
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "type": "object"
+            },
+            "RelReminderUsed": {
+                "required": [
+                    "id",
+                    "reminder_id",
+                    "created_at",
+                    "created_by"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "reminder_id": {
+                        "description": "Reminder ID",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the relation was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who created the relation",
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "type": "object"
+            },
+            "Reminder": {
+                "required": [
+                    "id",
+                    "reminder_name",
+                    "reminder_type",
+                    "reminder_context",
+                    "reminder_body",
+                    "created_at"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "reminder_name": {
+                        "description": "Name of the reminder",
+                        "type": "string"
+                    },
+                    "reminder_type": {
+                        "description": "Type of the reminder",
+                        "type": "string"
+                    },
+                    "reminder_context": {
+                        "description": "Context of reminder. Contain time",
+                        "type": "json"
+                    },
+                    "reminder_body": {
+                        "description": "Reminder text / message to send to user",
+                        "type": "string"
+                    },
+                    "reminder_attachment": {
+                        "description": "Attachment of reminder. Contain attachment_type, attachment_context, attachment_name",
+                        "type": "json"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the reminder was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Timestamp when the reminder was updated",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who created the reminder",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "updated_by": {
+                        "description": "ID of the user who updated the reminder",
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "type": "object"
+            },
+            "Schedule": {
+                "required": [
+                    "id",
+                    "firebase_id",
+                    "schedule_consume",
+                    "consume_type",
+                    "schedule_time",
+                    "created_at",
+                    "created_by"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Primary Key",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "consume_id": {
+                        "description": "Consume ID",
+                        "type": "string"
+                    },
+                    "firebase_id": {
+                        "description": "Firebase Firestore Doc ID",
+                        "type": "string"
+                    },
+                    "schedule_consume": {
+                        "description": "Name of the consume",
+                        "type": "string"
+                    },
+                    "consume_type": {
+                        "description": "Type of the consume",
+                        "type": "string"
+                    },
+                    "consume_detail": {
+                        "description": "Detail of the consume. Contain calorie, provide, main ingredient, provide latitude, and provide longitude",
+                        "type": "json"
+                    },
+                    "schedule_desc": {
+                        "description": "Comments about the consume for analyze",
+                        "type": "string"
+                    },
+                    "schedule_tag": {
+                        "description": "Tags associated with the consume",
+                        "type": "json"
+                    },
+                    "schedule_time": {
+                        "description": "Time of the schedule. Contain day, category, and time",
+                        "type": "json"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the schedule was created",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "description": "Timestamp when the schedule was updated",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_by": {
+                        "description": "ID of the user who created the schedule",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "updated_by": {
+                        "description": "ID of the user who updated the schedule",
+                        "type": "string",
+                        "format": "uuid"
                     }
                 },
                 "type": "object"
@@ -833,7 +1243,8 @@
                     },
                     "created_by": {
                         "description": "ID of the user who created the tag",
-                        "type": "string"
+                        "type": "string",
+                        "format": "uuid"
                     }
                 },
                 "type": "object"

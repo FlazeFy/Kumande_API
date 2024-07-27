@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * 
  *     @OA\Property(property="created_at", type="string", format="date-time", description="Timestamp when the allergic was created"),
  *     @OA\Property(property="updated_at", type="string", format="date-time", description="Timestamp when the allergic was updated"),
- *     @OA\Property(property="created_by", type="string", description="ID of the user who created the allergic")
+ *     @OA\Property(property="created_by", type="string", format="uuid",description="ID of the user who created the allergic")
  * )
  */
 

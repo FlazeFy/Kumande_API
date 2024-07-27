@@ -5,6 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @OA\Schema(
+ *     schema="Reminder",
+ *     type="object",
+ *     required={"id", "reminder_name", "reminder_type", "reminder_context", "reminder_body", "created_at"},
+ * 
+ *     @OA\Property(property="id", type="string", format="uuid", description="Primary Key"),
+ *     @OA\Property(property="reminder_name", type="string", description="Name of the reminder"),
+ *     @OA\Property(property="reminder_type", type="string", description="Type of the reminder"),
+ *     @OA\Property(property="reminder_context", type="json", description="Context of reminder. Contain time"),
+ *     @OA\Property(property="reminder_body", type="string", description="Reminder text / message to send to user"),
+ *     @OA\Property(property="reminder_attachment", type="json", description="Attachment of reminder. Contain attachment_type, attachment_context, attachment_name"),
+ * 
+ *     @OA\Property(property="created_at", type="string", format="date-time", description="Timestamp when the reminder was created"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time", description="Timestamp when the reminder was updated"),
+ *     @OA\Property(property="created_by", type="string", format="uuid",description="ID of the user who created the reminder"),
+ *     @OA\Property(property="updated_by", type="string", format="uuid",description="ID of the user who updated the reminder")
+ * )
+ */
+
 class Reminder extends Model
 {
     use HasFactory;
