@@ -57,6 +57,8 @@ Route::prefix('/v1/payment')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/total/month/{year}', [QueryPaymentApi::class, 'getTotalSpendMonth']);
     Route::get('/total/month/{month}/year/{year}', [QueryPaymentApi::class, 'getTotalSpendDay']);
     Route::get('/detail/month/{month}/year/{year}', [QueryPaymentApi::class, 'getMonthlySpend']);
+    Route::put('/update/{id}', [CommandPaymentApi::class, 'updatePayment']);
+    Route::delete('/delete/{id}', [CommandPaymentApi::class, 'deletePayment']);
 });
 
 Route::prefix('/v1/analytic')->middleware(['auth:sanctum'])->group(function () {
@@ -70,6 +72,7 @@ Route::prefix('/v1/analytic')->middleware(['auth:sanctum'])->group(function () {
 Route::prefix('/v1/tag')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueryTagApi::class, 'getAllTag']);
     Route::get('/my', [QueryTagApi::class, 'getMyTag']);
+    Route::get('/analyze/{slug}', [QueryTagApi::class, 'getAnalyzeMyTag']);
     Route::post('/add', [CommandTagApi::class, 'createMyTag']);
     Route::delete('/{id}', [CommandTagApi::class, 'deleteTagById']);
 });

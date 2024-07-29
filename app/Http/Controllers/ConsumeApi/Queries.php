@@ -225,7 +225,7 @@ class Queries extends Controller
                 ->first();
 
             if ($consume) {
-                $payment = Payment::select('payment_method','payment_price','payment.created_at','payment.updated_at')
+                $payment = Payment::select('payment.id as id_payment','payment_method','payment_price','payment.created_at','payment.updated_at')
                     ->join('consume','consume.id','=','payment.consume_id')
                     ->where('payment.created_by', $user_id)
                     ->where('slug_name', $slug)

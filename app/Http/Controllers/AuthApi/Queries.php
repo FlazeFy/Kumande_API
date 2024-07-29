@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 /**
  * @OA\Info(
- *     title="Kumande API Docs",
+ *     title="Kumande API Docs (Laravel)",
  *     version="1.0.0",
  *     description="API Documentation for Kumande Mobile & Web Apps",
  *     @OA\Contact(

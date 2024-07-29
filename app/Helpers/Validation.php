@@ -93,6 +93,13 @@ class Validation
         ]);
     }
 
+    public static function getValidatePayment($request){ 
+        return Validator::make($request->all(), [
+            'payment_method' => ['required', new TypePayment],
+            'payment_price' => 'required|numeric|min:0|max:10000000',
+        ]);
+    }
+
     public static function getValidateAllergic($request) {
         return Validator::make($request->all(), [
             'allergic_context' => 'required|string|min:2|max:75',

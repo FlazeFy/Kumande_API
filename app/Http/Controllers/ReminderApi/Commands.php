@@ -166,7 +166,7 @@ class Commands extends Controller
                     ->where('reminder_name', $request->reminder_name)
                     ->first();
 
-                if($check){
+                if(!$check){
                     if($request->reminder_context){
                         $jsonReminderContext = Converter::getEncoded($request->reminder_context);
                         $reminder_context = json_decode($jsonReminderContext, true);
@@ -174,6 +174,8 @@ class Commands extends Controller
                     if($request->reminder_attachment){
                         $jsonReminderAttachment = Converter::getEncoded($request->reminder_attachment);
                         $reminder_attachment = json_decode($jsonReminderAttachment, true);
+                    } else {
+                        $reminder_attachment = null;
                     }
 
                     $res = Reminder::create([
@@ -182,7 +184,7 @@ class Commands extends Controller
                         'reminder_type' => $request->reminder_type, 
                         'reminder_context' => $reminder_context, 
                         'reminder_body' => $request->reminder_body, 
-                        'reminder_attachment' => $request->reminder_attachment,
+                        'reminder_attachment' => $reminder_attachment,
                         'created_by' => $user_id, 
                         'created_at' => date('Y-m-d H:i:s')
                     ]);

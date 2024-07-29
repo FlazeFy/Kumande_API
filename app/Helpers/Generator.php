@@ -99,8 +99,8 @@ class Generator
                 ->limit(1)
                 ->get();
         } else if($type == "tag"){
-            $check = Tag::select('slug_name')
-                ->where('slug_name', $replace)
+            $check = Tag::select('tag_name')
+                ->where('tag_name', $replace)
                 ->limit(1)
                 ->get();
         }

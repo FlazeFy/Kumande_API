@@ -32,7 +32,7 @@ class Reminder extends Model
 
     protected $table = 'reminder';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'reminder_name', 'reminder_type', 'reminder_context', 'reminder_body', 'reminder_attachment', 'created_at', 'created_by'];
+    protected $fillable = ['id', 'reminder_name', 'reminder_type', 'reminder_context', 'reminder_body', 'reminder_attachment', 'created_at', 'created_by','updated_at','updated_by'];
     protected $casts = [
         'reminder_context' => 'array',
         'reminder_attachment' => 'array'
