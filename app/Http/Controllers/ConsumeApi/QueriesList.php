@@ -90,4 +90,153 @@ class QueriesList extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    /**
+     * @OA\GET(
+     *     path="/api/v1/list/detail/{id}",
+     *     summary="Get consume list detail",
+     *     tags={"Consume"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume List found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume List not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
+    public function getListDetail(Request $request, $id){
+        try{
+            $user_id = $request->user()->id;
+
+            $csl = ConsumeList::select('id','slug_name','list_name','list_desc','list_tag','created_at')
+                ->where('created_by', $user_id)
+                ->where('id', $id)
+                ->first();
+
+            if ($csl) {
+                $csm = RelConsumeList::selectRaw("consume.id, consume.slug_name, consume_name, consume_type, CAST(REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '') as unsigned) as calorie, REPLACE(JSON_EXTRACT(consume_detail, '$[0].provide'), '\"', '') as provide, consume_from")
+                    ->join('consume','consume.id','=','rel_consume_list.consume_id')
+                    ->where('list_id',$csl->id)
+                    ->get();
+                
+                foreach($csm as $jdx => $du){
+                    $pyt = Payment::selectRaw('CAST(AVG(payment_price) as unsigned) as average_price')
+                        ->where('consume_id', $du->id)
+                        ->groupby('consume_id')
+                        ->first();
+
+                    if($pyt){
+                        $csm[$jdx]->average_price = $pyt->average_price;
+                    } else {
+                        $csm[$jdx]->average_price = null;
+                    }
+                }
+
+                if(count($csm) > 0){
+                    $csl->consume = $csm;
+
+                    $whole_csm = Consume::selectRaw("AVG(CAST(REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '') as unsigned)) as average_calorie, AVG(payment_price) as average_price")
+                        ->leftjoin('payment','payment.consume_id','=','consume.id')
+                        ->first();
+
+                    $csl->whole_avg_calorie = (int)$whole_csm->average_calorie;
+                    $csl->whole_avg_price = (int)$whole_csm->average_price;
+                } else {
+                    $csl->consume = null;
+                }
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => "Consume List found", 
+                    'data' => $csl
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Consume List not found',
+                    'data' => null
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\GET(
+     *     path="/api/v1/list/detail/{id}",
+     *     summary="Get consume calorie, provide, from, average price by slug",
+     *     tags={"Consume"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume not found"
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Consume has been used in this list"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error"
+     *     ),
+     * )
+     */
+    public function getCheckConsumeBySlug(Request $request, $consume_slug, $list_id){
+        try{
+            $user_id = $request->user()->id;
+
+            $check = RelConsumeList::selectRaw('1')
+                ->join('consume','consume.id','=','rel_consume_list.consume_id')
+                ->where('slug_name',$consume_slug)
+                ->where('list_id',$list_id)
+                ->first();
+
+            if($check){
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Consume has been used in this list',
+                    'data' => null
+                ], Response::HTTP_CONFLICT);
+            } else {
+                $csl = Consume::selectRaw("consume_name,consume_from,REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '') as calorie, REPLACE(JSON_EXTRACT(consume_detail, '$[0].provide'), '\"', '') as provide,
+                    COALESCE(CAST(AVG(payment_price) as UNSIGNED), 0) as average_price")
+                    ->leftjoin('payment','payment.consume_id','=','consume.id')
+                    ->where('consume.created_by', $user_id)
+                    ->where('slug_name', $consume_slug)
+                    ->first();
+
+                if ($csl) {
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => "Consume found", 
+                        'data' => $csl
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'Consume not found',
+                        'data' => null
+                    ], Response::HTTP_NOT_FOUND);
+                }
+            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

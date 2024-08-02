@@ -35,16 +35,25 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $sch = Tag::select('id','tag_name','tag_slug','created_by')
+            $res = Tag::select('id','tag_name','tag_slug','created_by')
                 ->orderby('tag_name','ASC')
                 ->where('created_by',$user_id)
                 ->get();
         
-            if (count($sch) > 0) {
+            if (count($res) > 0) {
+                foreach($res as $idx => $dt){
+                    $csm = Consume::selectRaw('COUNT(1) as total')
+                        ->whereRaw('consume_tag like '."'".'%"slug_name":"'.$dt->tag_slug.'"%'."'")
+                        ->where('created_by',$user_id)
+                        ->first();
+
+                    $res[$idx]->total_used = $csm->total;
+                }
+
                 return response()->json([
                     'status' => 'success',
                     'message' => "Tag found", 
-                    'data' => $sch
+                    'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
@@ -145,13 +154,15 @@ class Queries extends Controller
         
             if ($res) {
                 if($res->total_item > 0){
-                    $lastUsedConsume = Consume::select('consume_name')
+                    $lastUsedConsume = Consume::select('consume_name','consume_type','slug_name')
                         ->whereRaw('consume_tag like '."'".'%"slug_name":"'.$slug.'"%'."'")
                         ->where('consume.created_by', $user_id)
                         ->where('consume.created_at', $res->last_used)
                         ->first();
 
                         $res->last_used_consume_name = $lastUsedConsume ? $lastUsedConsume->consume_name : null;
+                        $res->last_used_consume_type = $lastUsedConsume ? $lastUsedConsume->consume_type : null;
+                        $res->last_used_consume_slug = $lastUsedConsume ? $lastUsedConsume->slug_name : null;
                     
                     return response()->json([
                         'status' => 'success',
@@ -161,7 +172,7 @@ class Queries extends Controller
                 } else {
                     return response()->json([
                         'status' => 'success',
-                        'message' => "Tag found but never been", 
+                        'message' => "Tag found but never been used", 
                         'data' => null
                     ], Response::HTTP_OK);
                 }

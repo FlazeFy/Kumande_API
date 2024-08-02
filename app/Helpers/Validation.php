@@ -100,6 +100,13 @@ class Validation
         ]);
     }
 
+    public static function getValidateConsumeListRel($request){ 
+        return Validator::make($request->all(), [
+            'consume_slug' => 'required|min:4|max:80|string',
+            'list_id' => 'required|min:36|max:36|string',
+        ]);
+    }
+
     public static function getValidateAllergic($request) {
         return Validator::make($request->all(), [
             'allergic_context' => 'required|string|min:2|max:75',

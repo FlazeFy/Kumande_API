@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 use App\Models\ConsumeList;
+use App\Models\Consume;
+use App\Models\RelConsumeList;
+
 
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging\CloudMessage;
@@ -20,16 +23,6 @@ use App\Helpers\Converter;
 
 class CommandsList extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
     public function getAllList($page_limit, $order){
         $csl = ConsumeList::select('*')
             ->orderBy('created_at', $order)
@@ -141,6 +134,70 @@ class CommandsList extends Controller
                         'message' => 'List name is already exist, try other name',
                         'data' => null
                     ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+            }
+        } catch(\Exception $err) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $err->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function createListRelation(Request $request){
+        try{
+            $validator = Validation::getValidateConsumeListRel($request);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => 'error',
+                    'result' => $validator->errors()
+                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            } else {     
+                $user_id = $request->user()->id;
+
+                $csm = Consume::select('id')
+                    ->where('slug_name', $request->consume_slug)
+                    ->first();
+
+                if($csm){
+                    $check_rel = RelConsumeList::selectRaw('1')
+                        ->where('consume_id',$csm->id)
+                        ->where('list_id',$request->list_id)
+                        ->where('created_by',$user_id)
+                        ->first();
+
+                    if($check_rel){
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'Consume has been used in this list',
+                        ], Response::HTTP_CONFLICT);
+                    } else {
+                        $rel = RelConsumeList::create([
+                            'id' => Generator::getUUID(),
+                            'consume_id' => $csm->id, 
+                            'list_id' => $request->list_id, 
+                            'created_at' => date('Y-m-d H:i:s'), 
+                            'created_by' => $user_id
+                        ]);
+        
+                        if($rel){
+                            return response()->json([
+                                'status' => 'success',
+                                'message' => 'List updated',
+                            ], Response::HTTP_OK);
+                        } else {
+                            return response()->json([
+                                'status' => 'failed',
+                                'message' => 'Something error please contact admin',
+                            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                        }
+                    }
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'Consume not found',
+                    ], Response::HTTP_NOT_FOUND);
                 }
             }
         } catch(\Exception $err) {

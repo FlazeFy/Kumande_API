@@ -102,9 +102,12 @@ Route::prefix('/v1/budget')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('/v1/list')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/limit/{page_limit}/order/{order}', [QueryConsumeListApi::class, 'getAllList']);
+    Route::get('/detail/{id}', [QueryConsumeListApi::class, 'getListDetail']);
+    Route::get('/check/{consume_slug}/{list_id}', [QueryConsumeListApi::class, 'getCheckConsumeBySlug']);
     Route::delete('/delete/{id}', [CommandConsumeListApi::class, 'deleteListById']);
     Route::put('/update/data/{id}', [CommandConsumeListApi::class, 'updateListData']);
     Route::post('/create', [CommandConsumeListApi::class, 'createList']);
+    Route::post('/createRel', [CommandConsumeListApi::class, 'createListRelation']);
 });
 
 Route::prefix('/v1/schedule')->middleware(['auth:sanctum'])->group(function () {

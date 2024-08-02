@@ -24,6 +24,7 @@ class RelConsumeList extends Model
 {
     use HasFactory;
     public $incrementing = false;
+    public $timestamps = false;
 
     protected $table = 'rel_consume_list';
     protected $primaryKey = 'id';
