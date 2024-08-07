@@ -107,6 +107,13 @@ class Validation
         ]);
     }
 
+    public static function getValidateListRelData($request){ 
+        return Validator::make($request->all(), [
+            'list_name' => 'required|max:75|min:1',
+            'list_desc' => 'nullable|max:255|min:1'
+        ]);
+    }
+
     public static function getValidateAllergic($request) {
         return Validator::make($request->all(), [
             'allergic_context' => 'required|string|min:2|max:75',

@@ -9,6 +9,7 @@ use App\Http\Controllers\ConsumeApi\Commands as CommandConsumeApi;
 use App\Http\Controllers\ConsumeApi\Queries as QueryConsumeApi;
 use App\Http\Controllers\ConsumeApi\CommandsList as CommandConsumeListApi;
 use App\Http\Controllers\ConsumeApi\QueriesList as QueryConsumeListApi;
+use App\Http\Controllers\ConsumeApi\QueriesGallery as QueryConsumeGalleryApi;
 use App\Http\Controllers\ConsumeApi\QueriesAllergic as QueryAllergicApi;
 use App\Http\Controllers\ConsumeApi\CommandsAllergic as CommandAllergicApi;
 use App\Http\Controllers\PaymentApi\Commands as CommandPaymentApi;
@@ -46,6 +47,8 @@ Route::prefix('/v1/consume')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/calorie/maxmin', [QueryConsumeApi::class, 'getMaxMinCalorie']);
     Route::get('/calorie/bytype/{view}', [QueryConsumeApi::class, 'getCalorieTotalByConsumeType']);
     Route::get('/list/select', [QueryConsumeApi::class, 'getListConsume']);
+    Route::get('/gallery', [QueryConsumeApi::class, 'getAllMyGallery']);
+    Route::get('/gallery/{slug}', [QueryConsumeApi::class, 'getGalleryByConsume']);
     
     Route::delete('/delete/{id}', [CommandConsumeApi::class, 'deleteConsumeById']);
     Route::put('/update/data/{id}', [CommandConsumeApi::class, 'updateConsumeData']);
@@ -105,6 +108,7 @@ Route::prefix('/v1/list')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/detail/{id}', [QueryConsumeListApi::class, 'getListDetail']);
     Route::get('/check/{consume_slug}/{list_id}', [QueryConsumeListApi::class, 'getCheckConsumeBySlug']);
     Route::delete('/delete/{id}', [CommandConsumeListApi::class, 'deleteListById']);
+    Route::delete('/deleteRel/{id}', [CommandConsumeListApi::class, 'deleteListRelationById']);
     Route::put('/update/data/{id}', [CommandConsumeListApi::class, 'updateListData']);
     Route::post('/create', [CommandConsumeListApi::class, 'createList']);
     Route::post('/createRel', [CommandConsumeListApi::class, 'createListRelation']);

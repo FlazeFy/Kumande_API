@@ -120,14 +120,14 @@ class QueriesList extends Controller
                 ->first();
 
             if ($csl) {
-                $csm = RelConsumeList::selectRaw("consume.id, consume.slug_name, consume_name, consume_type, CAST(REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '') as unsigned) as calorie, REPLACE(JSON_EXTRACT(consume_detail, '$[0].provide'), '\"', '') as provide, consume_from")
+                $csm = RelConsumeList::selectRaw("consume.id as consume_id, rel_consume_list.id, consume.slug_name, consume_name, consume_type, CAST(REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '') as unsigned) as calorie, REPLACE(JSON_EXTRACT(consume_detail, '$[0].provide'), '\"', '') as provide, consume_from")
                     ->join('consume','consume.id','=','rel_consume_list.consume_id')
                     ->where('list_id',$csl->id)
                     ->get();
                 
                 foreach($csm as $jdx => $du){
                     $pyt = Payment::selectRaw('CAST(AVG(payment_price) as unsigned) as average_price')
-                        ->where('consume_id', $du->id)
+                        ->where('consume_id', $du->consume_id)
                         ->groupby('consume_id')
                         ->first();
 

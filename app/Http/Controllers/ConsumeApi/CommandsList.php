@@ -12,7 +12,6 @@ use App\Models\ConsumeList;
 use App\Models\Consume;
 use App\Models\RelConsumeList;
 
-
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
@@ -23,34 +22,67 @@ use App\Helpers\Converter;
 
 class CommandsList extends Controller
 {
-    public function getAllList($page_limit, $order){
-        $csl = ConsumeList::select('*')
-            ->orderBy('created_at', $order)
-            ->paginate($page_limit);
-    
-        return response()->json([
-            "message"=> "Data retrived", 
-            "status"=> 200,
-            "data"=> $csl
-        ]);
+    public function deleteListById(Request $request,$id){
+        try {
+            $user_id = $request->user()->id;
+
+            $rel_res = RelConsumeList::where('list_id',$id)
+                ->where('created_by',$user_id)
+                ->delete();
+
+            $res = ConsumeList::where('id', $id)
+                ->where('created_by',$user_id)
+                ->delete();
+
+            if($res){
+                return response()->json([
+                    "message"=> "List deleted", 
+                    "status"=> 'success'
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Something error please contact admin',
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        } catch(\Exception $err) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $err->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
-    public function deleteListById($id){
-        ConsumeList::where('id', $id)->delete();
+    public function deleteListRelationById(Request $request,$id){
+        try {
+            $user_id = $request->user()->id;
 
-        return response()->json([
-            "message"=> "Data deleted", 
-            "status"=> 200
-        ]);
+            $res = RelConsumeList::where('id', $id)
+                ->where('created_by',$user_id)
+                ->delete();
+
+            if($res){
+                return response()->json([
+                    "message"=> "Consume removed from list", 
+                    "status"=> 'success'
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Something error please contact admin',
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        } catch(\Exception $err) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $err->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     public function updateListData(Request $request, $id){
         try{
-            $validator = Validator::make($request->all(), [
-                'list_name' => 'required|max:75|min:1',
-                'list_desc' => 'nullable|max:255|min:1',
-                'list_tag' => 'nullable|json'
-            ]);
+            $validator = Validation::getValidateListRelData($request);
 
             if ($validator->fails()) {
                 return response()->json([
@@ -58,18 +90,39 @@ class CommandsList extends Controller
                     'result' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
-                $csl = ConsumeList::where('id', $id)->update([
-                    'list_name' => $request->list_name,
-                    'list_desc' => $request->list_desc,
-                    'list_tag' => $request->list_tag,
-                    'updated_at' => date("Y-m-d H:i:s")
-                ]);
+                $user_id = $request->user()->id;
 
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'List updated',
-                    'data' => $csl
-                ], Response::HTTP_OK);
+                $check = ConsumeList::where('id','!=',$id)
+                    ->where('list_name',$request->list_name)
+                    ->where('created_by',$user_id)
+                    ->first();
+
+                if(!$check){
+                    $csl = ConsumeList::where('id', $id)
+                        ->where('created_by',$user_id)
+                        ->update([
+                        'list_name' => $request->list_name,
+                        'list_desc' => $request->list_desc,
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ]);
+
+                    if($csl){
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => 'List updated',
+                        ], Response::HTTP_OK);
+                    } else {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'Something error please contact admin',
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                    }
+                } else {
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'List name has been used',
+                    ], Response::HTTP_CONFLICT);
+                }
             }
         } catch(\Exception $err) {
             return response()->json([
