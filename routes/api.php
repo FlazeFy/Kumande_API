@@ -10,6 +10,7 @@ use App\Http\Controllers\ConsumeApi\Queries as QueryConsumeApi;
 use App\Http\Controllers\ConsumeApi\CommandsList as CommandConsumeListApi;
 use App\Http\Controllers\ConsumeApi\QueriesList as QueryConsumeListApi;
 use App\Http\Controllers\ConsumeApi\QueriesGallery as QueryConsumeGalleryApi;
+use App\Http\Controllers\ConsumeApi\CommandsGallery as CommandConsumeGalleryApi;
 use App\Http\Controllers\ConsumeApi\QueriesAllergic as QueryAllergicApi;
 use App\Http\Controllers\ConsumeApi\CommandsAllergic as CommandAllergicApi;
 use App\Http\Controllers\PaymentApi\Commands as CommandPaymentApi;
@@ -47,8 +48,11 @@ Route::prefix('/v1/consume')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/calorie/maxmin', [QueryConsumeApi::class, 'getMaxMinCalorie']);
     Route::get('/calorie/bytype/{view}', [QueryConsumeApi::class, 'getCalorieTotalByConsumeType']);
     Route::get('/list/select', [QueryConsumeApi::class, 'getListConsume']);
-    Route::get('/gallery', [QueryConsumeApi::class, 'getAllMyGallery']);
-    Route::get('/gallery/{slug}', [QueryConsumeApi::class, 'getGalleryByConsume']);
+    Route::get('/gallery', [QueryConsumeGalleryApi::class, 'getAllMyGallery']);
+    Route::get('/gallery/{slug}', [QueryConsumeGalleryApi::class, 'getGalleryByConsume']);
+    Route::post('/gallery', [CommandConsumeGalleryApi::class, 'createGallery']);
+    Route::delete('/gallery/{id}', [CommandConsumeGalleryApi::class, 'deleteGallery']);
+    Route::put('/gallery/{id}', [CommandConsumeGalleryApi::class, 'updateGallery']);
     
     Route::delete('/delete/{id}', [CommandConsumeApi::class, 'deleteConsumeById']);
     Route::put('/update/data/{id}', [CommandConsumeApi::class, 'updateConsumeData']);

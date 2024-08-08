@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\ConsumeGallery;
 use App\Models\Consume;
 
-class QueriesList extends Controller
+class QueriesGallery extends Controller
 {
     /**
      * @OA\GET(
@@ -38,6 +38,7 @@ class QueriesList extends Controller
             $user_id = $request->user()->id;
 
             $csl = Consume::selectRaw('consume_name, consume_type, consume_from, is_favorite, consume_gallery.created_at, gallery_url, gallery_desc')
+                ->join('consume_gallery','consume_gallery.consume_id','=','consume.id')
                 ->where('consume.created_by',$user_id)
                 ->whereNull('deleted_at')
                 ->orderby('consume.created_by','desc')
@@ -66,7 +67,7 @@ class QueriesList extends Controller
 
     /**
      * @OA\GET(
-     *     path="/api/v1/consume/gallery",
+     *     path="/api/v1/consume/gallery/{slug}",
      *     summary="Get consume gallery by slug name consume",
      *     tags={"Consume"},
      *     @OA\Response(
@@ -87,8 +88,8 @@ class QueriesList extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $csl = ConsumeGallery::select('gallery_url', 'gallery_desc', 'consume_gallery.created_at')
-                ->join('consume','consume_gallery','=','')
+            $csl = ConsumeGallery::select('consume_gallery.id','gallery_url', 'gallery_desc', 'consume_gallery.created_at')
+                ->join('consume','consume_gallery.consume_id','=','consume.id')
                 ->where('consume.created_by',$user_id)
                 ->where('consume.slug_name',$slug)
                 ->whereNull('deleted_at')

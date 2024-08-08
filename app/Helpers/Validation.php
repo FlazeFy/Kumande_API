@@ -114,6 +114,20 @@ class Validation
         ]);
     }
 
+    public static function getValidateCreateConsumeGallery($request){ 
+        return Validator::make($request->all(), [
+            'consume_id' => 'required|max:36|min:36',
+            'gallery_desc' => 'nullable|max:144|min:1',
+            'gallery_url' => 'required|max:500|min:1'
+        ]);
+    }
+
+    public static function getValidateUpdateConsumeGallery($request){ 
+        return Validator::make($request->all(), [
+            'gallery_desc' => 'nullable|max:144|min:1'
+        ]);
+    }
+
     public static function getValidateAllergic($request) {
         return Validator::make($request->all(), [
             'allergic_context' => 'required|string|min:2|max:75',
