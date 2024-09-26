@@ -17,6 +17,7 @@ class Queries extends Controller
      *     path="/api/v1/budget/by/{year}",
      *     summary="Get all budget plan in whole year",
      *     tags={"Budget"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
      *         name="year",
      *         in="path",
@@ -104,13 +105,18 @@ class Queries extends Controller
      *     path="/api/v1/budget/dashboard",
      *     summary="Get budget dashboard / summary",
      *     tags={"Budget"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Budget found"
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Budget not found"
+     *         description="Budget not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Budget not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,

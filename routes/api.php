@@ -73,7 +73,7 @@ Route::prefix('/v1/analytic')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/allergic', [QueryAllergicApi::class, 'getAllAllergic']);
     Route::put('/allergic/{id}', [CommandAllergicApi::class, 'updateAllergic']);
     Route::post('/allergic', [CommandAllergicApi::class, 'createAllergic']);
-    Route::delete('/allergic/{id}', [CommandAllergicApi::class, 'deleteAllergic']);
+    Route::delete('/allergic/{id}', [CommandAllergicApi::class, 'deleteAllergicById']);
 });
 
 Route::prefix('/v1/tag')->middleware(['auth:sanctum'])->group(function () {

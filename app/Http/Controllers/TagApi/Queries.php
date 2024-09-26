@@ -142,6 +142,14 @@ class Queries extends Controller
      *     summary="Get analyze tag used in consume",
      *     tags={"Tag"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="slug",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Tag slug name",
+     *         example="milk",
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Tag found / Tag found but never been"

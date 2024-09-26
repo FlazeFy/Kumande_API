@@ -14,6 +14,70 @@ use App\Models\Allergic;
 
 class CommandsAllergic extends Controller
 {
+    /**
+     * @OA\PUT(
+     *     path="/api/v1/analytic/allergic/{id}",
+     *     summary="Update allergic favorite by id",
+     *     tags={"Analytic"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Allergic ID",
+     *         example="23260991-9dbb-a35b-0fc9-adfddf0938d1",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Allergic update is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Allergic is updated | Nothing to Change"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Allergic not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Allergice not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Item is exist",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Allergic context already exist")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="The name field is required"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
     public function updateAllergic(Request $request, $id){
         try{
             $validator = Validation::getValidateAllergic($request);
@@ -38,35 +102,93 @@ class CommandsAllergic extends Controller
                         'message' => 'Allergic context already exist',
                     ], Response::HTTP_CONFLICT);
                 } else {
-                    $res = Allergic::where('id',$id)
-                        ->where('created_by',$user_id)
-                        ->update([
-                            'allergic_context' => $request->allergic_context, 
-                            'allergic_desc'  => $request->allergic_desc, 
-                        ]);
+                    $exist = Allergic::where('id', $id)
+                        ->where('created_by', $user_id)
+                        ->first();
 
-                    if($res){
-                        return response()->json([
-                            'status' => 'success',
-                            'message' => 'Allergic updated',
-                            'rows_affected' => $res
-                        ], Response::HTTP_OK);
+                    if($exist){
+                        $res = Allergic::where('id',$id)
+                            ->where('created_by',$user_id)
+                            ->update([
+                                'allergic_context' => $request->allergic_context, 
+                                'allergic_desc'  => $request->allergic_desc, 
+                            ]);
+
+                        if($res){
+                            return response()->json([
+                                'status' => 'success',
+                                'message' => 'Allergic is updated',
+                            ], Response::HTTP_OK);
+                        } else {
+                            return response()->json([
+                                'status' => 'success',
+                                'message' => 'Nothing to Change',
+                            ], Response::HTTP_OK);
+                        }
                     } else {
                         return response()->json([
                             'status' => 'success',
-                            'message' => 'Nothing to Change',
-                        ], Response::HTTP_OK);
+                            'message' => 'Allergic not found',
+                        ], Response::HTTP_NOT_FOUND);
                     }
                 }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => $err->getMessage()
+                'message' => 'Something error please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     * @OA\POST(
+     *     path="/api/v1/analytic/allergic",
+     *     summary="Create allergic",
+     *     tags={"Analytic"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Allergic update is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Allergic is updated | Nothing to Change"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Item is exist",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Allergic context already exist")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="The name field is required"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
     public function createAllergic(Request $request){
         try{
             $validator = Validation::getValidateAllergic($request);
@@ -117,12 +239,60 @@ class CommandsAllergic extends Controller
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => $err->getMessage()
+                'message' => 'Something error please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    public function deleteAllergic(Request $request,$id){
+    /**
+     * @OA\DELETE(
+     *     path="/api/v1/analytic/allergic/{id}",
+     *     summary="Delete allergic by id",
+     *     tags={"Analytic"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Allergic ID",
+     *         example="23260991-9dbb-a35b-0fc9-adfddf0938d1",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Allergic delete is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Allergic is deleted"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Allergic not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Allergic not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function deleteAllergicById(Request $request,$id){
         try{
             $user_id = $request->user()->id;
             $res = Allergic::where('id',$id)
@@ -132,18 +302,18 @@ class CommandsAllergic extends Controller
             if($res){
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'Allergic deleted',
+                    'message' => 'Allergic is deleted',
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
-                    'status' => 'success',
-                    'message' => 'Something error please contact admin',
+                    'status' => 'failed',
+                    'message' => 'Allergic not found',
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => $err->getMessage()
+                'message' => 'Something error please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

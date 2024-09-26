@@ -11,6 +11,42 @@ use App\Models\Payment;
 
 class Queries extends Controller
 {
+    /**
+     * @OA\GET(
+     *     path="/api/v1/payment/total/month/{year}",
+     *     summary="Get total spend monthly in a year",
+     *     tags={"Payment"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="year",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Consume year from date created",
+     *         example="2024",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Analytic data found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Analytic data not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Analytic data not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
     public function getTotalSpendMonth(Request $request, $year){
         try{
             $user_id = $request->user()->id;
@@ -41,13 +77,20 @@ class Queries extends Controller
                 ];
             }
 
-            $collection = collect($obj);
+            if(count($obj) > 0){
+                $collection = collect($obj);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => "Analytic data retrived", 
-                'data' => $collection
-            ], Response::HTTP_OK);
+                return response()->json([
+                    'status' => 'success',
+                    'message' => "Analytic data found", 
+                    'data' => $collection
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => "Analytic data not found",
+                ], Response::HTTP_NOT_FOUND);
+            }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -56,6 +99,50 @@ class Queries extends Controller
         }
     }
 
+    /**
+     * @OA\GET(
+     *     path="/api/v1/payment/total/month/{month}/year/{year}",
+     *     summary="Get total spend monthly",
+     *     tags={"Payment"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="month",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Consume month from date created",
+     *         example="11",
+     *     ),
+     *     @OA\Parameter(
+     *         name="year",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Consume year from date created",
+     *         example="2024",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Analytic data found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Analytic data not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Analytic data not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
     public function getTotalSpendDay(Request $request, $month, $year){
         try{
             $user_id = $request->user()->id;
@@ -103,6 +190,50 @@ class Queries extends Controller
         }
     }
 
+    /**
+     * @OA\GET(
+     *     path="/api/v1/analytic/payment/month/{month}/year/{year}",
+     *     summary="Get total spend monthly in a year analytic",
+     *     tags={"Payment"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="month",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Consume month from date created",
+     *         example="11",
+     *     ),
+     *     @OA\Parameter(
+     *         name="year",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Consume year from date created",
+     *         example="2024",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Analytic data found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Analytic data not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Analytic data not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
     public function getAnalyticSpendMonth(Request $request, $month, $year){
         try{
             $user_id = $request->user()->id;
@@ -126,12 +257,19 @@ class Queries extends Controller
                 $p->min = intval($p->min);
                 $p->total = intval($p->total);
             }
-
-            return response()->json([
-                'status' => 'success',
-                'message' => "Analytic data retrived", 
-                'data' => $pym
-            ], Response::HTTP_OK);
+            
+            if(count($pym) > 0){
+                return response()->json([
+                    'status' => 'success',
+                    'message' => "Analytic data found", 
+                    'data' => $pym
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => "Analytic data not found", 
+                ], Response::HTTP_NOT_FOUND);
+            }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -140,6 +278,34 @@ class Queries extends Controller
         }
     }
 
+    /**
+     * @OA\GET(
+     *     path="/api/v1/count/payment",
+     *     summary="Get total payment in whole consume=",
+     *     tags={"Payment"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Analytic data found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Analytic data not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Analytic data not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
     public function getLifetimeSpend(Request $request){
         try{
             $user_id = $request->user()->id;
@@ -163,7 +329,7 @@ class Queries extends Controller
             if (count($csm) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Analytic data retrived", 
+                    'message' => "Analytic data found", 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
@@ -181,6 +347,50 @@ class Queries extends Controller
         }
     }
 
+    /**
+     * @OA\GET(
+     *     path="/api/v1/payment/detail/month/{month}/year/{year}",
+     *     summary="Get total payment in a month and year",
+     *     tags={"Payment"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="month",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Payment month from date created",
+     *         example="11",
+     *     ),
+     *     @OA\Parameter(
+     *         name="year",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Payment year from date created",
+     *         example="2024",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Payment data found"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Payment not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Payment not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
     public function getMonthlySpend(Request $request, $month, $year){
         try{
             $user_id = $request->user()->id;
@@ -201,7 +411,7 @@ class Queries extends Controller
             if (count($csm) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Payment data retrived", 
+                    'message' => "Payment data found", 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {

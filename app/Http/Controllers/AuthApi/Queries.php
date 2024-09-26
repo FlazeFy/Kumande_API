@@ -31,18 +31,47 @@ class Queries extends Controller
      *     path="/api/v1/logout",
      *     summary="Sign out from Apps",
      *     tags={"Auth"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Logout success"
-     *     )
+     *         description="Logout success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Logout success"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
      * )
      */
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        try{
+            $request->user()->currentAccessToken()->delete();
 
-        return response()->json([
-            'message' => 'Logout success'
-        ], Response::HTTP_OK);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Logout success'
+            ], Response::HTTP_OK);
+        } catch(\Exception $err) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something error please contact admin'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

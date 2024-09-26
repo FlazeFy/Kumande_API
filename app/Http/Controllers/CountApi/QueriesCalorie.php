@@ -81,6 +81,14 @@ class QueriesCalorie extends Controller
      *     summary="Get total calorie and fullfiled from date",
      *     tags={"Count"},
      *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="date",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Calorie date",
+     *         example="2024-08-08",
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Count data found"

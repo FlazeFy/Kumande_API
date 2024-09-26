@@ -16,20 +16,151 @@ use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 
 use App\Models\Consume;
+use App\Models\Schedule;
 use App\Models\Payment;
+use App\Models\RelConsumeList;
 use App\Models\User;
 
 class Commands extends Controller
 {
-    public function deleteConsumeById($id){
-        Consume::where('id', $id)->delete();
+    /**
+     * @OA\DELETE(
+     *     path="/api/v1/consume/delete/{id}",
+     *     summary="Delete consume by id",
+     *     tags={"Consume"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Consume ID",
+     *         example="23260991-9dbb-a35b-0fc9-adfddf0938d1",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume delete is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Consume is deleted"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Consume not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function deleteConsumeById(Request $request, $id){
+        try{ 
+            $user_id = $request->user()->id;
+            $res = Consume::where('id', $id)
+                ->where('created_by',$user_id)
+                ->delete();
 
-        return response()->json([
-            "message"=> "Data deleted", 
-            "status"=> 200
-        ]);
+            if($res){
+                Schedule::where('consume_id', $id)
+                    ->where('created_by',$user_id)
+                    ->delete();
+
+                RelConsumeList::where('consume_id', $id)
+                    ->where('created_by',$user_id)
+                    ->delete();
+                
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Consume is deleted',
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Consume not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $err) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something error please contact admin'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
+    /**
+     * @OA\PUT(
+     *     path="/api/v1/consume/update/data/{id}",
+     *     summary="Update consume by id",
+     *     tags={"Consume"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Consume ID",
+     *         example="23260991-9dbb-a35b-0fc9-adfddf0938d1",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume update is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Consume is update"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Consume not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="The name field is required"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
     public function updateConsumeData(Request $request, $id){
         try{
             $validator = Validator::make($request->all(), [
@@ -59,20 +190,82 @@ class Commands extends Controller
                     'updated_at' => date("Y-m-d H:i:s")
                 ]);
 
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Consume updated',
-                    'rows_affected' => $csm
-                ], Response::HTTP_OK);
+                if($csm){
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Consume is updated',
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'Consume not found',
+                    ], Response::HTTP_NOT_FOUND);
+                }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => $err->getMessage()
+                'message' => 'Something error please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     * @OA\PUT(
+     *     path="/api/v1/consume/update/favorite/{id}",
+     *     summary="Update consume favorite by id",
+     *     tags={"Consume"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Consume ID",
+     *         example="23260991-9dbb-a35b-0fc9-adfddf0938d1",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume favorite update is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Consume favorite is update"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume favorite not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Consume favorite not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="The name field is required"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
     public function updateConsumeFavorite(Request $request, $id){
         try{
             $validator = Validator::make($request->all(), [
@@ -90,20 +283,66 @@ class Commands extends Controller
                     'updated_at' => date("Y-m-d H:i:s")
                 ]);
 
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Consume updated',
-                    'rows_affected' => $csm
-                ], Response::HTTP_OK);
+                if($csm){
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Consume favorite is updated',
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'Consume favorite not found',
+                    ], Response::HTTP_NOT_FOUND);
+                }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => $err->getMessage()
+                'message' => 'Something error please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     * @OA\POST(
+     *     path="/api/v1/consume/create",
+     *     summary="Create consume",
+     *     tags={"Consume"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume create is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="You have add new payment and consume"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="The name field is required"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
     public function createConsume(Request $request){
         try{
             $validator = Validation::getValidateCreateConsume($request);
@@ -194,7 +433,7 @@ class Commands extends Controller
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => $err->getMessage()
+                'message' => 'Something error please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
