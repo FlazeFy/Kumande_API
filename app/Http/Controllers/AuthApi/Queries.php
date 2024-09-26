@@ -15,6 +15,13 @@ use Illuminate\Support\Facades\Hash;
  *     @OA\Contact(
  *         email="flazen.edu@gmail.com"
  *     )
+ * ),
+ * @OA\SecurityScheme(
+ *     securityScheme="bearerAuth",
+ *     type="http",
+ *     scheme="bearer",
+ *     bearerFormat="JWT",
+ *     description="JWT Authorization header using the Bearer scheme",
  * )
 */
 class Queries extends Controller

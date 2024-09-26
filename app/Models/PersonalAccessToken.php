@@ -25,7 +25,6 @@ use Illuminate\Database\Eloquent\Model;
  * )
  */
 
-
 class PersonalAccessToken extends Model
 {
     use HasFactory;

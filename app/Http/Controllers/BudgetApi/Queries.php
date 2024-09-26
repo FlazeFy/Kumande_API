@@ -17,17 +17,33 @@ class Queries extends Controller
      *     path="/api/v1/budget/by/{year}",
      *     summary="Get all budget plan in whole year",
      *     tags={"Budget"},
+     *     @OA\Parameter(
+     *         name="year",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Budget year",
+     *         example="2024",
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Budget found"
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Budget not found"
+     *         description="Budget not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Budget not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -73,13 +89,12 @@ class Queries extends Controller
                 return response()->json([
                     'status' => 'failed',
                     'message' => 'Budget not found',
-                    'data' => null
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -99,7 +114,11 @@ class Queries extends Controller
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -131,7 +150,7 @@ class Queries extends Controller
 
             $date_json = "STR_TO_DATE(CONCAT($year_json, '-', $month_case, '-01'), '%Y-%m-%d')";
 
-            $bdt = Budget::selectRaw("$month_json as month, $year_json as year, budget_total")
+            $bdt = Budget::selectRaw("id, $month_json as month, $year_json as year, budget_total")
                 ->where('created_by', $user_id)
                 ->orderByRaw("$date_json DESC");
 
@@ -182,7 +201,7 @@ class Queries extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

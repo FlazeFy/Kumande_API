@@ -110,12 +110,13 @@ class CommandsList extends Controller
                         return response()->json([
                             'status' => 'success',
                             'message' => 'List updated',
+                            'rows_affected' => $csl
                         ], Response::HTTP_OK);
                     } else {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => 'Something error please contact admin',
-                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                            'message' => 'List not found',
+                        ], Response::HTTP_NOT_FOUND);
                     }
                 } else {
                     return response()->json([

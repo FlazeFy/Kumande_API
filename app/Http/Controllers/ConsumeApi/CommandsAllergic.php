@@ -49,6 +49,7 @@ class CommandsAllergic extends Controller
                         return response()->json([
                             'status' => 'success',
                             'message' => 'Allergic updated',
+                            'rows_affected' => $res
                         ], Response::HTTP_OK);
                     } else {
                         return response()->json([
@@ -103,6 +104,7 @@ class CommandsAllergic extends Controller
                         return response()->json([
                             'status' => 'success',
                             'message' => 'Allergic created',
+                            'data' => $res
                         ], Response::HTTP_OK);
                     } else {
                         return response()->json([

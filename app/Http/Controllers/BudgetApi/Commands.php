@@ -7,9 +7,14 @@ use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
 use App\Models\Budget;
+use App\Models\User;
 
 use App\Helpers\Generator;
 use App\Helpers\Validation;
+
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
 
 class Commands extends Controller
 {
@@ -49,16 +54,14 @@ class Commands extends Controller
                         $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
                         $messaging = $factory->createMessaging();
                         $message = CloudMessage::withTarget('token', $fcm_token)
-                            ->withNotification(Notification::create('You have successfully added new meals to history called ', $request->consume_name))
-                            ->withData([
-                                'consume_name' => $request->consume_name,
-                            ]);
+                            ->withNotification(Notification::create("You have successfully make budget plan for $request->month-$request->year"));
                         $response = $messaging->send($message);
                     }
 
                     return response()->json([
                         'status' => 'success',
                         'message' => 'Budget is created',
+                        'data' => $bdt
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
@@ -71,6 +74,44 @@ class Commands extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => $err->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function deleteBudgetById(Request $request, $id){
+        try{ 
+            $user_id = $request->user()->id;
+
+            $data = Budget::find($id);
+            $res = Budget::where('created_by',$user_id)
+                ->where('id',$id)
+                ->delete();
+
+            if($res){
+                $user = User::getProfile($user_id);
+                $fcm_token = $user->firebase_fcm_token;
+                if($fcm_token){
+                    $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
+                    $messaging = $factory->createMessaging();
+                    $message = CloudMessage::withTarget('token', $fcm_token)
+                        ->withNotification(Notification::create("You have successfully delete budget plan $data->month-$data->year"));
+                    $response = $messaging->send($message);
+                }
+    
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Budget is deleted',
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Something error please contact admin',
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        } catch(\Exception $err) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something error please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

@@ -41,6 +41,7 @@ class Commands extends Controller
                     return response()->json([
                         'status' => 'success',
                         'message' => "Payment updated", 
+                        'rows_affected' => $res
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
@@ -52,7 +53,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -78,7 +79,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

@@ -16,17 +16,26 @@ class QueriesCalorie extends Controller
      *     path="/api/v1/count/calorie",
      *     summary="Get latest count calorie data",
      *     tags={"Count"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Count data found"
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Count data not found"
+     *         description="Count data not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Count data not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -56,13 +65,12 @@ class QueriesCalorie extends Controller
                 return response()->json([
                     "message"=> "Count data not found", 
                     "status"=> 'success',
-                    "data"=> null
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -72,17 +80,26 @@ class QueriesCalorie extends Controller
      *     path="/api/v1/count/calorie/fulfill/{date}",
      *     summary="Get total calorie and fullfiled from date",
      *     tags={"Count"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Count data found"
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Count data not found"
+     *         description="Count data not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Count data not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -116,7 +133,7 @@ class QueriesCalorie extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

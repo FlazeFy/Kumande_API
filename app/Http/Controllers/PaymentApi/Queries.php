@@ -11,16 +11,6 @@ use App\Models\Payment;
 
 class Queries extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
     public function getTotalSpendMonth(Request $request, $year){
         try{
             $user_id = $request->user()->id;
@@ -61,7 +51,7 @@ class Queries extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -108,7 +98,7 @@ class Queries extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -145,7 +135,7 @@ class Queries extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -186,7 +176,7 @@ class Queries extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -200,8 +190,13 @@ class Queries extends Controller
                 ->where('payment.created_by',$user_id)
                 ->whereRaw("DATE_FORMAT(payment.created_at, '%b') = ?",[$month])
                 ->whereRaw('YEAR(payment.created_at) = ?',[$year])
-                ->orderby('payment.created_by','DESC')
-                ->paginate(15);
+                ->orderby('payment.created_by','DESC');
+
+            if ($request->has('all') && $request->all == 'true') {
+                $csm = $csm->get();
+            } else {
+                $csm = $csm->paginate(15);
+            }
 
             if (count($csm) > 0) {
                 return response()->json([
@@ -218,7 +213,7 @@ class Queries extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

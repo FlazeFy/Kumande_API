@@ -17,17 +17,26 @@ class QueriesBodyInfo extends Controller
      *     path="/api/v1/user/body_info",
      *     summary="Get my body info (Medstory)",
      *     tags={"User"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="User body info found"
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="User body info not found"
+     *         description="User body info not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="User body info not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -83,13 +92,12 @@ class QueriesBodyInfo extends Controller
                 return response()->json([
                     "message" => "User body info not found",
                     "status" => 'failed',
-                    "data" => null
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -99,17 +107,26 @@ class QueriesBodyInfo extends Controller
      *     path="/api/v1/user/my_body_history",
      *     summary="Get all my body info (Medstory) & Calorie data",
      *     tags={"User"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="User body history found"
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="User body history not found"
+     *         description="User body history not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="User body history not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -151,13 +168,12 @@ class QueriesBodyInfo extends Controller
                 return response()->json([
                     "message" => "User body history not found",
                     "status" => 'failed',
-                    "data" => null
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

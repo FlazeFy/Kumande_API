@@ -98,6 +98,7 @@ class Commands extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => 'User updated',
+                    'rows_affected' => $user,
                 ], Response::HTTP_OK);
             }
         } catch(\Exception $err) {
@@ -138,7 +139,7 @@ class Commands extends Controller
                     return response()->json([
                         'status' => 'success',
                         'message' => 'User telegram id updated',
-                        'data' => $user." rows affected"
+                        'rows_affected' => $user,
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
@@ -185,7 +186,7 @@ class Commands extends Controller
                     return response()->json([
                         'status' => 'success',
                         'message' => 'User telegram id updated',
-                        'data' => $user." rows affected"
+                        'rows_affected' => $user,
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
@@ -224,6 +225,7 @@ class Commands extends Controller
                     return response()->json([
                         'status' => 'success',
                         'message' => 'User timezone updated',
+                        'rows_affected' => $user,
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
@@ -260,6 +262,7 @@ class Commands extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => 'User profile image updated',
+                    'rows_affected' => $user,
                 ], Response::HTTP_OK);
             }
         } catch(\Exception $err) {

@@ -124,13 +124,14 @@ class CommandsGallery extends Controller
                 if($res){
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'Gallery successfully updated'
+                        'message' => 'Gallery successfully updated',
+                        'rows_affected' => $res
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Something error please contact admin',
-                    ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                        'message' => 'Gallery failed to update',
+                    ], Response::HTTP_NOT_FOUND);
                 }
             }
         } catch(\Exception $err) {

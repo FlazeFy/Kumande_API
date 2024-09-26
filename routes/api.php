@@ -105,11 +105,12 @@ Route::prefix('/v1/budget')->middleware(['auth:sanctum'])->group(function () {
     Route::post('/dashboard', [QueryBudgetApi::class, 'getBudgetDashboard']);
     Route::get('/by/{year}', [QueryBudgetApi::class, 'getAllBudgetByYear']);
     Route::post('/create', [CommandsBudgetApi::class, 'createBudget']);
+    Route::delete('/{id}', [CommandsBudgetApi::class, 'deleteBudgetById']);
 });
 
 Route::prefix('/v1/list')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/limit/{page_limit}/order/{order}', [QueryConsumeListApi::class, 'getAllList']);
-    Route::get('/detail/{id}', [QueryConsumeListApi::class, 'getListDetail']);
+    Route::get('/detail/{list_id}', [QueryConsumeListApi::class, 'getListDetail']);
     Route::get('/check/{consume_slug}/{list_id}', [QueryConsumeListApi::class, 'getCheckConsumeBySlug']);
     Route::delete('/delete/{id}', [CommandConsumeListApi::class, 'deleteListById']);
     Route::delete('/deleteRel/{id}', [CommandConsumeListApi::class, 'deleteListRelationById']);

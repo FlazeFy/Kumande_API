@@ -16,17 +16,26 @@ class Queries extends Controller
      *     path="/api/v1/schedule",
      *     summary="Get list schedule consume in a week",
      *     tags={"Schedule"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Schedule found"
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Schedule not found"
+     *         description="Schedule not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Schedule not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -58,13 +67,12 @@ class Queries extends Controller
                 return response()->json([
                     'status' => 'failed',
                     'message' => 'Schedule not found',
-                    'data' => null
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -74,17 +82,26 @@ class Queries extends Controller
      *     path="/api/v1/schedule/day/{day}",
      *     summary="Get schedule consume in a day",
      *     tags={"Schedule"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Schedule found"
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Schedule not found"
+     *         description="Schedule not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Schedule not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -108,13 +125,12 @@ class Queries extends Controller
                 return response()->json([
                     "message"=> "Schedule not found", 
                     "status"=> 'failed',
-                    "data"=> null
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

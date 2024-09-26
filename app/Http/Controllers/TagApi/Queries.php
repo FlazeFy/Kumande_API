@@ -17,17 +17,26 @@ class Queries extends Controller
      *     path="/api/v1/tag/my",
      *     summary="Get all of my tag",
      *     tags={"Tag"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Tag found"
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Tag not found"
+     *         description="Tag not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Tag not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -59,13 +68,12 @@ class Queries extends Controller
                 return response()->json([
                     'status' => 'failed',
                     'message' => 'Tag not found',
-                    'data' => null
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -75,17 +83,26 @@ class Queries extends Controller
      *     path="/api/v1/tag",
      *     summary="Get all of my tag and public tag",
      *     tags={"Tag"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Tag found"
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Tag not found"
+     *         description="Tag not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Tag not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -109,13 +126,12 @@ class Queries extends Controller
                 return response()->json([
                     'status' => 'failed',
                     'message' => 'Tag not found',
-                    'data' => null
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -125,17 +141,26 @@ class Queries extends Controller
      *     path="/api/v1/tag/analyze/{slug}",
      *     summary="Get analyze tag used in consume",
      *     tags={"Tag"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="Tag found / Tag found but never been"
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Tag not found"
+     *         description="Tag not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Tag not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -180,13 +205,12 @@ class Queries extends Controller
                 return response()->json([
                     'status' => 'failed',
                     'message' => 'Tag not found',
-                    'data' => null
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

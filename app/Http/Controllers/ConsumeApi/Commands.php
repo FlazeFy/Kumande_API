@@ -21,16 +21,6 @@ use App\Models\User;
 
 class Commands extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
     public function deleteConsumeById($id){
         Consume::where('id', $id)->delete();
 
@@ -44,9 +34,8 @@ class Commands extends Controller
         try{
             $validator = Validator::make($request->all(), [
                 'consume_type' => 'required|max:10|min:1',
-                'consume_name' => 'required|json',
+                'consume_name' => 'required|max:75|min:3',
                 'consume_from' => 'required|max:10|min:1',
-                'consume_payment' => 'required|json',
                 'consume_tag' => 'nullable|json',
                 'consume_comment' => 'nullable|max:255|min:1'
             ]);
@@ -57,12 +46,15 @@ class Commands extends Controller
                     'result' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {        
+                $jsonDetail = Converter::getEncoded($request->consume_detail);
+                $detail = json_decode($jsonDetail, true);
+
                 $csm = Consume::where('id', $id)->update([
                     'consume_type' => $request->consume_type,
                     'consume_name' => $request->consume_name,
                     'consume_from' => $request->consume_from,
-                    'consume_payment' => $request->consume_payment,
                     'consume_tag' => $request->consume_tag,
+                    'consume_detail' => $detail,
                     'consume_comment' => $request->consume_comment,
                     'updated_at' => date("Y-m-d H:i:s")
                 ]);
@@ -70,7 +62,7 @@ class Commands extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Consume updated',
-                    'data' => $csm
+                    'rows_affected' => $csm
                 ], Response::HTTP_OK);
             }
         } catch(\Exception $err) {
@@ -101,7 +93,7 @@ class Commands extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Consume updated',
-                    'data' => $csm
+                    'rows_affected' => $csm
                 ], Response::HTTP_OK);
             }
         } catch(\Exception $err) {

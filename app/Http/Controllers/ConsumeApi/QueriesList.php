@@ -21,17 +21,42 @@ class QueriesList extends Controller
      *     path="/api/v1/list/limit/{page_limit}/order/{order}",
      *     summary="Get all consume list with limit, pagination, and ordering",
      *     tags={"Consume"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="page_limit",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Total of consume to show in each page",
+     *         example="14",
+     *     ),
+     *     @OA\Parameter(
+     *         name="order",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Sorting the consume",
+     *         example="desc",
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Consume List found"
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Consume List not found"
+     *         description="Consume List not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Consume List not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -80,33 +105,49 @@ class QueriesList extends Controller
                 return response()->json([
                     'status' => 'failed',
                     'message' => 'Consume List not found',
-                    'data' => null
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
      * @OA\GET(
-     *     path="/api/v1/list/detail/{id}",
+     *     path="/api/v1/list/detail/{list_id}",
      *     summary="Get consume list detail",
      *     tags={"Consume"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="list_id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="List ID",
+     *         example="272b7494-409a-a172-1bc3-ec1cec8f8400",
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Consume List found"
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Consume List not found"
+     *         description="Consume List not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Consume List not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -160,22 +201,38 @@ class QueriesList extends Controller
                 return response()->json([
                     'status' => 'failed',
                     'message' => 'Consume List not found',
-                    'data' => null
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     /**
      * @OA\GET(
-     *     path="/api/v1/list/detail/{id}",
+     *     path="/api/v1/list/check/{consume_slug}/{list_id}",
      *     summary="Get consume calorie, provide, from, average price by slug",
      *     tags={"Consume"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="list_id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="List ID",
+     *         example="272b7494-409a-a172-1bc3-ec1cec8f8400",
+     *     ),
+     *     @OA\Parameter(
+     *         name="consume_slug",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Consume slug name",
+     *         example="telur_rebus",
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Consume found"
@@ -186,11 +243,19 @@ class QueriesList extends Controller
      *     ),
      *     @OA\Response(
      *         response=409,
-     *         description="Consume has been used in this list"
+     *         description="Consume has been used in this list",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Consume not found")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Internal Server Error"
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
      *     ),
      * )
      */
@@ -228,14 +293,13 @@ class QueriesList extends Controller
                     return response()->json([
                         'status' => 'failed',
                         'message' => 'Consume not found',
-                        'data' => null
                     ], Response::HTTP_NOT_FOUND);
                 }
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
