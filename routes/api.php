@@ -64,8 +64,8 @@ Route::prefix('/v1/payment')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/total/month/{year}', [QueryPaymentApi::class, 'getTotalSpendMonth']);
     Route::get('/total/month/{month}/year/{year}', [QueryPaymentApi::class, 'getTotalSpendDay']);
     Route::get('/detail/month/{month}/year/{year}', [QueryPaymentApi::class, 'getMonthlySpend']);
-    Route::put('/update/{id}', [CommandPaymentApi::class, 'updatePayment']);
-    Route::delete('/delete/{id}', [CommandPaymentApi::class, 'deletePayment']);
+    Route::put('/update/{id}', [CommandPaymentApi::class, 'updatePaymentById']);
+    Route::delete('/delete/{id}', [CommandPaymentApi::class, 'deletePaymentById']);
 });
 
 Route::prefix('/v1/analytic')->middleware(['auth:sanctum'])->group(function () {
@@ -88,8 +88,8 @@ Route::prefix('/v1/reminder')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueryReminderApi::class, 'getListReminder']);
     Route::post('/rel', [CommandReminderApi::class, 'createReminderRel']);
     Route::post('/add', [CommandReminderApi::class, 'createReminder']);
-    Route::delete('/rel/{id}', [CommandReminderApi::class, 'deleteReminderRel']);
-    Route::delete('/delete/{id}', [CommandReminderApi::class, 'deleteReminder']);
+    Route::delete('/rel/{rel_id}', [CommandReminderApi::class, 'deleteReminderRelByRelId']);
+    Route::delete('/delete/{id}', [CommandReminderApi::class, 'deleteReminderById']);
 });
 
 Route::prefix('/v1/count')->middleware(['auth:sanctum'])->group(function () {

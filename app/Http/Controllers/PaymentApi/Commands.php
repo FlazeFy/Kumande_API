@@ -17,7 +17,63 @@ use App\Models\User;
 
 class Commands extends Controller
 {
-    public function updatePayment(Request $request, $id){
+    /**
+     * @OA\PUT(
+     *     path="/api/v1/payment/update/{id}",
+     *     summary="Update payment by id",
+     *     tags={"Payment"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Payment ID",
+     *         example="23260991-9dbb-a35b-0fc9-adfddf0938d1",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Payment update is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Payment is updated"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Payment not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Payment not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="The name field is required"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function updatePaymentById(Request $request, $id){
         try{
             $validator = Validation::getValidatePayment($request);
 
@@ -40,13 +96,12 @@ class Commands extends Controller
                 if ($res) {
                     return response()->json([
                         'status' => 'success',
-                        'message' => "Payment updated", 
-                        'rows_affected' => $res
+                        'message' => "Payment is updated"
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Payment failed to updated',
+                        'message' => 'Payment not found',
                     ], Response::HTTP_NOT_FOUND);
                 }
             }
@@ -57,7 +112,56 @@ class Commands extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function deletePayment(Request $request, $id){
+
+    /**
+     * @OA\DELETE(
+     *     path="/api/v1/payment/delete/{id}",
+     *     summary="Delete payment by id",
+     *     tags={"Payment"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Payment ID",
+     *         example="23260991-9dbb-a35b-0fc9-adfddf0938d1",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Payment delete is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Payment is deleted"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Payment not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Payment not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function deletePaymentById(Request $request, $id){
         try{
             $user_id = $request->user()->id;
 
@@ -68,12 +172,12 @@ class Commands extends Controller
             if ($res) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Payment deleted", 
+                    'message' => "Payment is deleted", 
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Payment failed to deleted',
+                    'message' => 'Payment not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
