@@ -14,15 +14,45 @@ use App\Models\User;
 class Commands extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
+     * @OA\POST(
+     *     path="/api/v1/user/create",
+     *     summary="Create user",
+     *     tags={"User"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="User create is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="User is created"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Item is exist",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="This email or username is already been used")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="The name field is required"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */  
     public function createUser(Request $request){
         try{
             $validator = Validation::getValidateCreateUser($request);
@@ -55,26 +85,81 @@ class Commands extends Controller
                         'deleted_at' => null
                     ]);
             
-                    return response()->json([
-                        'status' => 'success',
-                        'message' => 'User created',
-                        'data' => $user
-                    ], Response::HTTP_OK);
+                    if($user){
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => 'User is created',
+                            'data' => $user
+                        ], Response::HTTP_OK);
+                    } else {
+                        return response()->json([
+                            'status' => 'error',
+                            'message' => 'something wrong. please contact admin'
+                        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                    }
                 } else {
                     return response()->json([
                         'status' => 'failed',
                         'message' => "This email or username is already been used"
-                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                    ], Response::HTTP_CONFLICT);
                 }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => $err->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
  
+    /**
+     * @OA\PUT(
+     *     path="/api/v1/user/edit",
+     *     summary="Edit user",
+     *     tags={"User"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="User update is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Profile is updated"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="User not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Item is exist",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="This email or username is already been used")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="The name field is required"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */ 
     public function updateUser(Request $request){
         try{
             $validator = Validation::getValidateUpdateUser($request);
@@ -95,20 +180,66 @@ class Commands extends Controller
                     'updated_at' => date("Y-m-d H:i:s")
                 ]);
         
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'User updated',
-                    'rows_affected' => $user,
-                ], Response::HTTP_OK);
+                if($user > 0){
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Profile is updated'
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'User not found',
+                    ], Response::HTTP_NOT_FOUND);
+                }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => $err->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     * @OA\PUT(
+     *     path="/api/v1/user/edit_telegram_id",
+     *     summary="Edit user telegram ID",
+     *     tags={"User"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="User telegram id update is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Telegram id is updated"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="User not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="The name field is required"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */ 
     public function updateTelegramId(Request $request){
         try{
             $validator = Validation::getValidateUpdateTelegramID($request);
@@ -138,24 +269,63 @@ class Commands extends Controller
                     
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'User telegram id updated',
-                        'rows_affected' => $user,
+                        'message' => 'Telegram id is updated'
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'User telegram id failed to update',
+                        'message' => 'User not found',
                     ], Response::HTTP_NOT_FOUND);
                 }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => $err->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     * @OA\PUT(
+     *     path="/api/v1/user/edit_telegram_id_qrcode",
+     *     summary="Edit user telegram ID via QR Code",
+     *     tags={"User"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="User telegram id update is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Telegram id is updated"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="User not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="The name field is required"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */ 
     public function updateTelegramIdQRCode(Request $request){
         try{
             $validator = Validation::getValidateUpdateTelegramID($request);
@@ -185,24 +355,63 @@ class Commands extends Controller
                     
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'User telegram id updated',
-                        'rows_affected' => $user,
+                        'message' => 'Telegram id is updated'
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'User telegram id failed to update',
+                        'message' => 'User not found',
                     ], Response::HTTP_NOT_FOUND);
                 }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => $err->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
+     /**
+     * @OA\PUT(
+     *     path="/api/v1/user/edit_timezone",
+     *     summary="Edit user timezone",
+     *     tags={"User"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="User timezone update is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Timezone is updated"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="User not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="The name field is required | timezone is invalid"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */ 
     public function updateTimezone(Request $request){
         try{
             $validator = Validation::getValidateUpdateUserTimezone($request);
@@ -222,14 +431,20 @@ class Commands extends Controller
                         'timezone' => $timezone,
                     ]);
             
-                    return response()->json([
-                        'status' => 'success',
-                        'message' => 'User timezone updated',
-                        'rows_affected' => $user,
-                    ], Response::HTTP_OK);
+                    if($user > 0){
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => 'Timezone is updated'
+                        ], Response::HTTP_OK);
+                    } else {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'User not found'
+                        ], Response::HTTP_NOT_FOUND);
+                    }
                 } else {
                     return response()->json([
-                        'status' => 'error',
+                        'status' => 'failed',
                         'result' => 'timezone is invalid'
                     ], Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
@@ -237,11 +452,51 @@ class Commands extends Controller
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => $err->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
+     /**
+     * @OA\PUT(
+     *     path="/api/v1/user/image",
+     *     summary="Edit user profile image",
+     *     tags={"User"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="User image update is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Profile image is updated"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="User not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="The name field is required | timezone is invalid"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */ 
     public function updateImage(Request $request){
         try{
             $validator = Validation::getValidateUpdateImageUser($request);
@@ -258,17 +513,23 @@ class Commands extends Controller
                     'image_url' => $request->image_url,
                     'updated_at' => date("Y-m-d H:i:s")
                 ]);
-        
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'User profile image updated',
-                    'rows_affected' => $user,
-                ], Response::HTTP_OK);
+
+                if($user > 0){
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Profile image is updated'
+                    ], Response::HTTP_OK);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'User not found'
+                    ], Response::HTTP_NOT_FOUND);
+                }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => $err->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

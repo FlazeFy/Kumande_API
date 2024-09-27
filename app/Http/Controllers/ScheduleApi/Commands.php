@@ -19,14 +19,73 @@ use App\Models\User;
 
 class Commands extends Controller
 {
+    /**
+     * @OA\DELETE(
+     *     path="/api/v1/schedule/delete/{id}",
+     *     summary="Delete schedule by id",
+     *     tags={"Schedule"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Schedule ID",
+     *         example="23260991-9dbb-a35b-0fc9-adfddf0938d1",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Schedule delete is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Schedule is deleted"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Schedule not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Schedule not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
     public function deleteScheduleById($id){
         try{
-            Schedule::where('id', $id)->delete();
+            $user_id = $request->user()->id;
 
-            return response()->json([
-                "message"=> "Data deleted", 
-                "status"=> 200
-            ]);
+            $res = Schedule::where('id', $id)
+                ->where('created_by',$user_id)
+                ->delete();
+
+            if($res){
+                return response()->json([
+                    "message"=> "Schedule is deleted", 
+                    "status"=> 'success'
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Schedule not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -35,6 +94,62 @@ class Commands extends Controller
         }
     }
 
+    /**
+     * @OA\PUT(
+     *     path="/api/v1/schedule/update/data/{id}",
+     *     summary="Update schedule by id",
+     *     tags={"Schedule"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Schedule ID",
+     *         example="23260991-9dbb-a35b-0fc9-adfddf0938d1",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Schedule update is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Schedule is updated"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Schedule not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Schedule not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="The name field is required"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
     public function updateScheduleData(Request $request, $id){
         try{
             $validator = Validator::make($request->all(), [
@@ -58,20 +173,74 @@ class Commands extends Controller
                     'updated_at' => date("Y-m-d H:i:s")
                 ]);
 
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Schedule updated',
-                    'data' => $sch
-                ], Response::HTTP_OK);
+                if($sch){
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Schedule is updated'
+                    ], Response::HTTP_OK);   
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => 'Schedule not found'
+                    ], Response::HTTP_NOT_FOUND);
+                }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => $err->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     * @OA\POST(
+     *     path="/api/v1/schedule/create",
+     *     summary="Create schedule",
+     *     tags={"Schedule"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Schedule create is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Schedule is created"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Item is exist",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="There is a schedule with same day and category")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="The name field is required"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
     public function createSchedule(Request $request){
         try{
             $success_add = 0;
@@ -124,7 +293,7 @@ class Commands extends Controller
                             return response()->json([
                                 'status' => 'failed',
                                 'message' => 'There is a schedule with same day and category',
-                            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                            ], Response::HTTP_CONFLICT);
                         }
                     }
                 }
@@ -170,7 +339,7 @@ class Commands extends Controller
                         return response()->json([
                             'status' => 'failed',
                             'message' => 'There is a schedule with same day and category',
-                        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                        ], Response::HTTP_CONFLICT);
                     }
                 }
             }
@@ -191,20 +360,19 @@ class Commands extends Controller
         
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'Schedule created',
+                    'message' => 'Schedule is created',
                     'data' => $sch
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
-                    'status' => 'failed',
-                    'message' => 'No schedule created',
-                    'data' => $sch
-                ], Response::HTTP_NOT_FOUND);
+                    'status' => 'error',
+                    'message' => 'something wrong. please contact admin',
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => $err->getMessage()
+                'message' => 'something wrong. please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

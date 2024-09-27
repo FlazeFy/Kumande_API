@@ -50,7 +50,7 @@ class Commands extends Controller
      *         response=422,
      *         description="Validation failed",
      *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="status", type="string", example="failed"),
      *             @OA\Property(property="message", type="string", example="The name field is required"),
      *         )
      *     ),

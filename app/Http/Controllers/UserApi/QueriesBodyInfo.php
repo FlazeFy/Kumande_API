@@ -23,6 +23,14 @@ class QueriesBodyInfo extends Controller
      *         description="User body info found"
      *     ),
      *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
      *         response=404,
      *         description="User body info not found",
      *         @OA\JsonContent(
@@ -111,6 +119,14 @@ class QueriesBodyInfo extends Controller
      *     @OA\Response(
      *         response=200,
      *         description="User body history found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=404,
