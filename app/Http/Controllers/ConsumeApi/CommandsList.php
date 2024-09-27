@@ -22,42 +22,138 @@ use App\Helpers\Converter;
 
 class CommandsList extends Controller
 {
-    public function deleteListById(Request $request,$id){
+    /**
+     * @OA\DELETE(
+     *     path="/api/v1/list/delete/{list_id}",
+     *     summary="Delete consume list by list id",
+     *     tags={"Consume"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="list_id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Consume List ID",
+     *         example="23260991-9dbb-a35b-0fc9-adfddf0938d1",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume list delete is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="List is deleted"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume list not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="List not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function deleteListByListId(Request $request,$list_id){
         try {
             $user_id = $request->user()->id;
 
-            $rel_res = RelConsumeList::where('list_id',$id)
+            $rel_res = RelConsumeList::where('list_id',$list_id)
                 ->where('created_by',$user_id)
                 ->delete();
 
-            $res = ConsumeList::where('id', $id)
+            $res = ConsumeList::where('id', $list_id)
                 ->where('created_by',$user_id)
                 ->delete();
 
             if($res){
                 return response()->json([
-                    "message"=> "List deleted", 
+                    "message"=> "List is deleted", 
                     "status"=> 'success'
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Something error please contact admin',
-                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                    'message' => 'List not found',
+                ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => $err->getMessage()
+                'message' => 'Something error please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    public function deleteListRelationById(Request $request,$id){
+    /**
+     * @OA\DELETE(
+     *     path="/api/v1/list/deleteRel/{rel_id}",
+     *     summary="Delete consume list relation by list id",
+     *     tags={"Consume"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="rel_id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Consume List Relation ID",
+     *         example="23260991-9dbb-a35b-0fc9-adfddf0938d1",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume list relation delete is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Consume removed from list"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume list relation not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Consume not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function deleteListRelationByRelId(Request $request,$rel_id){
         try {
             $user_id = $request->user()->id;
 
-            $res = RelConsumeList::where('id', $id)
+            $res = RelConsumeList::where('id', $rel_id)
                 ->where('created_by',$user_id)
                 ->delete();
 
@@ -69,17 +165,73 @@ class CommandsList extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Something error please contact admin',
-                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                    'message' => 'Consume not found',
+                ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => $err->getMessage()
+                'message' => 'Something error please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     * @OA\PUT(
+     *     path="/api/v1/list/update/data/{list_id}",
+     *     summary="Update consume list by list id",
+     *     tags={"Consume"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="list_id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Consume List ID",
+     *         example="23260991-9dbb-a35b-0fc9-adfddf0938d1",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume list update is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="List is updated"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume list not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="List not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="The name field is required"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
     public function updateListData(Request $request, $id){
         try{
             $validator = Validation::getValidateListRelData($request);
@@ -109,7 +261,7 @@ class CommandsList extends Controller
                     if($csl){
                         return response()->json([
                             'status' => 'success',
-                            'message' => 'List updated',
+                            'message' => 'List is updated',
                             'rows_affected' => $csl
                         ], Response::HTTP_OK);
                     } else {
@@ -128,11 +280,59 @@ class CommandsList extends Controller
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => $err->getMessage()
+                'message' => 'Something error please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     * @OA\POST(
+     *     path="/api/v1/list/create",
+     *     summary="Create consume list",
+     *     tags={"Consume"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume list create is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="List is created"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Conflicted item",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="List is already exist"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="The name field is required"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
     public function createList(Request $request){
         try{
             $validator = Validation::getValidateCreateConsumeList($request);
@@ -185,19 +385,74 @@ class CommandsList extends Controller
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'List name is already exist, try other name',
-                        'data' => null
-                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                        'message' => 'List is already exist',
+                    ], Response::HTTP_CONFLICT);
                 }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => $err->getMessage()
+                'message' => 'Something error please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     * @OA\POST(
+     *     path="/api/v1/list/createRel",
+     *     summary="Create consume list relation",
+     *     tags={"Consume"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume list relation create is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Consume is added to list"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume to add to list relation not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Consume not found"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Conflicted item",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Consume has been used in this list"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation failed",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="The name field is required"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
     public function createListRelation(Request $request){
         try{
             $validator = Validation::getValidateConsumeListRel($request);
@@ -238,7 +493,7 @@ class CommandsList extends Controller
                         if($rel){
                             return response()->json([
                                 'status' => 'success',
-                                'message' => 'List updated',
+                                'message' => 'Consume is added to list',
                             ], Response::HTTP_OK);
                         } else {
                             return response()->json([
@@ -257,7 +512,7 @@ class CommandsList extends Controller
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => $err->getMessage()
+                'message' => 'Something error please contact admin'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

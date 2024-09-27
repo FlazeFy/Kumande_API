@@ -51,8 +51,8 @@ Route::prefix('/v1/consume')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/gallery', [QueryConsumeGalleryApi::class, 'getAllMyGallery']);
     Route::get('/gallery/{slug}', [QueryConsumeGalleryApi::class, 'getGalleryByConsume']);
     Route::post('/gallery', [CommandConsumeGalleryApi::class, 'createGallery']);
-    Route::delete('/gallery/{id}', [CommandConsumeGalleryApi::class, 'deleteGallery']);
-    Route::put('/gallery/{id}', [CommandConsumeGalleryApi::class, 'updateGallery']);
+    Route::delete('/gallery/{gallery_id}', [CommandConsumeGalleryApi::class, 'deleteGalleryById']);
+    Route::put('/gallery/{gallery_id}', [CommandConsumeGalleryApi::class, 'updateGalleryById']);
     
     Route::delete('/delete/{id}', [CommandConsumeApi::class, 'deleteConsumeById']);
     Route::put('/update/data/{id}', [CommandConsumeApi::class, 'updateConsumeData']);
@@ -112,9 +112,9 @@ Route::prefix('/v1/list')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/limit/{page_limit}/order/{order}', [QueryConsumeListApi::class, 'getAllList']);
     Route::get('/detail/{list_id}', [QueryConsumeListApi::class, 'getListDetail']);
     Route::get('/check/{consume_slug}/{list_id}', [QueryConsumeListApi::class, 'getCheckConsumeBySlug']);
-    Route::delete('/delete/{id}', [CommandConsumeListApi::class, 'deleteListById']);
-    Route::delete('/deleteRel/{id}', [CommandConsumeListApi::class, 'deleteListRelationById']);
-    Route::put('/update/data/{id}', [CommandConsumeListApi::class, 'updateListData']);
+    Route::delete('/delete/{list_id}', [CommandConsumeListApi::class, 'deleteListByListId']);
+    Route::delete('/deleteRel/{rel_id}', [CommandConsumeListApi::class, 'deleteListRelationByRelId']);
+    Route::put('/update/data/{list_id}', [CommandConsumeListApi::class, 'updateListData']);
     Route::post('/create', [CommandConsumeListApi::class, 'createList']);
     Route::post('/createRel', [CommandConsumeListApi::class, 'createListRelation']);
 });
