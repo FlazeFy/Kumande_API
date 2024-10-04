@@ -20,7 +20,19 @@ class Queries extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Tag found"
+     *         description="Tag found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Tag found"),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                          @OA\Property(property="weight", type="integer", example=68),
+     *                          @OA\Property(property="height", type="integer", example=183),
+     *                          @OA\Property(property="result", type="integer", example=1800),
+     *                          @OA\Property(property="created_at", type="integer", format="date-time", example="2024-03-19 02:37:58"),
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -55,7 +67,7 @@ class Queries extends Controller
             $res = Tag::select('id','tag_name','tag_slug','created_by')
                 ->orderby('tag_name','ASC')
                 ->where('created_by',$user_id)
-                ->get();
+                ->first();
         
             if (count($res) > 0) {
                 foreach($res as $idx => $dt){
@@ -94,7 +106,19 @@ class Queries extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Tag found"
+     *         description="Tag found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Consume found"),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                          @OA\Property(property="id", type="string", example="2d98f524-de02-11ed-b5ea-0242ac120002"),
+     *                          @OA\Property(property="tag_name", type="string", example="Low Fat"),
+     *                          @OA\Property(property="tag_slug", type="string", example="low_fat"),
+     *                          @OA\Property(property="created_at", type="string", format="date-time", example="2024-03-19 02:37:58"),
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,

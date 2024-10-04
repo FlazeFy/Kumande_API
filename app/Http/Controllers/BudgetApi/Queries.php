@@ -28,7 +28,17 @@ class Queries extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Budget found"
+     *         description="Budget found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="budget found"),
+     *             @OA\Property(property="data", type="array",
+     *                  @OA\Items(
+     *                      @OA\Property(property="context", type="string", example="Sep"),
+     *                      @OA\Property(property="total", type="number", example=2000000)
+     *                  )
+     *             ),
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -116,7 +126,25 @@ class Queries extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Budget found"
+     *         description="Budget found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="budget found"),
+     *             @OA\Property(property="data", type="array",
+     *                  @OA\Items(
+     *                      @OA\Property(property="id", type="string", example="b2f1386d-cd36-bb09-2b4a-d903f6b10fa0"),
+     *                      @OA\Property(property="month", type="string", example="Oct"),
+     *                      @OA\Property(property="year", type="string", example="2024"),
+     *                      @OA\Property(property="budget_total", type="number", example=1500000),
+     *                      @OA\Property(property="payment_history", type="object",
+     *                      @OA\Property(property="total_price", type="number", example=12000),
+     *                      @OA\Property(property="total_item", type="number", example=1),
+     *                      @OA\Property(property="average_payment", type="number", example=12000)
+     *                  ),
+     *                  @OA\Property(property="remain_budget", type="number", example=1500000)
+     *                  )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,

@@ -22,7 +22,24 @@ class QueriesGallery extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Consume Gallery found"
+     *         description="Consume Gallery found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Consume Gallery found"),
+     *             @OA\Property(property="data", type="object",
+     *                  @OA\Property(property="data", type="array",
+     *                      @OA\Items(
+     *                          @OA\Property(property="consume_name", type="string", example="Fried Rice"),
+     *                          @OA\Property(property="consume_type", type="string", example="Food"),
+     *                          @OA\Property(property="consume_from", type="string", example="Take Away"),
+     *                          @OA\Property(property="is_favorite", type="number", example=0),
+     *                          @OA\Property(property="created_at", type="string", example="2024-09-25T08:01:33.000000Z"),
+     *                          @OA\Property(property="gallery_url", type="string", example="https://firebasestorage.googleapis.com"),
+     *                          @OA\Property(property="gallery_desc", type="string", example="this is gallery"),
+     *                      )
+     *                  ),
+     *              )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,

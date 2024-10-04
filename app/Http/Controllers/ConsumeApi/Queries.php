@@ -158,7 +158,17 @@ class Queries extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Consume found"
+     *         description="Consume found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Consume found"),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                          @OA\Property(property="context", type="string", example="Go Food"),
+     *                          @OA\Property(property="total", type="integer", example=2)
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -229,7 +239,17 @@ class Queries extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Consume found"
+     *         description="Consume found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Consume found"),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                          @OA\Property(property="context", type="string", example="Drink"),
+     *                          @OA\Property(property="total", type="integer", example=2)
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -387,7 +407,17 @@ class Queries extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Consume found"
+     *         description="Consume found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Consume found"),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                          @OA\Property(property="context", type="string", example="Rice"),
+     *                          @OA\Property(property="total", type="integer", example=2)
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -461,7 +491,17 @@ class Queries extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Consume found"
+     *         description="Consume found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Consume found"),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                          @OA\Property(property="context", type="string", example="Mc Donalds"),
+     *                          @OA\Property(property="total", type="integer", example=2)
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -551,7 +591,17 @@ class Queries extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Consume found"
+     *         description="Consume found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Consume found"),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                          @OA\Property(property="context", type="string", example="12"),
+     *                          @OA\Property(property="total", type="integer", example=2)
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -643,7 +693,17 @@ class Queries extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Consume found"
+     *         description="Consume found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Consume found"),
+     *                 @OA\Property(property="data", type="object",
+     *                      @OA\Property(property="max_calorie", type="integer", example=6),
+     *                      @OA\Property(property="min_calorie", type="integer", example=4),
+     *                      @OA\Property(property="avg_calorie", type="integer", example=4)
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -682,9 +742,9 @@ class Queries extends Controller
                     CAST(AVG($cal) AS INT) as avg_calorie 
                 ")
                 ->where('created_by', $user_id)
-                ->get();
+                ->first();
 
-            if ($csm->count() > 0) {
+            if ($csm) {
                 return response()->json([
                     'status' => 'success',
                     'message' => "Consume found", 
@@ -943,7 +1003,18 @@ class Queries extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Consume found"
+     *         description="Consume found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Consume found"),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                          @OA\Property(property="slug_name", type="string", example="bakso-campur"),
+     *                          @OA\Property(property="consume_name", type="string", example="Bakso Campur"),
+     *                          @OA\Property(property="consume_type", type="string", example="Food")
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,

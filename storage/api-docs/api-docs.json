@@ -504,7 +504,40 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Budget found"
+                        "description": "Budget found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "budget found"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "context": {
+                                                        "type": "string",
+                                                        "example": "Sep"
+                                                    },
+                                                    "total": {
+                                                        "type": "number",
+                                                        "example": 2000000
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -583,7 +616,69 @@
                 "operationId": "4b9e2ced6915be361533abdf6f47f3cc",
                 "responses": {
                     "200": {
-                        "description": "Budget found"
+                        "description": "Budget found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "budget found"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "b2f1386d-cd36-bb09-2b4a-d903f6b10fa0"
+                                                    },
+                                                    "month": {
+                                                        "type": "string",
+                                                        "example": "Oct"
+                                                    },
+                                                    "year": {
+                                                        "type": "string",
+                                                        "example": "2024"
+                                                    },
+                                                    "budget_total": {
+                                                        "type": "number",
+                                                        "example": 1500000
+                                                    },
+                                                    "payment_history": {
+                                                        "properties": {
+                                                            "total_price": {
+                                                                "type": "number",
+                                                                "example": 12000
+                                                            },
+                                                            "total_item": {
+                                                                "type": "number",
+                                                                "example": 1
+                                                            },
+                                                            "average_payment": {
+                                                                "type": "number",
+                                                                "example": 12000
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "remain_budget": {
+                                                        "type": "number",
+                                                        "example": 1500000
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -1376,7 +1471,69 @@
                 "operationId": "fa0a2e7a2731f4194dbc45448c1cd0f5",
                 "responses": {
                     "200": {
-                        "description": "Allergic found"
+                        "description": "Allergic found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Allergic found"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "2d98f524-de02-11ed-b5ea-0242ac120002"
+                                                    },
+                                                    "allergic_context": {
+                                                        "type": "string",
+                                                        "example": "rice"
+                                                    },
+                                                    "allergic_desc": {
+                                                        "type": "string",
+                                                        "example": "rice"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2024-03-19 02:37:58"
+                                                    },
+                                                    "detected_on": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "consume_name": {
+                                                                    "type": "string",
+                                                                    "example": "Fried Rice"
+                                                                },
+                                                                "consume_type": {
+                                                                    "type": "string",
+                                                                    "example": "Food"
+                                                                },
+                                                                "slug_name": {
+                                                                    "type": "string",
+                                                                    "example": "fried_rice"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -1569,7 +1726,65 @@
                 "operationId": "8783da1cf08c540c03bf89dd0e5c659b",
                 "responses": {
                     "200": {
-                        "description": "Consume Gallery found"
+                        "description": "Consume Gallery found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Consume Gallery found"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "consume_name": {
+                                                                "type": "string",
+                                                                "example": "Fried Rice"
+                                                            },
+                                                            "consume_type": {
+                                                                "type": "string",
+                                                                "example": "Food"
+                                                            },
+                                                            "consume_from": {
+                                                                "type": "string",
+                                                                "example": "Take Away"
+                                                            },
+                                                            "is_favorite": {
+                                                                "type": "number",
+                                                                "example": 0
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "example": "2024-09-25T08:01:33.000000Z"
+                                                            },
+                                                            "gallery_url": {
+                                                                "type": "string",
+                                                                "example": "https://firebasestorage.googleapis.com"
+                                                            },
+                                                            "gallery_desc": {
+                                                                "type": "string",
+                                                                "example": "this is gallery"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -2713,7 +2928,40 @@
                 "operationId": "523e23899397d4165a8978a67aac459c",
                 "responses": {
                     "200": {
-                        "description": "Consume found"
+                        "description": "Consume found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Consume found"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "context": {
+                                                        "type": "string",
+                                                        "example": "Go Food"
+                                                    },
+                                                    "total": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -2792,7 +3040,40 @@
                 "operationId": "ccd23e40e3c8c49bd0005d03bc178df9",
                 "responses": {
                     "200": {
-                        "description": "Consume found"
+                        "description": "Consume found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Consume found"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "context": {
+                                                        "type": "string",
+                                                        "example": "Drink"
+                                                    },
+                                                    "total": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -2962,7 +3243,40 @@
                 "operationId": "0c21f90c0b3c36ad78ec1ec3a38e8b9a",
                 "responses": {
                     "200": {
-                        "description": "Consume found"
+                        "description": "Consume found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Consume found"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "context": {
+                                                        "type": "string",
+                                                        "example": "Rice"
+                                                    },
+                                                    "total": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -3041,7 +3355,40 @@
                 "operationId": "c20113c17694ec9f60103aadc97e91b8",
                 "responses": {
                     "200": {
-                        "description": "Consume found"
+                        "description": "Consume found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Consume found"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "context": {
+                                                        "type": "string",
+                                                        "example": "Mc Donalds"
+                                                    },
+                                                    "total": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -3142,7 +3489,40 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Consume found"
+                        "description": "Consume found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Consume found"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "context": {
+                                                        "type": "string",
+                                                        "example": "12"
+                                                    },
+                                                    "total": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -3221,61 +3601,35 @@
                 "operationId": "f24f001751a354eba0e0fcf653e9381a",
                 "responses": {
                     "200": {
-                        "description": "Consume found"
-                    },
-                    "401": {
-                        "description": "protected route need to include sign in token as authorization bearer",
+                        "description": "Consume found",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "status": {
                                             "type": "string",
-                                            "example": "failed"
+                                            "example": "success"
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "you need to include the authorization token from login"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Consume not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "failed"
+                                            "example": "Consume found"
                                         },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Consume not found"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "status": {
-                                            "type": "string",
-                                            "example": "error"
-                                        },
-                                        "message": {
-                                            "type": "string",
-                                            "example": "something wrong. please contact admin"
+                                        "data": {
+                                            "properties": {
+                                                "max_calorie": {
+                                                    "type": "integer",
+                                                    "example": 6
+                                                },
+                                                "min_calorie": {
+                                                    "type": "integer",
+                                                    "example": 4
+                                                },
+                                                "avg_calorie": {
+                                                    "type": "integer",
+                                                    "example": 4
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -3498,7 +3852,44 @@
                 "operationId": "1082f4597d5ca2f396d7acdb5f686fe9",
                 "responses": {
                     "200": {
-                        "description": "Consume found"
+                        "description": "Consume found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Consume found"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "slug_name": {
+                                                        "type": "string",
+                                                        "example": "bakso-campur"
+                                                    },
+                                                    "consume_name": {
+                                                        "type": "string",
+                                                        "example": "Bakso Campur"
+                                                    },
+                                                    "consume_type": {
+                                                        "type": "string",
+                                                        "example": "Food"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -6323,7 +6714,49 @@
                 "operationId": "ce9839b64429904713265d33ad825b57",
                 "responses": {
                     "200": {
-                        "description": "Tag found"
+                        "description": "Tag found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Tag found"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "weight": {
+                                                        "type": "integer",
+                                                        "example": 68
+                                                    },
+                                                    "height": {
+                                                        "type": "integer",
+                                                        "example": 183
+                                                    },
+                                                    "result": {
+                                                        "type": "integer",
+                                                        "example": 1800
+                                                    },
+                                                    "created_at": {
+                                                        "type": "integer",
+                                                        "format": "date-time",
+                                                        "example": "2024-03-19 02:37:58"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -6402,7 +6835,49 @@
                 "operationId": "e2f5f57acd44ef0a8a0748f81a70de47",
                 "responses": {
                     "200": {
-                        "description": "Tag found"
+                        "description": "Tag found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Consume found"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "2d98f524-de02-11ed-b5ea-0242ac120002"
+                                                    },
+                                                    "tag_name": {
+                                                        "type": "string",
+                                                        "example": "Low Fat"
+                                                    },
+                                                    "tag_slug": {
+                                                        "type": "string",
+                                                        "example": "low_fat"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2024-03-19 02:37:58"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -8462,6 +8937,68 @@
                     }
                 },
                 "type": "object"
+            }
+        },
+        "responses": {
+            "401": {
+                "description": "protected route need to include sign in token as authorization bearer",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "example": "failed"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "you need to include the authorization token from login"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "404": {
+                "description": "Consume not found",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "example": "failed"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "Consume not found"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "500": {
+                "description": "Internal Server Error",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "example": "error"
+                                },
+                                "message": {
+                                    "type": "string",
+                                    "example": "something wrong. please contact admin"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
             }
         },
         "securitySchemes": {

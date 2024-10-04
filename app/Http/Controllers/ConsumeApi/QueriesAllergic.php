@@ -22,7 +22,27 @@ class QueriesAllergic extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Allergic found"
+     *         description="Allergic found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Allergic found"),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                          @OA\Property(property="id", type="string", example="2d98f524-de02-11ed-b5ea-0242ac120002"),
+     *                          @OA\Property(property="allergic_context", type="string", example="rice"),
+     *                          @OA\Property(property="allergic_desc", type="string", example="rice"),
+     *                          @OA\Property(property="created_at", type="string", format="date-time", example="2024-03-19 02:37:58"),
+     *                          @OA\Property(property="detected_on", type="array", 
+     *                              @OA\Items(
+     *                                  @OA\Property(property="consume_name", type="string", example="Fried Rice"),
+     *                                  @OA\Property(property="consume_type", type="string", example="Food"),
+     *                                  @OA\Property(property="slug_name", type="string", example="fried_rice"),
+     *                             
+     *                          )
+     *                     ),
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
