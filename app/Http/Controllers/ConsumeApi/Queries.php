@@ -13,6 +13,7 @@ use Carbon\Carbon;
 
 use App\Models\Consume;
 use App\Models\Payment;
+use App\Models\Allergic;
 use App\Models\Schedule;
 
 class Queries extends Controller
@@ -366,6 +367,7 @@ class Queries extends Controller
                 ->first();
 
             if ($consume) {
+                $allergic = false;
                 $payment = Payment::select('payment.id as id_payment','payment_method','payment_price','payment.created_at','payment.updated_at')
                     ->join('consume','consume.id','=','payment.consume_id')
                     ->where('payment.created_by', $user_id)
@@ -377,8 +379,21 @@ class Queries extends Controller
                     ->where('slug_name', $slug)
                     ->get();
 
+                $consume_split = explode(" ",$consume->consume_name);
+                $allergic_query = Allergic::select('allergic_context');
+
+                foreach($consume_split as $idx => $cs){
+                    if($idx == 0){
+                        $allergic_query->where('allergic_context', 'like', "%$cs%");
+                    } else {
+                        $allergic_query->orWhere('allergic_context', 'like', "%$cs%");
+                    }
+                }
+                $allergic = $allergic_query->get();
+
                 $consume->payment = $payment;
                 $consume->schedule = $schedule;
+                $consume->allergic = count($allergic) > 0 ? $allergic : null;
                 
                 return response()->json([
                     'status' => 'success',

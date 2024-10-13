@@ -85,27 +85,34 @@ class Commands extends Controller
                     'message' => $errors,
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
-                $user = User::where('email', $request->email)->first();
+                if (str_contains($request->email, '@gmail')) {
+                    $user = User::where('email', $request->email)->first();
 
-                if (!$user) {
-                    return response()->json([
-                        'status' => 'failed',
-                        'message' => "Email doesn't exist",        
-                    ], Response::HTTP_UNAUTHORIZED);
-                } else if ($user && ($request->password != $user->password)) {
-                    return response()->json([
-                        'status' => 'failed',
-                        'message' => 'Wrong password',            
-                    ], Response::HTTP_UNAUTHORIZED);
+                    if (!$user) {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => "Email doesn't exist",        
+                        ], Response::HTTP_UNAUTHORIZED);
+                    } else if ($user && ($request->password != $user->password)) {
+                        return response()->json([
+                            'status' => 'failed',
+                            'message' => 'Wrong password',            
+                        ], Response::HTTP_UNAUTHORIZED);
+                    } else {
+                        $token = $user->createToken('login')->plainTextToken;
+
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => 'Login success',
+                            'result' => $user,
+                            'token' => $token,                
+                        ], Response::HTTP_OK);
+                    }
                 } else {
-                    $token = $user->createToken('login')->plainTextToken;
-
                     return response()->json([
-                        'status' => 'success',
-                        'message' => 'Login success',
-                        'result' => $user,
-                        'token' => $token,                
-                    ], Response::HTTP_OK);
+                        'status' => 'failed',
+                        'message' => 'email must be gmail',
+                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
             }
         } catch(\Exception $err) {

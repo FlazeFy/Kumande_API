@@ -29,6 +29,8 @@ use App\Http\Controllers\TagApi\Queries as QueryTagApi;
 use App\Http\Controllers\TagApi\Commands as CommandTagApi;
 use App\Http\Controllers\ReminderApi\Queries as QueryReminderApi;
 use App\Http\Controllers\ReminderApi\Commands as CommandReminderApi;
+use App\Http\Controllers\HistoryApi\Queries as QueryHistoryApi;
+use App\Http\Controllers\HistoryApi\Commands as CommandHistoryApi;
 
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ConsumeListController;
@@ -142,4 +144,10 @@ Route::prefix('/v1/user')->group(function () {
     Route::post('/body_info/create', [CommandBodyInfoApi::class, 'createBodyInfo'])->middleware(['auth:sanctum']);;
 
     Route::delete('/body_info/delete/{id}', [CommandBodyInfoApi::class, 'deleteBodyInfo'])->middleware(['auth:sanctum']);;
+});
+
+Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {
+    Route::get('/', [QueryHistoryApi::class, 'get_all_history']);
+    
+    Route::delete('/destroy/{id}', [CommandHistoryApi::class, 'hard_delete_history_by_id']);
 });

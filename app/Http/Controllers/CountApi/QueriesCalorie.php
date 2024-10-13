@@ -146,7 +146,7 @@ class QueriesCalorie extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => "Count data found", 
-                    'data' => $csm
+                    'data' => $csm[0]
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([

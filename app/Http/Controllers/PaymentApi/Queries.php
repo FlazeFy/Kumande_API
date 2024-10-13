@@ -286,7 +286,7 @@ class Queries extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => "Analytic data found", 
-                    'data' => $pym
+                    'data' => $pym[0]
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([

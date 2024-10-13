@@ -67,7 +67,7 @@ class Queries extends Controller
             $res = Tag::select('id','tag_name','tag_slug','created_by')
                 ->orderby('tag_name','ASC')
                 ->where('created_by',$user_id)
-                ->first();
+                ->get();
         
             if (count($res) > 0) {
                 foreach($res as $idx => $dt){

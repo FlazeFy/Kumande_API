@@ -131,7 +131,7 @@ class Queries extends Controller
                 ->orderByRaw("JSON_EXTRACT(schedule_time, '$[0].time') ASC")
                 ->get();
 
-            if($sch){
+            if(count($sch) > 0){
                 return response()->json([
                     "message"=> "Schedule found", 
                     "status"=> 'success',
@@ -139,7 +139,7 @@ class Queries extends Controller
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
-                    "message"=> "Schedule not found", 
+                    "message"=> "No Schedule for today", 
                     "status"=> 'failed',
                 ], Response::HTTP_NOT_FOUND);
             }
