@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('errors', function (Blueprint $table) {
-            $table->bigInteger('id')->length(20)->primary();
+            $table->bigIncrements('id')->length(20);
             $table->string('message',255);
             $table->text('stack_trace');
             $table->string('file', 255);

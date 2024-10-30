@@ -165,12 +165,51 @@ class Generator
         return $res;
     }
 
-    public static function getRandDate(){
-        $start = strtotime('2020-01-01 00:00:00');
-        $end = strtotime(date("Y-m-d H:i:s"));
-        $res = mt_rand($start, $end); 
+    public static function getRandDate($null){
+        if($null == 0){
+            $start = strtotime('2020-01-01 00:00:00');
+            $end = strtotime(date("Y-m-d H:i:s"));
+            $res = mt_rand($start, $end); 
 
-        return $res;
+            return date("Y-m-d H:i:s", $res);
+        } else {
+            return null;
+        }
+    }
+
+    public static function getRandomTimezone(){
+        $symbol = ['+','-'];
+        $ran = mt_rand(0, 1);
+        $select_symbol = $symbol[$ran];
+        if($select_symbol == '+'){
+            $hour = mt_rand(0, 14);
+        } else {
+            $hour = mt_rand(0, 12);
+        }
+
+        $timezone = "$select_symbol$hour:00";
+        return $timezone;
+    }
+
+    public static function getRandGender(){
+        $data = ['male','female'];
+        $ran = mt_rand(0,count($data)-1);
+
+        return $data[$ran];
+    }
+
+    public static function getRandConsumeType(){
+        $data = ['Food','Drink','Snack'];
+        $ran = mt_rand(0,count($data)-1);
+
+        return $data[$ran];
+    }
+
+    public static function getRandConsumeFrom(){
+        $data = ["GoFood","GrabFood","ShopeeFood","Dine-In","Take Away","Cooking","Others"];
+        $ran = mt_rand(0,count($data)-1);
+
+        return $data[$ran];
     }
 
     public static function getMonthName($idx, $type){
@@ -204,5 +243,50 @@ class Generator
             return $matches[1];
         }
         return null;
+    }
+
+    public static function getRandDouble($min, $max) {
+        return $min + mt_rand() / mt_getrandmax() * ($max - $min);
+    }
+
+    public static function getRandFoodAsset($type, $is_full = false){
+        $filePath = public_path('Kumande Asset - Food.csv');
+        $values = [];
+
+        if (($handle = fopen($filePath, 'r')) !== false) {
+            fgetcsv($handle);
+
+            while (($data = fgetcsv($handle, 1000, ',')) !== false) {
+                // Data[1] = Column B : food
+                if(!$is_full){
+                    if (isset($data[1]) && $data[1] !== '') { 
+                        $values[] = $data[1];
+                    }
+                } else {
+                    if (isset($data[1]) && $data[1] !== '' && isset($data[2]) && $data[2] !== '') { 
+                        $values[] = [
+                            'consume_name' => $data[1], // Data[1] = Column B : food
+                            'calorie' => $data[2], // Data[2] = Column C : calorie
+                        ];
+                    }
+                }
+            }
+            fclose($handle);
+        }
+
+        if(!empty($values)){
+            $food = $values[array_rand($values)];
+
+            if($type == 'food' || $is_full){
+                return $food;
+            } else if($type == 'ingredient'){
+                $ingredient = explode(" ",$food);
+                return $ingredient[mt_rand(0,count($ingredient)-1)];
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 }

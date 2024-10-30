@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  *     required={"id", "allergic_context", "created_at", "created_by"},
  * 
  *     @OA\Property(property="id", type="string", format="uuid", description="Primary Key"),
+ *     @OA\Property(property="firebase_id", type="string", description="Firebase Firestore Doc ID"),
  *     @OA\Property(property="allergic_context", type="string", description="User's Allergic for Consume Analyze"),
  *     @OA\Property(property="allergic_desc", type="string", description="User's Allergic description for Consume Analyze"),
  * 
@@ -29,5 +30,5 @@ class Allergic extends Model
 
     protected $table = 'allergic';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'allergic_context', 'allergic_desc', 'created_at', 'created_by', 'updated_at'];
+    protected $fillable = ['id', 'firebase_id', 'allergic_context', 'allergic_desc', 'created_at', 'created_by', 'updated_at'];
 }

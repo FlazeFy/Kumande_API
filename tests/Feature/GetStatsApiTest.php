@@ -72,7 +72,7 @@ class GetStatsApiTest extends TestCase
     // TC-S002
     public function test_get_monthly_payment_analytic(): void
     {
-        $randDate = Generator::getRandDate();
+        $randDate = Generator::getRandDate(0);
         $month = date('m',$randDate);
         $year = date('Y',$randDate);
 
@@ -98,7 +98,7 @@ class GetStatsApiTest extends TestCase
     // TC-S003
     public function test_get_today_calories(): void
     {
-        $randDate = Generator::getRandDate();
+        $randDate = Generator::getRandDate(0);
         $date = date('Y-m-d',$randDate);
 
         $token = $this->authTest->test_post_login();
@@ -222,7 +222,7 @@ class GetStatsApiTest extends TestCase
     // TC-S010
     public function test_get_budget_spending_this_year(): void
     {
-        $randDate = Generator::getRandDate();
+        $randDate = Generator::getRandDate(0);
         $year = date('Y',$randDate);
 
         $token = $this->authTest->test_post_login();
@@ -293,7 +293,7 @@ class GetStatsApiTest extends TestCase
     // TC-S008
     public function test_get_total_spending_this_year(): void
     {
-        $randDate = Generator::getRandDate();
+        $randDate = Generator::getRandDate(0);
         $month = date('m',$randDate);
 
         $token = $this->authTest->test_post_login();
@@ -349,7 +349,7 @@ class GetStatsApiTest extends TestCase
     // TC-C002
     public function test_get_total_spend_day(): void
     {
-        $randDate = Generator::getRandDate();
+        $randDate = Generator::getRandDate(0);
         $month = date('m',$randDate);
         $year = date('Y',$randDate);
 
@@ -377,7 +377,7 @@ class GetStatsApiTest extends TestCase
     // TC-C003 && TC-S009
     public function test_get_calendar_daily_calorie(): void
     {
-        $randDate = Generator::getRandDate();
+        $randDate = Generator::getRandDate(0);
         $month = date('m',$randDate);
         $year = date('Y',$randDate);
 

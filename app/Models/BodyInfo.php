@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  *     required={"id", "blood_pressure", "blood_glucose", "gout", "cholesterol", "created_at", "created_by"},
  * 
  *     @OA\Property(property="id", type="string", format="uuid", description="Primary Key"),
+ *     @OA\Property(property="firebase_id", type="string", description="Firebase Firestore Doc ID"),
  *     @OA\Property(property="blood_pressure", type="string", description="SmartDoc Health Monitoring"),
  *     @OA\Property(property="blood_glucose", type="string", description="SmartDoc Health Monitoring"),
  *     @OA\Property(property="gout", type="string", description="SmartDoc Health Monitoring"),
@@ -30,5 +31,5 @@ class BodyInfo extends Model
 
     protected $table = 'body_info';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'blood_pressure', 'blood_glucose', 'gout', 'cholesterol', 'created_at', 'created_by'];
+    protected $fillable = ['id', 'firebase_id', 'blood_pressure', 'blood_glucose', 'gout', 'cholesterol', 'created_at', 'created_by'];
 }

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  *     required={"id", "tag_slug", "tag_name", "created_at", "created_by"},
  * 
  *     @OA\Property(property="id", type="string", format="uuid", description="Primary Key"),
+ *     @OA\Property(property="firebase_id", type="string", description="Firebase Firestore Doc ID"),
  *     @OA\Property(property="tag_slug", type="string", description="Slug of the tag"),
  *     @OA\Property(property="tag_name", type="string", description="Name of the tag"),
  * 
@@ -28,5 +29,16 @@ class Tag extends Model
 
     protected $table = 'tag';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'tag_slug', 'tag_name', 'created_at', 'created_by'];
+    protected $fillable = ['id', 'firebase_id', 'tag_slug', 'tag_name', 'created_at', 'created_by'];
+
+    public static function getRandom($null){
+        if($null == 0){
+            $data = Tag::inRandomOrder()->take(1)->first();
+            $res = $data;
+        } else {
+            $res = null;
+        }
+        
+        return $res;
+    }
 }

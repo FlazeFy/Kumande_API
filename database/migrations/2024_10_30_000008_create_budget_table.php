@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('budget', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('firebase_id',28)->unique();
-            $table->integer('budget_total')->length(10)->unique();
+            $table->integer('budget_total')->length(10);
             $table->longText('budget_month_year');
 
             // Props

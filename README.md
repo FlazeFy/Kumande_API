@@ -53,6 +53,9 @@ or
 > php artisan cache:clear
 > php artisan route:clear
 
+# If migration or seeding conflic with old file
+> composer dump-autoload
+
 ========================= File Directory =========================
 # API Controller
 Directory               : app/Http/Controllers/Api

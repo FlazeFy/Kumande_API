@@ -15,11 +15,12 @@ return new class extends Migration
             $table->boolean('telegram_is_valid');
             $table->string('firebase_fcm_token', 255)->nullable()->unique();
             $table->string('line_user_id', 144)->nullable()->unique();
+            $table->string('fullname', 50);
             $table->string('username', 36);
             $table->string('email', 255)->unique();
             $table->string('password', 500);
             $table->string('gender', 6);
-            $table->string('image_url', 500)->unique();
+            $table->string('image_url', 500)->nullable();
             $table->string('timezone', 9)->nullable();
             $table->date('born_at', $precision = 0)->nullable();
 
