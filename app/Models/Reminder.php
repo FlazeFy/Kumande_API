@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @OA\Schema(
  *     schema="Reminder",
  *     type="object",
- *     required={"id", "reminder_name", "reminder_type", "reminder_context", "reminder_body", "created_at"},
+ *     required={"id", "reminder_name", "reminder_type", "reminder_context", "reminder_body", "created_at","created_by"},
  * 
  *     @OA\Property(property="id", type="string", format="uuid", description="Primary Key"),
  *     @OA\Property(property="reminder_name", type="string", description="Name of the reminder"),
@@ -21,7 +21,6 @@ use Illuminate\Database\Eloquent\Model;
  *     @OA\Property(property="created_at", type="string", format="date-time", description="Timestamp when the reminder was created"),
  *     @OA\Property(property="updated_at", type="string", format="date-time", description="Timestamp when the reminder was updated"),
  *     @OA\Property(property="created_by", type="string", format="uuid",description="ID of the user who created the reminder"),
- *     @OA\Property(property="updated_by", type="string", format="uuid",description="ID of the user who updated the reminder")
  * )
  */
 
@@ -32,7 +31,7 @@ class Reminder extends Model
 
     protected $table = 'reminder';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'reminder_name', 'reminder_type', 'reminder_context', 'reminder_body', 'reminder_attachment', 'created_at', 'created_by','updated_at','updated_by'];
+    protected $fillable = ['id', 'reminder_name', 'reminder_type', 'reminder_context', 'reminder_body', 'reminder_attachment', 'created_at', 'created_by','updated_at'];
     protected $casts = [
         'reminder_context' => 'array',
         'reminder_attachment' => 'array'

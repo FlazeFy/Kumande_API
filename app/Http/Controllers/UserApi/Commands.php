@@ -67,12 +67,10 @@ class Commands extends Controller
 
                 if(!$check){
                     $id = Generator::getUUID();
-                    $slug = Generator::getSlug($request->username, "user");
 
                     $user = User::create([
                         'id' => $id,
                         'firebase_id' => $request->firebase_id,
-                        'slug_name' => $slug,
                         'fullname' => $request->fullname,
                         'username'  => $request->username,
                         'email' => $request->email,

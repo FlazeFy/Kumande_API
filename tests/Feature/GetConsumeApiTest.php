@@ -109,7 +109,7 @@ class GetConsumeApiTest extends TestCase
         $stringFields = ['id','slug_name','consume_from','consume_name','consume_type','created_at'];
         $arrayFields = ['consume_detail','consume_tag'];
         $stringNullableFields = ['consume_comment','payment_method'];
-        $integerFields = ['is_favorite','is_payment','payment_price'];
+        $integerFields = ['is_favorite','payment_price'];
 
         // Validate column
         $this->templateTest->templateValidateColumn($data['data']['data'], $stringFields, 'string', false);
@@ -124,7 +124,6 @@ class GetConsumeApiTest extends TestCase
 
         $this->templateTest->templateValidateContain($data['data']['data'], $consumeFromRule, 'consume_from');
         $this->templateTest->templateValidateContain($data['data']['data'], $isFavoriteRule, 'is_favorite');
-        $this->templateTest->templateValidateContain($data['data']['data'], $isFavoriteRule, 'is_payment');
         $this->templateTest->templateValidateContain($data['data']['data'], $consumeTypeRule, 'consume_type');
     }
 }

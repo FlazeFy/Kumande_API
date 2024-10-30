@@ -390,8 +390,6 @@ class Commands extends Controller
                         'updated_at' => null,
                         'deleted_at' => null,
                         'created_by' => $user_id,
-                        'updated_by' => null,
-                        'deleted_by' => null,
                     ]);
                 } else {
                     $id = $name_ava;
@@ -403,11 +401,9 @@ class Commands extends Controller
                         'consume_id' => $id,
                         'payment_method' => $request->payment_method,  
                         'payment_price' => $request->payment_price,
-                        'is_payment' => $request->is_payment,
                         'created_at' => $created_at,
                         'updated_at' => null,
                         'created_by' => $user_id,
-                        'updated_by' => null,
                     ]);
                     $payment_only = false;
                 }

@@ -88,11 +88,6 @@ class Generator
                 ->where('slug_name', $replace)
                 ->limit(1)
                 ->get();
-        } else if($type == "user"){
-            $check = User::select('slug_name')
-                ->where('slug_name', $replace)
-                ->limit(1)
-                ->get();
         } else if($type == "schedule"){
             $check = Schedule::select('slug_name')
                 ->where('slug_name', $replace)

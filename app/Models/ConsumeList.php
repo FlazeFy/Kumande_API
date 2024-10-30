@@ -21,7 +21,6 @@ use Illuminate\Database\Eloquent\Model;
  *     @OA\Property(property="created_at", type="string", format="date-time", description="Timestamp when the consume was created"),
  *     @OA\Property(property="updated_at", type="string", format="date-time", description="Timestamp when the consume was updated"),
  *     @OA\Property(property="created_by", type="string", format="uuid",description="ID of the user who created the consume"),
- *     @OA\Property(property="updated_by", type="string", format="uuid",description="ID of the user who updated the consume")
  * )
  */
 
@@ -32,7 +31,7 @@ class ConsumeList extends Model
 
     protected $table = 'consume_list';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'firebase_id', 'slug_name', 'list_name', 'list_desc', 'list_tag', 'created_at', 'created_by', 'updated_at', 'updated_by'];
+    protected $fillable = ['id', 'firebase_id', 'slug_name', 'list_name', 'list_desc', 'list_tag', 'created_at', 'created_by', 'updated_at'];
     protected $casts = [
         'list_tag' => 'array'
     ];

@@ -11,7 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @OA\Schema(
  *     schema="User",
  *     type="object",
- *     required={"id", "firebase_id", "slug_name", "fullname", "username", "email", "password", "gender", "created_at"},
+ *     required={"id", "firebase_id",  "fullname", "username", "email", "password", "gender", "created_at"},
  * 
  *     @OA\Property(property="id", type="string", format="uuid", description="Primary Key"),
  *     @OA\Property(property="firebase_id", type="string", description="Firebase Firestore Doc ID"),
@@ -19,7 +19,6 @@ use Laravel\Sanctum\HasApiTokens;
  *     @OA\Property(property="firebase_fcm_token", type="string", description="FCM Notification Token for Mobile Apps"),
  *     @OA\Property(property="line_user_id", type="string", description="Line Account ID for Bot Apps"),
  * 
- *     @OA\Property(property="slug_name", type="string", description="Unique Identifier for user from username"),
  *     @OA\Property(property="fullname", type="string", description="Full name of user"),
  *     @OA\Property(property="username", type="string", description="Unique Identifier for user"),
  *     @OA\Property(property="email", type="string", description="Email for Auth and Task Scheduling"),

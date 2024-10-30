@@ -76,6 +76,7 @@ class CommandsGallery extends Controller
                     'gallery_desc' => $request->gallery_desc,  
                     'gallery_url' => $request->gallery_url,   
                     'created_at' => date("Y-m-d H:i:s"),
+                    'created_by' => $user_id,
                 ]);
 
                 if($res){
@@ -260,7 +261,9 @@ class CommandsGallery extends Controller
                     'result' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
+                $user_id = $request->user()->id;
                 $res = ConsumeGallery::where('id',$gallery_id)
+                    ->where('created_by',$user_id)
                     ->update([
                         'gallery_desc' => $request->gallery_desc
                     ]);

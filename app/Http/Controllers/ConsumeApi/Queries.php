@@ -106,7 +106,7 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $csm = Consume::selectRaw('consume.id, slug_name, consume_type, consume_name, consume_detail, consume_from, is_favorite, consume_tag, consume_comment, consume.created_at, payment_method, payment_price, is_payment')
+            $csm = Consume::selectRaw('consume.id, slug_name, consume_type, consume_name, consume_detail, consume_from, is_favorite, consume_tag, consume_comment, consume.created_at, payment_method, payment_price')
                 ->leftjoin('payment', 'payment.consume_id', '=', 'consume.id')
                 ->whereNull('deleted_at')
                 ->where('consume.created_by', $user_id);

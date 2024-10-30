@@ -6,30 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('errors', function (Blueprint $table) {
-            $table->id();
-            $table->string('message');
+            $table->bigInteger('id')->length(20)->primary();
+            $table->string('message',255);
             $table->text('stack_trace');
-            $table->string('file');
-            $table->integer('line');
+            $table->string('file', 255);
+            $table->integer('line')->length(11)->unsigned();
             $table->string('faced_by', 36)->nullable();
-            $table->dateTime('created_at', $precision = 0);
-            $table->dateTime('fixed_at', $precision = 0)->nullable();
+            $table->boolean('is_fixed');
+
+            // Props
+            $table->timestamp('created_at', $precision = 0);
+
+            // References
+            $table->foreign('faced_by')->references('id')->on('user')->onDelete('cascade');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('errors');

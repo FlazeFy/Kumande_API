@@ -365,7 +365,6 @@ class CommandsList extends Controller
                         'created_at' => date("Y-m-d H:i:s"),
                         'created_by' => $user_id,
                         'updated_at' => null,
-                        'updated_by' => null,
                     ]);
 
                     $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));

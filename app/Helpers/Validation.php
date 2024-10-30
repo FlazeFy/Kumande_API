@@ -29,8 +29,7 @@ class Validation
 
             // Payment table
             'payment_method' => ['required', new TypePayment],
-            'payment_price' => 'required|numeric|min:0|max:10000000',
-            'is_payment' => 'required|min:0|max:1',            
+            'payment_price' => 'required|numeric|min:0|max:10000000',    
         ]);
     }
 

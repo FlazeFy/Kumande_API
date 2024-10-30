@@ -27,8 +27,6 @@ use Illuminate\Database\Eloquent\Model;
  *     @OA\Property(property="updated_at", type="string", format="date-time", description="Timestamp when the consume was updated"),
  *     @OA\Property(property="deleted_at", type="string", format="date-time", description="Timestamp when the consume was deleted"),
  *     @OA\Property(property="created_by", type="string", format="uuid",description="ID of the user who created the consume"),
- *     @OA\Property(property="updated_by", type="string", format="uuid",description="ID of the user who updated the consume"),
- *     @OA\Property(property="deleted_by", type="string", format="uuid",description="ID of the user who deleted the consume")
  * )
  */
 
@@ -39,7 +37,7 @@ class Consume extends Model
 
     protected $table = 'consume';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'firebase_id', 'slug_name', 'consume_type', 'consume_name', 'consume_detail', 'consume_from', 'is_favorite', 'consume_tag', 'consume_comment', 'created_at', 'updated_at', 'deleted_at', 'created_by', 'updated_by', 'deleted_by'];
+    protected $fillable = ['id', 'firebase_id', 'slug_name', 'consume_type', 'consume_name', 'consume_detail', 'consume_from', 'is_favorite', 'consume_tag', 'consume_comment', 'created_at', 'updated_at', 'deleted_at', 'created_by'];
     protected $casts = [
         'consume_detail' => 'array',
         'consume_payment' => 'array',
