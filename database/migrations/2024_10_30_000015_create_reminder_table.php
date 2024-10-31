@@ -19,7 +19,7 @@ return new class extends Migration
 
             // Props
             $table->dateTime('created_at', $precision = 0);
-            $table->string('created_by', 36);
+            $table->string('created_by', 36)->nullable();
             $table->dateTime('updated_at', $precision = 0)->nullable();
 
             // References

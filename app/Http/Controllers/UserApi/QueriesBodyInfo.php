@@ -65,13 +65,7 @@ class QueriesBodyInfo extends Controller
                 ->first();
 
             if($cal){
-                if($cal->gender == 'male'){
-                    $bmi = $cal->weight / (($cal->height / 100) * ($cal->height / 100));
-                } else if($cal->gender == 'female'){
-                    $bmi = $cal->weight / (($cal->height / 100) * ($cal->height / 100));
-                }
-
-                $cal->bmi = (double) number_format($bmi, 2);
+                $cal->bmi = countBMI($cal->gender,$cal->height,$cal->weight);
             }
 
             if ($usr && $cal) {

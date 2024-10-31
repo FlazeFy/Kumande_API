@@ -81,4 +81,13 @@ class Consume extends Model
             return false;
         }
     }
+
+    public static function getRandom($user_id){
+        $data = Consume::where('created_by',$user_id)
+            ->inRandomOrder()
+            ->take(1)
+            ->first();    
+
+        return $data;
+    }
 }

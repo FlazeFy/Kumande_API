@@ -149,6 +149,21 @@ class Generator
         return $res;
     }
 
+    public static function getFoodTime($time) {
+        $hour = (int)substr($time, 0, 2);
+    
+        if ($hour >= 17 || $hour <= 3) {
+            return "Dinner";
+        } elseif ($hour >= 11 && $hour < 17) {
+            return "Lunch";
+        } elseif ($hour > 3 && $hour < 11) {
+            return "Breakfast";
+        }
+        
+        return null;
+    }
+    
+
     public static function checkUser($username, $email){
         $user = User::select('username','email')
             ->where('username', $username)
@@ -203,6 +218,25 @@ class Generator
         $ran = mt_rand(0,count($data)-1);
 
         return $data[$ran];
+    }
+
+    public static function getRandHour(){
+        $randomHour = str_pad(rand(0, 23), 2, '0', STR_PAD_LEFT);
+        
+        return "$randomHour:00";
+    }
+
+    public static function getRandDayMonth(){
+        $date = date("d F",strtotime(self::getRandDate(0)));
+
+        return $date;
+    }
+
+    public static function getRandCoor() {
+        $latitude = mt_rand(-90000000, 90000000) / 1000000;
+        $longitude = mt_rand(-180000000, 180000000) / 1000000;
+        
+        return "$latitude, $longitude";
     }
 
     public static function getRandConsumeFrom(){

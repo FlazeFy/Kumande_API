@@ -50,4 +50,13 @@ class ConsumeList extends Model
 
         return $res;
     }
+
+    public static function getRandom($user_id){
+        $data = ConsumeList::where('created_by',$user_id)
+            ->inRandomOrder()
+            ->take(1)
+            ->first();
+        
+        return $data;
+    }
 }

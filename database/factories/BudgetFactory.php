@@ -17,7 +17,7 @@ class BudgetFactory extends Factory
         $fake_firebase_id = substr($id, 0, 10).'-FAKER-'.date('YmdHi');
         $budget_total = round(mt_rand(750000, 3500000) / 50000) * 50000;
 
-        $date = date("Y-m-d H:i:s", Generator::getRandDate(0));
+        $date = date("Y-m-d H:i:s", strtotime(Generator::getRandDate(0)));
         $month_year = [
             "year" => date('Y', strtotime($date)),
             "month" => date("M", strtotime($date))

@@ -42,7 +42,7 @@ class User extends Authenticatable
 
     protected $table = 'user';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'firebase_id','telegram_user_id','firebase_fcm_token','line_user_id', 'fullname', 'username', 'email', 'password', 'gender', 'image_url', 'timezone', 'created_at', 'updated_at', 'deleted_at'];
+    protected $fillable = ['id', 'firebase_id','telegram_user_id','firebase_fcm_token','line_user_id', 'fullname', 'username', 'email', 'password', 'gender', 'image_url', 'timezone', 'born_at', 'created_at', 'updated_at', 'deleted_at'];
 
     public static function getProfile($id){
         $res = User::find($id);
@@ -57,9 +57,21 @@ class User extends Authenticatable
         return $res;
     }
 
-    public static function getRandom($null){
+    public static function getRandom($null, $is_have_consume = false){
         if($null == 0){
-            $data = User::inRandomOrder()->take(1)->first();
+            if($is_have_consume){
+                $data = User::selectRaw('user.*')
+                    ->join('consume','consume.created_by','=','user.id')
+                    ->join('consume_list','consume_list.created_by','=','user.id')
+                    ->inRandomOrder()
+                    ->take(1)
+                    ->first();
+            } else {
+                $data = User::inRandomOrder()
+                    ->take(1)
+                    ->first();
+            }
+            
             $res = $data->id;
         } else {
             $res = null;

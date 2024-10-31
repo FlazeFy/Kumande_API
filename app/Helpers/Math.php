@@ -26,4 +26,26 @@ class Math
 
         return $res;
     }
+
+    public static function countBMI($gender,$height,$weight){
+        if($gender == 'male'){
+            $bmi = $weight / (($height / 100) * ($height / 100));
+        } else if($gender == 'female'){
+            $bmi = $weight / (($height / 100) * ($height / 100));
+        }
+
+        return (double) number_format($bmi, 2);
+    }
+
+    public static function countCalorieNeeded($birth,$gender,$height,$weight){
+        $age = floor((time() - strtotime($birth)) / 31556926);
+
+        if($gender == 'male'){
+            $cal = 655 + (9.6 * $weight) + (1.8 * $height) - (4.7 * $age);
+        } else if($gender == 'female'){
+            $cal = 66 + (13.7 * $weight) + (5 * $height) - (6.8 * $age);
+        }
+
+        return $cal;
+    }
 }

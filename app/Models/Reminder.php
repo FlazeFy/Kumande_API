@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  *     required={"id", "reminder_name", "reminder_type", "reminder_context", "reminder_body", "created_at","created_by"},
  * 
  *     @OA\Property(property="id", type="string", format="uuid", description="Primary Key"),
+ *     @OA\Property(property="firebase_id", type="string", description="Firebase Firestore Doc ID"),
  *     @OA\Property(property="reminder_name", type="string", description="Name of the reminder"),
  *     @OA\Property(property="reminder_type", type="string", description="Type of the reminder"),
  *     @OA\Property(property="reminder_context", type="json", description="Context of reminder. Contain time"),
@@ -31,7 +32,7 @@ class Reminder extends Model
 
     protected $table = 'reminder';
     protected $primaryKey = 'id';
-    protected $fillable = ['id', 'reminder_name', 'reminder_type', 'reminder_context', 'reminder_body', 'reminder_attachment', 'created_at', 'created_by','updated_at'];
+    protected $fillable = ['id', 'firebase_id', 'reminder_name', 'reminder_type', 'reminder_context', 'reminder_body', 'reminder_attachment', 'created_at', 'created_by','updated_at'];
     protected $casts = [
         'reminder_context' => 'array',
         'reminder_attachment' => 'array'
@@ -45,6 +46,16 @@ class Reminder extends Model
             ->orderby('username','asc')
             ->get();
 
+        return $res;
+    }
+
+    public static function getRandom($is_personal, $user_id){
+        $data = Reminder::where('created_by',$is_personal == 1 ? $user_id : null)
+            ->inRandomOrder()
+            ->take(1)
+            ->first();    
+        $res = $data->id;
+        
         return $res;
     }
 }
