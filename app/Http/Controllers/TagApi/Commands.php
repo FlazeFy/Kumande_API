@@ -158,7 +158,7 @@ class Commands extends Controller
                     return response()->json([
                         'status' => 'success',
                         'message' => "Tag is created", 
-                    ], Response::HTTP_OK);
+                    ], Response::HTTP_CREATED);
                 } else {
                     return response()->json([
                         'status' => 'error',

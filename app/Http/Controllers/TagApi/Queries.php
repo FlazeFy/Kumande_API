@@ -64,7 +64,7 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $res = Tag::select('id','tag_name','tag_slug','created_by')
+            $res = Tag::select('id','tag_name','tag_slug')
                 ->orderby('tag_name','ASC')
                 ->where('created_by',$user_id)
                 ->get();

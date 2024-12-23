@@ -69,7 +69,7 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $res = History::select('*')
+            $res = History::select('id','history_type','history_context','created_at')
                 ->where('created_by',$user_id)
                 ->orderby('created_at', 'DESC')
                 ->paginate(12);
@@ -77,13 +77,13 @@ class Queries extends Controller
             if (count($res) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'history fetched',
+                    'message' => 'History fetched',
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'history not found',
+                    'message' => 'History not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {

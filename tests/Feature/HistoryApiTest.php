@@ -9,7 +9,7 @@ use Tests\TestCase;
 use App\Helpers\Audit;
 use App\Helpers\Generator;
 
-class GetTagApiTest extends TestCase
+class HistoryApiTest extends TestCase
 {
     /**
      * A basic feature test example.
@@ -17,12 +17,13 @@ class GetTagApiTest extends TestCase
     protected $httpClient;
 
     private $authTest;
+    private $templateGet;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->httpClient = new Client([
-            'base_uri' => 'http://127.0.0.1:8000/',
+            'base_uri' => 'http://127.0.0.1:8000/api/v1/history/',
             'http_errors' => false
         ]);
 
@@ -35,26 +36,37 @@ class GetTagApiTest extends TestCase
         $this->templateTest = new TestTemplate();
     }
 
-    public function test_get_all_tag(): void
+    public function test_get_all_history(): void
     {
-        $is_paginate = false;
-        
-        $token = $this->authTest->test_post_login();
-        $response = $this->httpClient->get("/api/v1/tag", [
+        $is_paginate = true;
+
+        $response = $this->httpClient->get("", [
             'headers' => [
                 'Authorization' => "Bearer {$this->token}"
             ]
         ]);
         $data = json_decode($response->getBody(), true);
-       
+
         $this->templateTest->templateGet($response, $is_paginate);
 
         // Get list key / column
-        $stringFields = ['tag_slug','tag_name'];
-        $stringNullableFields = ['created_by'];
+        $stringFields = ['id','history_type','history_context','created_at'];
 
         // Validate column
-        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
-        $this->templateTest->templateValidateColumn($data['data'], $stringNullableFields, 'string', true);
+        $this->templateTest->templateValidateColumn($data['data']['data'], $stringFields, 'string', false);
+    }
+
+    public function test_hard_delete_history_by_id(): void
+    {
+        $id = "2d98f524-de02-11ed-b5ea-0242ac120002";
+
+        $response = $this->httpClient->delete("destroy/$id", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ]
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "permentally delete", "history");
     }
 }

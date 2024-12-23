@@ -70,12 +70,12 @@ class Commands extends Controller
             if($rows > 0){
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'history permentally deleted',
+                    'message' => 'History is permentally deleted',
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'history not found',
+                    'message' => 'History not found',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
