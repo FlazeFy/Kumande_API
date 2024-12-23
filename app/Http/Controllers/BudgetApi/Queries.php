@@ -70,12 +70,17 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
             
-            $bdt = DB::select(DB::raw("SELECT 
-                    REPLACE(JSON_EXTRACT(budget_month_year, '$[0].month'), '\"', '') as context, budget_total as total
+            $bdt = DB::select("
+                    SELECT 
+                        REPLACE(JSON_EXTRACT(budget_month_year, '$[0].month'), '\"', '') as context, 
+                        budget_total as total
                     FROM budget
-                    WHERE REPLACE(JSON_EXTRACT(budget_month_year, '$[0].year'), '\"', '') = ".$year."
-                    AND created_by = '".$user_id."'
-                "));
+                    WHERE REPLACE(JSON_EXTRACT(budget_month_year, '$[0].year'), '\"', '') = :year
+                    AND created_by = :user_id
+                ", [
+                    'year' => $year,
+                    'user_id' => $user_id,
+                ]);
 
                 $obj = [];
                 for ($i = 1; $i <= 12; $i++) {

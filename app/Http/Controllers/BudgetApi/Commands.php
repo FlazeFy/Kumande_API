@@ -25,7 +25,7 @@ class Commands extends Controller
      *     tags={"Budget"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
-     *         response=200,
+     *         response=201,
      *         description="Logout success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
@@ -110,7 +110,7 @@ class Commands extends Controller
                         'status' => 'success',
                         'message' => 'Budget is created',
                         'data' => $bdt
-                    ], Response::HTTP_OK);
+                    ], Response::HTTP_CREATED);
                 } else {
                     return response()->json([
                         'status' => 'failed',

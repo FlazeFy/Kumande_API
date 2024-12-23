@@ -21,6 +21,15 @@ class TestTemplate extends TestCase
         }
     }
 
+    public function templateCommand($obj, $type, $ctx)
+    {
+        $status_code = $type != "create" ? 200 : 201;
+        $this->assertEquals($status_code, $obj->getStatusCode(), "Expected status code $status_code, Result : {$obj->getStatusCode()}");
+        $data = json_decode($obj->getBody(), true);
+        $this->assertIsString($data['message'], "Expected 'message' to be a string");
+        $this->assertEquals($data['message'], ucfirst($ctx)." is ".$type."d", "Expected 'message' to be a string");
+    }
+
     public function templateValidateContain($data, $list, $target)
     {
         foreach ($data as $idx => $dt) {
