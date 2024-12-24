@@ -367,6 +367,8 @@ class Queries extends Controller
                 ->first();
 
             if ($consume) {
+                unset($consume->created_by);
+                
                 $allergic = false;
                 $payment = Payment::select('payment.id as id_payment','payment_method','payment_price','payment.created_at','payment.updated_at')
                     ->join('consume','consume.id','=','payment.consume_id')
@@ -392,8 +394,11 @@ class Queries extends Controller
                 $allergic = $allergic_query->get();
 
                 $consume->payment = $payment;
-                $consume->schedule = $schedule;
+                $consume->schedule = count($schedule) > 0 ? $schedule : null;
                 $consume->allergic = count($allergic) > 0 ? $allergic : null;
+                // if ($consume->consume_detail && isset($consume->consume_detail[0])) {
+                //     $consume->consume_detail[0]['calorie'] = (int)$consume->consume_detail[0]['calorie'];
+                // }
                 
                 return response()->json([
                     'status' => 'success',
