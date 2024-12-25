@@ -267,7 +267,7 @@
                 "summary": "Add monthly budget plan",
                 "operationId": "1466a9741e1ceb6ab655961e905b8b87",
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Logout success",
                         "content": {
                             "application/json": {
@@ -748,13 +748,121 @@
                 ]
             }
         },
+        "/api/v1/consume/destroy/{id}": {
+            "delete": {
+                "tags": [
+                    "Consume"
+                ],
+                "summary": "Permentally Delete consume by id",
+                "operationId": "e0573cfb7d756dd774650991db623dbe",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Consume ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "23260991-9dbb-a35b-0fc9-adfddf0938d1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Consume delete is success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Consume is permanentaly deleted"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Consume not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Consume not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/consume/delete/{id}": {
             "delete": {
                 "tags": [
                     "Consume"
                 ],
                 "summary": "Delete consume by id",
-                "operationId": "3261a005ccb74a9aab381064abfaed2c",
+                "operationId": "800ec8927077d662c3d4f6c6bae70ffc",
                 "parameters": [
                     {
                         "name": "id",
@@ -4755,6 +4863,245 @@
                 ]
             }
         },
+        "/api/v1/history/destroy/{id}": {
+            "delete": {
+                "tags": [
+                    "History"
+                ],
+                "summary": "Delete history by id",
+                "operationId": "e2ce430834218262e26b6620be22112f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "History ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "e1288783-a5d4-1c4c-2cd6-0e92f7cc3bf9"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "history permentally deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "history permentally deleted"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "history failed to permentally deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "history not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/history": {
+            "get": {
+                "tags": [
+                    "History"
+                ],
+                "summary": "Get all history",
+                "description": "This request is used to get all history when user use the App. This request is using MySql database, have a protected routes, and have template pagination.",
+                "operationId": "267b7d532c09853879c41a58ade8f21a",
+                "responses": {
+                    "200": {
+                        "description": "history fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "history fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "6f59235e-c398-8a83-2f95-3f1fbe95ca6e"
+                                                            },
+                                                            "history_type": {
+                                                                "type": "string",
+                                                                "example": "Create"
+                                                            },
+                                                            "history_context": {
+                                                                "type": "string",
+                                                                "example": "New clothes"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2024-09-20 22:53:47"
+                                                            },
+                                                            "created_by": {
+                                                                "type": "string",
+                                                                "example": "2d98f524-de02-11ed-b5ea-0242ac120002"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "history failed to fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "history not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/payment/update/{id}": {
             "put": {
                 "tags": [
@@ -8111,6 +8458,10 @@
                         "type": "string",
                         "format": "uuid"
                     },
+                    "firebase_id": {
+                        "description": "Firebase Firestore Doc ID",
+                        "type": "string"
+                    },
                     "allergic_context": {
                         "description": "User's Allergic for Consume Analyze",
                         "type": "string"
@@ -8152,6 +8503,10 @@
                         "description": "Primary Key",
                         "type": "string",
                         "format": "uuid"
+                    },
+                    "firebase_id": {
+                        "description": "Firebase Firestore Doc ID",
+                        "type": "string"
                     },
                     "blood_pressure": {
                         "description": "SmartDoc Health Monitoring",
@@ -8306,16 +8661,6 @@
                         "description": "ID of the user who created the consume",
                         "type": "string",
                         "format": "uuid"
-                    },
-                    "updated_by": {
-                        "description": "ID of the user who updated the consume",
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "deleted_by": {
-                        "description": "ID of the user who deleted the consume",
-                        "type": "string",
-                        "format": "uuid"
                     }
                 },
                 "type": "object"
@@ -8401,11 +8746,6 @@
                     },
                     "created_by": {
                         "description": "ID of the user who created the consume",
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "updated_by": {
-                        "description": "ID of the user who updated the consume",
                         "type": "string",
                         "format": "uuid"
                     }
@@ -8510,7 +8850,6 @@
                     "id",
                     "consume_id",
                     "payment_method",
-                    "is_payment",
                     "created_at",
                     "created_by"
                 ],
@@ -8532,10 +8871,6 @@
                         "description": "Ammount of the consume price in Rupiah",
                         "type": "integer"
                     },
-                    "is_payment": {
-                        "description": "Indicates if the consume is come with payment",
-                        "type": "boolean"
-                    },
                     "created_at": {
                         "description": "Timestamp when the payment was created",
                         "type": "string",
@@ -8548,11 +8883,6 @@
                     },
                     "created_by": {
                         "description": "ID of the user who created the payment",
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "updated_by": {
-                        "description": "ID of the user who updated the payment",
                         "type": "string",
                         "format": "uuid"
                     }
@@ -8692,13 +9022,18 @@
                     "reminder_type",
                     "reminder_context",
                     "reminder_body",
-                    "created_at"
+                    "created_at",
+                    "created_by"
                 ],
                 "properties": {
                     "id": {
                         "description": "Primary Key",
                         "type": "string",
                         "format": "uuid"
+                    },
+                    "firebase_id": {
+                        "description": "Firebase Firestore Doc ID",
+                        "type": "string"
                     },
                     "reminder_name": {
                         "description": "Name of the reminder",
@@ -8734,11 +9069,6 @@
                         "description": "ID of the user who created the reminder",
                         "type": "string",
                         "format": "uuid"
-                    },
-                    "updated_by": {
-                        "description": "ID of the user who updated the reminder",
-                        "type": "string",
-                        "format": "uuid"
                     }
                 },
                 "type": "object"
@@ -8747,8 +9077,6 @@
                 "required": [
                     "id",
                     "firebase_id",
-                    "schedule_consume",
-                    "consume_type",
                     "schedule_time",
                     "created_at",
                     "created_by"
@@ -8767,29 +9095,13 @@
                         "description": "Firebase Firestore Doc ID",
                         "type": "string"
                     },
-                    "schedule_consume": {
-                        "description": "Name of the consume",
-                        "type": "string"
-                    },
-                    "consume_type": {
-                        "description": "Type of the consume",
-                        "type": "string"
-                    },
-                    "consume_detail": {
-                        "description": "Detail of the consume. Contain calorie, provide, main ingredient, provide latitude, and provide longitude",
+                    "schedule_time": {
+                        "description": "Time of the schedule. Contain day, category, and time",
                         "type": "json"
                     },
                     "schedule_desc": {
                         "description": "Comments about the consume for analyze",
                         "type": "string"
-                    },
-                    "schedule_tag": {
-                        "description": "Tags associated with the consume",
-                        "type": "json"
-                    },
-                    "schedule_time": {
-                        "description": "Time of the schedule. Contain day, category, and time",
-                        "type": "json"
                     },
                     "created_at": {
                         "description": "Timestamp when the schedule was created",
@@ -8803,11 +9115,6 @@
                     },
                     "created_by": {
                         "description": "ID of the user who created the schedule",
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "updated_by": {
-                        "description": "ID of the user who updated the schedule",
                         "type": "string",
                         "format": "uuid"
                     }
@@ -8827,6 +9134,10 @@
                         "description": "Primary Key",
                         "type": "string",
                         "format": "uuid"
+                    },
+                    "firebase_id": {
+                        "description": "Firebase Firestore Doc ID",
+                        "type": "string"
                     },
                     "tag_slug": {
                         "description": "Slug of the tag",
@@ -8853,7 +9164,6 @@
                 "required": [
                     "id",
                     "firebase_id",
-                    "slug_name",
                     "fullname",
                     "username",
                     "email",
@@ -8881,10 +9191,6 @@
                     },
                     "line_user_id": {
                         "description": "Line Account ID for Bot Apps",
-                        "type": "string"
-                    },
-                    "slug_name": {
-                        "description": "Unique Identifier for user from username",
                         "type": "string"
                     },
                     "fullname": {
@@ -9030,6 +9336,10 @@
         {
             "name": "Count",
             "description": "Count"
+        },
+        {
+            "name": "History",
+            "description": "History"
         },
         {
             "name": "Payment",

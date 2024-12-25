@@ -396,9 +396,10 @@ class Queries extends Controller
                 $consume->payment = $payment;
                 $consume->schedule = count($schedule) > 0 ? $schedule : null;
                 $consume->allergic = count($allergic) > 0 ? $allergic : null;
-                // if ($consume->consume_detail && isset($consume->consume_detail[0])) {
-                //     $consume->consume_detail[0]['calorie'] = (int)$consume->consume_detail[0]['calorie'];
-                // }
+
+                $consume_detail = $consume->consume_detail;
+                $consume_detail[0]['calorie'] = (int)$consume->consume_detail[0]['calorie'];
+                $consume->consume_detail = $consume_detail;               
                 
                 return response()->json([
                     'status' => 'success',
@@ -414,7 +415,7 @@ class Queries extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => 'something wrong. please contact admin'.$e->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

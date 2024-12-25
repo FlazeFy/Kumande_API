@@ -25,6 +25,88 @@ class Commands extends Controller
 {
     /**
      * @OA\DELETE(
+     *     path="/api/v1/consume/destroy/{id}",
+     *     summary="Permentally Delete consume by id",
+     *     tags={"Consume"},
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         description="Consume ID",
+     *         example="23260991-9dbb-a35b-0fc9-adfddf0938d1",
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Consume delete is success",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Consume is permanentaly deleted"),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="protected route need to include sign in token as authorization bearer",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="you need to include the authorization token from login")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Consume not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="failed"),
+     *             @OA\Property(property="message", type="string", example="Consume not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Internal Server Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="something wrong. please contact admin")
+     *         )
+     *     ),
+     * )
+     */
+    public function hardDeleteConsumeById(Request $request, $id){
+        try{ 
+            $user_id = $request->user()->id;
+            $res = Consume::where('id', $id)
+                ->where('created_by',$user_id)
+                ->delete();
+
+            if($res){
+                Schedule::where('consume_id', $id)
+                    ->where('created_by',$user_id)
+                    ->delete();
+
+                RelConsumeList::where('consume_id', $id)
+                    ->where('created_by',$user_id)
+                    ->delete();
+                
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Consume is permanentaly deleted',
+                ], Response::HTTP_OK);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'Consume not found',
+                ], Response::HTTP_NOT_FOUND);
+            }
+        } catch(\Exception $err) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something error please contact admin'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * @OA\DELETE(
      *     path="/api/v1/consume/delete/{id}",
      *     summary="Delete consume by id",
      *     tags={"Consume"},
@@ -71,22 +153,17 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function deleteConsumeById(Request $request, $id){
+    public function softDeleteConsumeById(Request $request, $id){
         try{ 
             $user_id = $request->user()->id;
             $res = Consume::where('id', $id)
                 ->where('created_by',$user_id)
-                ->delete();
+                ->whereNull('deleted_at')
+                ->update([
+                    'deleted_at' => date('Y-m-d H:i:s')
+                ]);
 
-            if($res){
-                Schedule::where('consume_id', $id)
-                    ->where('created_by',$user_id)
-                    ->delete();
-
-                RelConsumeList::where('consume_id', $id)
-                    ->where('created_by',$user_id)
-                    ->delete();
-                
+            if($res > 0){                
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Consume is deleted',
@@ -177,18 +254,22 @@ class Commands extends Controller
                     'result' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {        
+                $user_id = $request->user()->id;
                 $jsonDetail = Converter::getEncoded($request->consume_detail);
                 $detail = json_decode($jsonDetail, true);
 
-                $csm = Consume::where('id', $id)->update([
-                    'consume_type' => $request->consume_type,
-                    'consume_name' => $request->consume_name,
-                    'consume_from' => $request->consume_from,
-                    'consume_tag' => $request->consume_tag,
-                    'consume_detail' => $detail,
-                    'consume_comment' => $request->consume_comment,
-                    'updated_at' => date("Y-m-d H:i:s")
-                ]);
+                $csm = Consume::where('id', $id)
+                    ->whereNull('deleted_at')
+                    ->where('created_by',$user_id)
+                    ->update([
+                        'consume_type' => $request->consume_type,
+                        'consume_name' => $request->consume_name,
+                        'consume_from' => $request->consume_from,
+                        'consume_tag' => $request->consume_tag,
+                        'consume_detail' => $detail,
+                        'consume_comment' => $request->consume_comment,
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ]);
 
                 if($csm){
                     return response()->json([
@@ -278,10 +359,15 @@ class Commands extends Controller
                     'result' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {        
-                $csm = Consume::where('id', $id)->update([
-                    'is_favorite' => $request->is_favorite,
-                    'updated_at' => date("Y-m-d H:i:s")
-                ]);
+                $user_id = $request->user()->id;
+
+                $csm = Consume::where('id', $id)
+                    ->whereNull('deleted_at')
+                    ->where('created_by',$user_id)
+                    ->update([
+                        'is_favorite' => $request->is_favorite,
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ]);
 
                 if($csm){
                     return response()->json([

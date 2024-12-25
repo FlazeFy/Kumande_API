@@ -56,7 +56,8 @@ Route::prefix('/v1/consume')->middleware(['auth:sanctum'])->group(function () {
     Route::delete('/gallery/{gallery_id}', [CommandConsumeGalleryApi::class, 'deleteGalleryById']);
     Route::put('/gallery/{gallery_id}', [CommandConsumeGalleryApi::class, 'updateGalleryById']);
     
-    Route::delete('/delete/{id}', [CommandConsumeApi::class, 'deleteConsumeById']);
+    Route::delete('/destroy/{id}', [CommandConsumeApi::class, 'hardDeleteConsumeById']);
+    Route::delete('/delete/{id}', [CommandConsumeApi::class, 'softDeleteConsumeById']);
     Route::put('/update/data/{id}', [CommandConsumeApi::class, 'updateConsumeData']);
     Route::put('/update/favorite/{id}', [CommandConsumeApi::class, 'updateConsumeFavorite']);
     Route::post('/create', [CommandConsumeApi::class, 'createConsume']);

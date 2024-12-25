@@ -198,52 +198,82 @@ class ConsumeApiTest extends TestCase
         $this->templateTest->templateValidateContain($data_arr, $isFavoriteRule, 'is_favorite');
         $this->templateTest->templateValidateContain($data_arr, $consumeTypeRule, 'consume_type');
 
-        foreach ($data['data']['consume_detail'] as $dt) {
-            // Get list key / column
-            $stringFields = ['provide','main_ing'];
-            $intFields = ['calorie'];
+        // Get list key / column for consume detail
+        $stringFieldsConsumeDetail = ['provide','main_ing'];
+        $intFieldsConsumeDetail = ['calorie'];
+        $this->templateTest->templateValidateColumn($data['data']['consume_detail'], $stringFieldsConsumeDetail, 'string', false);
+        $this->templateTest->templateValidateColumn($data['data']['consume_detail'], $intFieldsConsumeDetail, 'integer', false);
 
-            // Validate column
-            $this->templateTest->templateValidateColumn($dt, $stringFields, 'string', false);
-            $this->templateTest->templateValidateColumn($dt, $intFields, 'integer', false);
-        }
-
+        // Get list key / column for payment
         if(!is_null($data['data']['payment'])){
-            foreach ($data['data']['payment'] as $dt) {
-                // Get list key / column
-                $stringFields = ['id_payment','payment_method','created_at'];
-                $intFields = ['payment_price'];
-                $stringNullableFields = ['updated_at'];
-
-                // Validate column
-                $this->templateTest->templateValidateColumn($dt, $stringFields, 'string', false);
-                $this->templateTest->templateValidateColumn($dt, $intFields, 'integer', false);
-                $this->templateTest->templateValidateColumn($dt, $stringNullableFields, 'string', true);
-            }
+            $stringFieldsPayment = ['id_payment','payment_method','created_at'];
+            $intFieldsPayment = ['payment_price'];
+            $stringNullableFieldsPayment = ['updated_at'];
+            $this->templateTest->templateValidateColumn($data['data']['payment'], $stringFieldsPayment, 'string', false);
+            $this->templateTest->templateValidateColumn($data['data']['payment'], $intFieldsPayment, 'integer', false);
+            $this->templateTest->templateValidateColumn($data['data']['payment'], $stringNullableFieldsPayment, 'string', true);
         }
 
         if(!is_null($data['data']['schedule'])){
-            foreach ($data['data']['schedule'] as $dt) {
-                // Get list key / column
-                $stringFields = ['created_at'];
-                $stringNullableFields = ['updated_at'];
-                $arrayFields = ['schedule_time'];
-
-                // Validate column
-                $this->templateTest->templateValidateColumn($dt, $stringFields, 'string', false);
-                $this->templateTest->templateValidateColumn($dt, $stringNullableFields, 'string', true);
-                $this->templateTest->templateValidateColumn($dt, $arrayFields, 'array', false);
-            }
+            // Get list key / column for schedule
+            $stringFieldsSchedule = ['created_at'];
+            $stringNullableFieldsSchedule = ['updated_at'];
+            $arrayFieldsSchedule = ['schedule_time'];
+            $this->templateTest->templateValidateColumn($data['data']['schedule'], $stringFieldsSchedule, 'string', false);
+            $this->templateTest->templateValidateColumn($data['data']['schedule'], $stringNullableFieldsSchedule, 'string', true);
+            $this->templateTest->templateValidateColumn($data['data']['schedule'], $arrayFieldsSchedule, 'array', false);
         }
 
         if(!is_null($data['data']['allergic'])){
-            foreach ($data['data']['allergic'] as $dt) {
-                // Get list key / column
-                $stringFields = ['allergic_context'];
-
-                // Validate column
-                $this->templateTest->templateValidateColumn($dt, $stringFields, 'string', false);
-            }
+            // Get list key / column for allergic
+            $stringFieldsAllergic = ['allergic_context'];
+            $this->templateTest->templateValidateColumn($data['data']['allergic'], $stringFieldsAllergic, 'string', false);
         }
+    }
+
+    public function test_hard_delete_consume_by_id(): void
+    {
+        $id = "27dbf1e0-a9e5-11zz-aa95-3216422210e8";
+
+        $response = $this->httpClient->delete("destroy/$id", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ]
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "permanentaly delete", "consume");
+    }
+
+    public function test_soft_delete_consume_by_id(): void
+    {
+        $id = "05a82ccb-c588-e3f0-2d59-004e882b89f8";
+
+        $response = $this->httpClient->delete("delete/$id", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ]
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "delete", "consume");
+    }
+
+    public function test_put_update_consume_favorite(): void
+    {
+        $id = "19663b65-1869-e0de-0cc7-62dc026b55e4";
+        $data = [
+            'is_favorite' => 1
+        ];
+
+        $response = $this->httpClient->put("update/favorite/$id", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+            'json' => $data
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "update", "consume favorite");
     }
 }
