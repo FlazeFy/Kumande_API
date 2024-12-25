@@ -33,6 +33,22 @@ class Validation
         ]);
     }
 
+    public static function getValidateUpdateConsume($request,$type){ 
+        if($type == 'favorite'){
+            return Validator::make($request->all(), [
+                'is_favorite' => 'required|min:0|max:1',  
+            ]);
+        } else if($type == 'data'){
+            return Validator::make($request->all(), [
+                'consume_type' => ['required', new TypeConsume],
+                'consume_name' => 'required|string|min:4|max:75',
+                'consume_from' => ['required', new TypeFrom],
+                'consume_tag' => 'nullable|json',
+                'consume_comment' => 'nullable|string|max:255',
+            ]);
+        }
+    }
+
     public static function getValidateCreateBudget($request){ 
         return Validator::make($request->all(), [
             'budget_total' => 'required|numeric|min:1',

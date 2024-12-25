@@ -276,4 +276,72 @@ class ConsumeApiTest extends TestCase
 
         $this->templateTest->templateCommand($response, "update", "consume favorite");
     }
+
+    public function test_put_update_consume_data(): void
+    {
+        $id = "19663b65-1869-e0de-0cc7-62dc026b55e4";
+        $data = [
+            'consume_type' => 'Food',
+            'consume_name' => 'Consume Update A',
+            'consume_from' => 'GoFood',
+            'consume_tag' => '[{"slug_name":"chocolate","tag_name":"Chocolate"},{"slug_name":"tasty","tag_name":"Tasty"}]',
+            'consume_comment' => 'Test comment'
+        ];
+
+        $response = $this->httpClient->put("update/data/$id", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+            'json' => $data
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "update", "consume");
+    }
+
+    public function test_post_consume(): void
+    {
+        $data = [
+            'firebase_id' => 'AAA-111',
+            'consume_type' => 'Food',
+            'consume_name' => 'Consume Create A',
+            'consume_detail' => '[{"provide":"Ayam Geprek Crisbar","calorie":240,"main_ing":"Chicken"}]',
+            'consume_from' => 'GrabFood',
+            'is_favorite' => 0,
+            'consume_tag' => '[{"slug_name":"rice", "tag_name":"Rice"},{"slug_name":"spicy", "tag_name":"Spicy"}]',
+            'consume_comment' => null,
+            'payment_method' => 'Ovo',
+            'payment_price' => 36000,
+            'is_payment' => 1,      
+        ];
+
+        $response = $this->httpClient->post("create", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+            'json' => $data
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "create", null, "You have add new payment and consume");
+    }
+
+    public function test_put_update_gallery_by_id(): void
+    {
+        $gallery_id = "0a319135-fec2-697d-335a-fa05832be998";
+        $data = [
+            'gallery_desc' => 'Testing description',
+        ];
+
+        $response = $this->httpClient->put("gallery/$gallery_id", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+            'json' => $data
+        ]);
+        $data = json_decode($response->getBody(), true);
+        print($response->getBody());
+
+        $this->templateTest->templateCommand($response, "update", "gallery");
+    }
 }

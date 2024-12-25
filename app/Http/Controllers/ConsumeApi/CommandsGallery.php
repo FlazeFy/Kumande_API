@@ -262,13 +262,14 @@ class CommandsGallery extends Controller
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
                 $user_id = $request->user()->id;
-                $res = ConsumeGallery::where('id',$gallery_id)
+                $res = ConsumeGallery::where('consume_gallery.id',$gallery_id)
+                    ->join('consume','consume.id','=','consume_gallery.consume_id')
                     ->where('created_by',$user_id)
                     ->update([
                         'gallery_desc' => $request->gallery_desc
                     ]);
 
-                if($res){
+                if($res > 0){
                     return response()->json([
                         'status' => 'success',
                         'message' => 'Gallery is updated',
@@ -280,10 +281,10 @@ class CommandsGallery extends Controller
                     ], Response::HTTP_NOT_FOUND);
                 }
             }
-        } catch(\Exception $err) {
+        } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => 'Something error please contact admin'.$e->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

@@ -240,13 +240,7 @@ class Commands extends Controller
      */
     public function updateConsumeData(Request $request, $id){
         try{
-            $validator = Validator::make($request->all(), [
-                'consume_type' => 'required|max:10|min:1',
-                'consume_name' => 'required|max:75|min:3',
-                'consume_from' => 'required|max:10|min:1',
-                'consume_tag' => 'nullable|json',
-                'consume_comment' => 'nullable|max:255|min:1'
-            ]);
+            $validator = Validation::getValidateUpdateConsume($request,'data');
 
             if ($validator->fails()) {
                 return response()->json([
@@ -349,9 +343,7 @@ class Commands extends Controller
      */
     public function updateConsumeFavorite(Request $request, $id){
         try{
-            $validator = Validator::make($request->all(), [
-                'is_favorite' => 'required|max:1'
-            ]);
+            $validator = Validation::getValidateUpdateConsume($request,'favorite');
 
             if ($validator->fails()) {
                 return response()->json([
@@ -510,7 +502,7 @@ class Commands extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => $payment_only ? 'You have add new payment' : 'You have add new payment and consume',
-                ], Response::HTTP_OK);
+                ], Response::HTTP_CREATED);
             }
         } catch(\Exception $err) {
             return response()->json([

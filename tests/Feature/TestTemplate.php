@@ -21,13 +21,19 @@ class TestTemplate extends TestCase
         }
     }
 
-    public function templateCommand($obj, $type, $ctx)
+    public function templateCommand($obj, $type, $ctx, $custom_message = null)
     {
         $status_code = $type != "create" ? 200 : 201;
         $this->assertEquals($status_code, $obj->getStatusCode(), "Expected status code $status_code, Result : {$obj->getStatusCode()}");
         $data = json_decode($obj->getBody(), true);
         $this->assertIsString($data['message'], "Expected 'message' to be a string");
-        $this->assertEquals($data['message'], ucfirst($ctx)." is ".$type."d", "Expected 'message' to be a string");
+
+        if($custom_message == null){
+            $this->assertEquals($data['message'], ucfirst($ctx)." is ".$type."d", "Expected 'message' to be a string");
+        } else {
+            // Using api custom message if context empty
+            $this->assertEquals($data['message'], $custom_message);
+        }
     }
 
     public function templateValidateContain($data, $list, $target)
