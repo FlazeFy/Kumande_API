@@ -43,6 +43,7 @@ class ConsumeApiTest extends TestCase
         $this->ord = "DESC";
     }
 
+    // Query Test
     public function test_get_all_my_gallery(): void
     {
         $is_paginate = true;
@@ -231,6 +232,44 @@ class ConsumeApiTest extends TestCase
         }
     }
 
+    public function test_get_consume_by_context(): void
+    {
+        $ctx = 'provide';
+        $target = 'Warteg%20Kembang%20Kuningan';
+        $is_paginate = false;
+
+        $response = $this->httpClient->post("by/context/$ctx/$target", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ]
+        ]);
+        $data = json_decode($response->getBody(), true);
+        
+        $this->templateTest->templateGet($response, $is_paginate);
+
+        // Get list key / column
+        $stringFields = ['id','slug_name','consume_type','consume_name','consume_from'];
+        $objectFields = ['consume_detail'];
+        $arrayNullableFields = ['consume_tag','schedule'];
+        $integerFields = ['is_favorite'];
+
+        // Validate column
+        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
+        $this->templateTest->templateValidateColumn($data['data'], $objectFields, 'object', false);
+        $this->templateTest->templateValidateColumn($data['data'], $arrayNullableFields, 'array', true);
+        $this->templateTest->templateValidateColumn($data['data'], $integerFields, 'integer', false);
+
+        // Validate contain
+        $consumeFromRule = ['GoFood','GrabFood','ShopeeFood','Dine-In','Take Away','Cooking'];
+        $isFavoriteRule = [1,0];
+        $consumeTypeRule = ['Food','Snack','Drink'];
+
+        $this->templateTest->templateValidateContain($data['data'], $consumeFromRule, 'consume_from');
+        $this->templateTest->templateValidateContain($data['data'], $isFavoriteRule, 'is_favorite');
+        $this->templateTest->templateValidateContain($data['data'], $consumeTypeRule, 'consume_type');
+    }
+
+    // Command Test
     public function test_hard_delete_consume_by_id(): void
     {
         $id = "27dbf1e0-a9e5-11zz-aa95-3216422210e8";

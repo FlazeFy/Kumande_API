@@ -9,7 +9,7 @@ use Tests\TestCase;
 use App\Helpers\Audit;
 use App\Helpers\Generator;
 
-class GetReminderApiTest extends TestCase
+class ReminderApiTest extends TestCase
 {
     /**
      * A basic feature test example.

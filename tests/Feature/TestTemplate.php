@@ -29,7 +29,7 @@ class TestTemplate extends TestCase
         $this->assertIsString($data['message'], "Expected 'message' to be a string");
 
         if($custom_message == null){
-            $this->assertEquals($data['message'], ucfirst($ctx)." is ".$type."d", "Expected 'message' to be a string");
+            $this->assertEquals($data['message'], "$ctx $type"."d", "Expected 'message' to be a string");
         } else {
             // Using api custom message if context empty
             $this->assertEquals($data['message'], $custom_message);

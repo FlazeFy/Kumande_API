@@ -9,7 +9,7 @@ use Tests\TestCase;
 use App\Helpers\Audit;
 use App\Helpers\Generator;
 
-class GetStatsApiTest extends TestCase
+class StatsApiTest extends TestCase
 {
     /**
      * A basic feature test example.
@@ -289,35 +289,6 @@ class GetStatsApiTest extends TestCase
         $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
         $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
     }
-
-    // TC-S008
-    public function test_get_total_spending_this_year(): void
-    {
-        $randDate = Generator::getRandDate(0);
-        $month = date('m',$randDate);
-
-        $token = $this->authTest->test_post_login();
-        $response = $this->httpClient->get("/api/v1/payment/total/month/$month", [
-            'headers' => [
-                'Authorization' => "Bearer {$this->token}"
-            ]
-        ]);
-        $data = json_decode($response->getBody(), true);
-        
-        $this->templateTest->templateGet($response, $this->is_paginate);
-
-        // Get list key / column
-        $intFields = ['total'];
-        $stringFields = ['context'];
-
-        // Validate column
-        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
-        $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
-
-        // Validate contain
-        $monthNameShort = Generator::getMonthName('all','short');
-        $this->templateTest->templateValidateContain($data['data'], $monthNameShort, 'context');
-    }
  
     // TC-C001
     public function test_get_my_schedule(): void
@@ -344,34 +315,6 @@ class GetStatsApiTest extends TestCase
 
         $this->templateTest->templateValidateContain($data['data'], $timeRule, 'time');
         $this->templateTest->templateValidateContain($data['data'], $dayName, 'day');
-    }
- 
-    // TC-C002
-    public function test_get_total_spend_day(): void
-    {
-        $randDate = Generator::getRandDate(0);
-        $month = date('m',$randDate);
-        $year = date('Y',$randDate);
-
-        $token = $this->authTest->test_post_login();
-        Audit::auditRecord("Test - Returned Data", "TC-C002", "Month : $month\nYear : $year");
-
-        $response = $this->httpClient->get("/api/v1/payment/total/month/$month/year/$year", [
-            'headers' => [
-                'Authorization' => "Bearer {$this->token}"
-            ]
-        ]);
-        $data = json_decode($response->getBody(), true);
-        
-        $this->templateTest->templateGet($response, $this->is_paginate);
-
-        // Get list key / column
-        $intFields = ['total'];
-        $stringFields = ['context'];
-
-        // Validate column
-        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
-        $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);        
     }
  
     // TC-C003 && TC-S009

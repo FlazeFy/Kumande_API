@@ -4000,6 +4000,66 @@
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "description": "protected route need to include sign in token as authorization bearer",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "you need to include the authorization token from login"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Consume not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Consume not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "something wrong. please contact admin"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -4030,7 +4090,40 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Consume found"
+                        "description": "Consume found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Consume found"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "calorie": {
+                                                        "type": "integer",
+                                                        "example": 200
+                                                    },
+                                                    "consume_type": {
+                                                        "type": "string",
+                                                        "example": "Food"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -4073,7 +4166,24 @@
                         }
                     },
                     "422": {
-                        "description": "Consume view must be all, day, week, month, or year"
+                        "description": "Consume view must be all, day, week, month, or year",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "consume view must be all, day, week, month, or year"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "500": {
                         "description": "Internal Server Error",
@@ -4134,7 +4244,157 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Consume found"
+                        "description": "Consume found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "consume fetched"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "e3f70e2a-9d46-cdd2-2755-38edf3aa2425"
+                                                    },
+                                                    "firebase_id": {
+                                                        "type": "string",
+                                                        "example": "HBT60VBe5PrDMKvINzuH"
+                                                    },
+                                                    "slug_name": {
+                                                        "type": "string",
+                                                        "example": "nasi-warteg-tahu-bacem-sayur-pare-sayur-nangka"
+                                                    },
+                                                    "consume_type": {
+                                                        "type": "string",
+                                                        "example": "Food"
+                                                    },
+                                                    "consume_name": {
+                                                        "type": "string",
+                                                        "example": "Nasi warteg (tahu bacem, sayur pare, sayur nangka)"
+                                                    },
+                                                    "consume_detail": {
+                                                        "properties": {
+                                                            "provide": {
+                                                                "type": "string",
+                                                                "example": "Warteg TLT B2"
+                                                            },
+                                                            "calorie": {
+                                                                "type": "integer",
+                                                                "example": 750
+                                                            },
+                                                            "main_ing": {
+                                                                "type": "string",
+                                                                "example": "Rice"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "consume_from": {
+                                                        "type": "string",
+                                                        "example": "Take Away"
+                                                    },
+                                                    "is_favorite": {
+                                                        "type": "integer",
+                                                        "example": 0
+                                                    },
+                                                    "consume_tag": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "consume_comment": {
+                                                        "type": "string",
+                                                        "example": "Enak murmer"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "example": "2024-07-01T04:03:19.000000Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "example": "2024-09-25T06:59:55.000000Z"
+                                                    },
+                                                    "deleted_at": {
+                                                        "type": "string",
+                                                        "nullable": true
+                                                    },
+                                                    "payment": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id_payment": {
+                                                                    "type": "string",
+                                                                    "example": "0b4f351a-4d63-06e7-3675-e5fbb4a0c46c"
+                                                                },
+                                                                "payment_method": {
+                                                                    "type": "string",
+                                                                    "example": "MBanking"
+                                                                },
+                                                                "payment_price": {
+                                                                    "type": "integer",
+                                                                    "example": 15000
+                                                                },
+                                                                "created_at": {
+                                                                    "type": "string",
+                                                                    "example": "2024-07-01T04:03:19.000000Z"
+                                                                },
+                                                                "updated_at": {
+                                                                    "type": "string",
+                                                                    "nullable": true
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "schedule": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "schedule_time": {
+                                                                    "type": "string",
+                                                                    "example": "Warteg TLT B2"
+                                                                },
+                                                                "created_at": {
+                                                                    "type": "string",
+                                                                    "example": "2024-07-01T04:03:19.000000Z"
+                                                                },
+                                                                "updated_at": {
+                                                                    "type": "string",
+                                                                    "example": "2024-07-01T04:03:19.000000Z"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "allergic": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "allergic_context": {
+                                                                    "type": "string",
+                                                                    "example": "Tahu"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -4177,7 +4437,24 @@
                         }
                     },
                     "422": {
-                        "description": "Consume context not valid"
+                        "description": "Consume context not valid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "failed"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "consume context not valid"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "500": {
                         "description": "Internal Server Error",
@@ -10580,68 +10857,6 @@
                     }
                 },
                 "type": "object"
-            }
-        },
-        "responses": {
-            "401": {
-                "description": "protected route need to include sign in token as authorization bearer",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "properties": {
-                                "status": {
-                                    "type": "string",
-                                    "example": "failed"
-                                },
-                                "message": {
-                                    "type": "string",
-                                    "example": "you need to include the authorization token from login"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                }
-            },
-            "404": {
-                "description": "Consume not found",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "properties": {
-                                "status": {
-                                    "type": "string",
-                                    "example": "failed"
-                                },
-                                "message": {
-                                    "type": "string",
-                                    "example": "Consume not found"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                }
-            },
-            "500": {
-                "description": "Internal Server Error",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "properties": {
-                                "status": {
-                                    "type": "string",
-                                    "example": "error"
-                                },
-                                "message": {
-                                    "type": "string",
-                                    "example": "something wrong. please contact admin"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                }
             }
         },
         "securitySchemes": {
