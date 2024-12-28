@@ -1,16 +1,18 @@
 <?php
 
 namespace App\Http\Controllers\ConsumeApi;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Helpers\Generator;
-use App\Helpers\Validation;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+// Models
 use App\Models\Allergic;
+
+// Helpers
+use App\Helpers\Generator;
+use App\Helpers\Validation;
 
 class CommandsAllergic extends Controller
 {
@@ -99,7 +101,7 @@ class CommandsAllergic extends Controller
                 if($check){
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Allergic context already exist',
+                        'message' => Generator::getMessageTemplate("conflict", 'allergic context'),
                     ], Response::HTTP_CONFLICT);
                 } else {
                     $exist = Allergic::where('id', $id)
@@ -117,18 +119,18 @@ class CommandsAllergic extends Controller
                         if($res){
                             return response()->json([
                                 'status' => 'success',
-                                'message' => 'Allergic is updated',
+                                'message' => Generator::getMessageTemplate("update", 'allergic'),
                             ], Response::HTTP_OK);
                         } else {
                             return response()->json([
                                 'status' => 'success',
-                                'message' => 'Nothing to Change',
+                                'message' => Generator::getMessageTemplate("custom", 'nothing to change'),
                             ], Response::HTTP_OK);
                         }
                     } else {
                         return response()->json([
                             'status' => 'success',
-                            'message' => 'Allergic not found',
+                            'message' => Generator::getMessageTemplate("not_found", 'allergic'),
                         ], Response::HTTP_NOT_FOUND);
                     }
                 }
@@ -136,7 +138,7 @@ class CommandsAllergic extends Controller
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -209,7 +211,7 @@ class CommandsAllergic extends Controller
                 if($check){
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Allergic context already exist',
+                        'message' => Generator::getMessageTemplate("conflict", 'allergic context'),
                     ], Response::HTTP_CONFLICT);
                 } else {
                     $id = Generator::getUUID();
@@ -225,13 +227,13 @@ class CommandsAllergic extends Controller
                     if($res){
                         return response()->json([
                             'status' => 'success',
-                            'message' => 'Allergic created',
+                            'message' => Generator::getMessageTemplate("create", 'allergic'),
                             'data' => $res
                         ], Response::HTTP_OK);
                     } else {
                         return response()->json([
                             'status' => 'success',
-                            'message' => 'Something error please contact admin',
+                            'message' => Generator::getMessageTemplate("unknown_error", null),
                         ], Response::HTTP_UNPROCESSABLE_ENTITY);
                     }
                 }
@@ -239,7 +241,7 @@ class CommandsAllergic extends Controller
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -302,18 +304,18 @@ class CommandsAllergic extends Controller
             if($res){
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'Allergic is deleted',
+                    'message' => Generator::getMessageTemplate("delete", 'allergic'),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Allergic not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'allergic'),
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

@@ -1,14 +1,17 @@
 <?php
 
 namespace App\Http\Controllers\BudgetApi;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
+// Models
 use App\Models\Budget;
 use App\Models\Payment;
+
+// Helpers
+use App\Helpers\Generator;
 
 class Queries extends Controller
 {
@@ -106,19 +109,19 @@ class Queries extends Controller
             if (count($collection) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Budget found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'budget'), 
                     'data' => $collection
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Budget not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'budget'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -242,21 +245,21 @@ class Queries extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Budget found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'budget'), 
                     'data' => $bdt,
                     'total_all' => $total->total_all
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Budget not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'budget'),
                     'total_all' => $total->total_all
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

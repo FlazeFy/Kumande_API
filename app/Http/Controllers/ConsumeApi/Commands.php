@@ -1,20 +1,20 @@
 <?php
 
 namespace App\Http\Controllers\ConsumeApi;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
-
-use App\Helpers\Generator;
-use App\Helpers\Validation;
-use App\Helpers\Converter;
-
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 
+// Helpers
+use App\Helpers\Generator;
+use App\Helpers\Validation;
+use App\Helpers\Converter;
+
+// Models
 use App\Models\Consume;
 use App\Models\Schedule;
 use App\Models\Payment;
@@ -89,18 +89,18 @@ class Commands extends Controller
                 
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'Consume is permanentaly deleted',
+                    'message' => Generator::getMessageTemplate("permentally delete", 'consume'),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Consume not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'consume'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -166,18 +166,18 @@ class Commands extends Controller
             if($res > 0){                
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'Consume is deleted',
+                    'message' => Generator::getMessageTemplate("delete", 'consume'),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Consume not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'consume'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -268,19 +268,19 @@ class Commands extends Controller
                 if($csm){
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'Consume is updated',
+                        'message' => Generator::getMessageTemplate("update", 'consume'),
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Consume not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'consume'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -364,19 +364,19 @@ class Commands extends Controller
                 if($csm){
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'Consume favorite is updated',
+                        'message' => Generator::getMessageTemplate("update", 'consume'),
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Consume favorite not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'consume'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -507,7 +507,7 @@ class Commands extends Controller
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

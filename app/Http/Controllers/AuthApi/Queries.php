@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\AuthApi;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
+
+// Helpers
+use App\Helpers\Generator;
 
 /**
  * @OA\Info(
@@ -65,12 +67,12 @@ class Queries extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Logout success'
+                'message' => Generator::getMessageTemplate("custom", "logout success")
             ], Response::HTTP_OK);
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

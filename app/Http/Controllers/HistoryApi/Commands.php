@@ -1,14 +1,15 @@
 <?php
 
 namespace App\Http\Controllers\HistoryApi;
-
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
 // Models
 use App\Models\History;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+// Helpers
+use App\Helpers\Generator;
 
 class Commands extends Controller
 {
@@ -81,7 +82,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin',
+                'message' => Generator::getMessageTemplate("unknown_error", null),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

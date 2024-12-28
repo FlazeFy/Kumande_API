@@ -1,20 +1,22 @@
 <?php
 
 namespace App\Http\Controllers\ConsumeApi;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Helpers\Generator;
-use App\Helpers\Query;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
+// Models
 use App\Models\Consume;
 use App\Models\Payment;
 use App\Models\Allergic;
 use App\Models\Schedule;
+
+// Helpers
+use App\Helpers\Generator;
+use App\Helpers\Query;
 
 class Queries extends Controller
 {
@@ -134,19 +136,19 @@ class Queries extends Controller
             if ($csm->count() > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Consume found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'consume'), 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Consume not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'consume'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -215,19 +217,19 @@ class Queries extends Controller
             if ($csm->count() > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Consume found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'consume'), 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Consume not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'consume'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -296,19 +298,19 @@ class Queries extends Controller
             if ($csm->count() > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Consume found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'consume'), 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Consume not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'consume'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -403,19 +405,19 @@ class Queries extends Controller
                 
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Consume found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'consume'), 
                     'data' => $consume
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Consume not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'consume'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'.$e->getMessage()
+                'message' => Generator::getMessageTemplate("unknown_error", null).$e->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -487,19 +489,19 @@ class Queries extends Controller
             if (count($csm) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Consume found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'consume'), 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Consume not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'consume'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -571,19 +573,19 @@ class Queries extends Controller
             if (count($csm) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Consume found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'consume'), 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Consume not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'consume'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -689,19 +691,19 @@ class Queries extends Controller
             if ($collection->count() > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Consume found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'consume'), 
                     'data' => $collection
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Consume not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'consume'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -768,19 +770,19 @@ class Queries extends Controller
             if ($csm) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Consume found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'consume'), 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Consume not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'consume'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -859,26 +861,26 @@ class Queries extends Controller
                 if ($csm->count() > 0) {
                     return response()->json([
                         'status' => 'success',
-                        'message' => "Consume found", 
+                        'message' => Generator::getMessageTemplate("fetch", 'consume'), 
                         'data' => $csm
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Consume not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'consume'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Consume view must be all, day, week, month, or year',
+                    'message' => Generator::getMessageTemplate("custom", 'Consume view must be all, day, week, month, or year'),
                     'data' => null
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -993,25 +995,25 @@ class Queries extends Controller
                     
                     return response()->json([
                         'status' => 'success',
-                        'message' => "Consume found", 
+                        'message' => Generator::getMessageTemplate("fetch", 'consume'), 
                         'data' => $consume
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Consume not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'consume'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Consume context not valid',
+                    'message' => Generator::getMessageTemplate("custom", 'consume context not valid'),
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -1075,19 +1077,19 @@ class Queries extends Controller
             if ($consume->count() > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Consume found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'consume'), 
                     'data' => $consume
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Consume not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'consume'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

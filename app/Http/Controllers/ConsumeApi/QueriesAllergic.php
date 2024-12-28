@@ -1,16 +1,18 @@
 <?php
 
 namespace App\Http\Controllers\ConsumeApi;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Helpers\Generator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+// Models
 use App\Models\Allergic;
 use App\Models\Consume;
+
+// Helpers
+use App\Helpers\Generator;
 
 class QueriesAllergic extends Controller
 {
@@ -95,19 +97,19 @@ class QueriesAllergic extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Allergic found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'allergic'), 
                     'data' => $csl
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Allergic not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'allergic'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

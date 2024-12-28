@@ -1,18 +1,20 @@
 <?php
 
 namespace App\Http\Controllers\ConsumeApi;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Helpers\Generator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+// Models
 use App\Models\ConsumeList;
 use App\Models\Consume;
 use App\Models\Payment;
 use App\Models\RelConsumeList;
+
+// Helpers
+use App\Helpers\Generator;
 
 class QueriesList extends Controller
 {
@@ -106,19 +108,19 @@ class QueriesList extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Consume List found", 
+                    'message' => Generator::getMessageTemplate("fetch", "consume list"), 
                     'data' => $csl
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Consume List not found',
+                    'message' => Generator::getMessageTemplate("not_found", "consume list"),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -222,7 +224,7 @@ class QueriesList extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -327,7 +329,7 @@ class QueriesList extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

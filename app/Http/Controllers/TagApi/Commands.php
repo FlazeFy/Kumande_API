@@ -1,16 +1,17 @@
 <?php
 
 namespace App\Http\Controllers\TagApi;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
+// Models
 use App\Models\Tag;
 
-use App\Helpers\Validation;
+// Helpers
 use App\Helpers\Generator;
+use App\Helpers\Validation;
 
 class Commands extends Controller
 {
@@ -84,7 +85,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -162,7 +163,7 @@ class Commands extends Controller
                 } else {
                     return response()->json([
                         'status' => 'error',
-                        'message' => 'something wrong. please contact admin',
+                        'message' => Generator::getMessageTemplate("unknown_error", null),
                     ], Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
             } else {
@@ -174,7 +175,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

@@ -1,24 +1,24 @@
 <?php
 
 namespace App\Http\Controllers\ReminderApi;
-
+use Telegram\Bot\Laravel\Facades\Telegram;
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
+// Helpers
 use App\Helpers\Generator;
 use App\Helpers\Converter;
 use App\Helpers\Validation;
 
+// Models
 use App\Models\Reminder;
 use App\Models\RelReminderUsed;
 use App\Models\User;
-
-use Telegram\Bot\Laravel\Facades\Telegram;
-use Kreait\Firebase\Factory;
-use Kreait\Firebase\Messaging\CloudMessage;
-use Kreait\Firebase\Messaging\Notification;
 
 class Commands extends Controller
 {
@@ -90,14 +90,14 @@ class Commands extends Controller
                 } else {
                     return response()->json([
                         'status' => 'error',
-                        'message' => 'something wrong. please contact admin'
+                        'message' => Generator::getMessageTemplate("unknown_error", null)
                     ], Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -172,7 +172,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -275,7 +275,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -425,7 +425,7 @@ class Commands extends Controller
                     } else {
                         return response()->json([
                             'status' => 'error',
-                            'message' => 'something wrong. please contact admin',
+                            'message' => Generator::getMessageTemplate("unknown_error", null),
                         ], Response::HTTP_INTERNAL_SERVER_ERROR);
                     }
                 } else {
@@ -438,7 +438,7 @@ class Commands extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

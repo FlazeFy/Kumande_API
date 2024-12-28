@@ -1,12 +1,15 @@
 <?php
 
 namespace App\Http\Controllers\UserApi;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
+// Helpers
+use App\Helpers\Generator;
+
+// Models
 use App\Models\BodyInfo;
 use App\Models\CountCalorie;
 
@@ -99,7 +102,7 @@ class QueriesBodyInfo extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -183,7 +186,7 @@ class QueriesBodyInfo extends Controller
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

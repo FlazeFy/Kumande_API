@@ -1,16 +1,18 @@
 <?php
 
 namespace App\Http\Controllers\ConsumeApi;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Helpers\Generator;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
+// Models
 use App\Models\ConsumeGallery;
 use App\Models\Consume;
+
+// Helpers
+use App\Helpers\Generator;
 
 class QueriesGallery extends Controller
 {
@@ -81,19 +83,19 @@ class QueriesGallery extends Controller
             if (count($csl) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Consume Gallery found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'consume gallery'), 
                     'data' => $csl
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Consume Gallery not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'consume gallery'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -157,19 +159,19 @@ class QueriesGallery extends Controller
             if (count($csl) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Consume Gallery found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'consume gallery'), 
                     'data' => $csl
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Consume Gallery not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'consume gallery'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

@@ -1,15 +1,17 @@
 <?php
 
 namespace App\Http\Controllers\UserApi;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Helpers\Generator;
-use App\Helpers\Validation;
 use App\Http\Controllers\Controller;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
+// Models
 use App\Models\BodyInfo;
+
+// Helpers
+use App\Helpers\Generator;
+use App\Helpers\Validation;
 
 class CommandsBodyInfo extends Controller
 {
@@ -83,14 +85,14 @@ class CommandsBodyInfo extends Controller
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'something wrong. please contact admin'
+                        'message' => Generator::getMessageTemplate("unknown_error", null)
                     ], Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -191,7 +193,7 @@ class CommandsBodyInfo extends Controller
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'something wrong. please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

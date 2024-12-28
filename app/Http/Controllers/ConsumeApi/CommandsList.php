@@ -1,21 +1,21 @@
 <?php
 
 namespace App\Http\Controllers\ConsumeApi;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-
-use App\Models\ConsumeList;
-use App\Models\Consume;
-use App\Models\RelConsumeList;
-
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 
+// Models
+use App\Models\ConsumeList;
+use App\Models\Consume;
+use App\Models\RelConsumeList;
+
+// Helpers
 use App\Helpers\Validation;
 use App\Helpers\Generator;
 use App\Helpers\Converter;
@@ -84,19 +84,19 @@ class CommandsList extends Controller
 
             if($res){
                 return response()->json([
-                    "message"=> "List is deleted", 
-                    "status"=> 'success'
+                    "status"=> 'success',
+                    "message"=> Generator::getMessageTemplate("delete", 'consume list'), 
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'List not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'consume list'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -159,19 +159,19 @@ class CommandsList extends Controller
 
             if($res){
                 return response()->json([
-                    "message"=> "Consume removed from list", 
+                    "message"=> Generator::getMessageTemplate("custom", 'consume removed from list'), 
                     "status"=> 'success'
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Consume not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'consume list'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -261,26 +261,26 @@ class CommandsList extends Controller
                     if($csl){
                         return response()->json([
                             'status' => 'success',
-                            'message' => 'List is updated',
+                            'message' => Generator::getMessageTemplate("update", 'consume list'),
                             'rows_affected' => $csl
                         ], Response::HTTP_OK);
                     } else {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => 'List not found',
+                            'message' => Generator::getMessageTemplate("not_found", 'consume list'),
                         ], Response::HTTP_NOT_FOUND);
                     }
                 } else {
                     return response()->json([
-                        'status' => 'success',
-                        'message' => 'List name has been used',
+                        'status' => 'failed',
+                        'message' => Generator::getMessageTemplate("conflict", 'list name'),
                     ], Response::HTTP_CONFLICT);
                 }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -378,20 +378,20 @@ class CommandsList extends Controller
     
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'List created',
+                        'message' => Generator::getMessageTemplate("create", 'list'),
                         'data' => $csl
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'List is already exist',
+                        'message' => Generator::getMessageTemplate("conflict", 'list'),
                     ], Response::HTTP_CONFLICT);
                 }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -478,7 +478,7 @@ class CommandsList extends Controller
                     if($check_rel){
                         return response()->json([
                             'status' => 'failed',
-                            'message' => 'Consume has been used in this list',
+                            'message' => Generator::getMessageTemplate("conflict", 'consume'),
                         ], Response::HTTP_CONFLICT);
                     } else {
                         $rel = RelConsumeList::create([
@@ -492,26 +492,26 @@ class CommandsList extends Controller
                         if($rel){
                             return response()->json([
                                 'status' => 'success',
-                                'message' => 'Consume is added to list',
+                                'message' => Generator::getMessageTemplate("custom", 'Consume is added to list'),
                             ], Response::HTTP_OK);
                         } else {
                             return response()->json([
                                 'status' => 'failed',
-                                'message' => 'Something error please contact admin',
+                                'message' => Generator::getMessageTemplate("unknown_error", null),
                             ], Response::HTTP_INTERNAL_SERVER_ERROR);
                         }
                     }
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Consume not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'consume'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

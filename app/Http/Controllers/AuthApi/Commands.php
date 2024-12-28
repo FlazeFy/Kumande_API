@@ -1,15 +1,17 @@
 <?php
 
 namespace App\Http\Controllers\AuthApi;
-
-use App\Models\User;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 
+// Models
+use App\Models\User;
+
+// Helpers
 use App\Helpers\Validation;
+use App\Helpers\Generator;
 
 class Commands extends Controller
 {
@@ -91,19 +93,19 @@ class Commands extends Controller
                     if (!$user) {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => "Email doesn't exist",        
+                            'message' => Generator::getMessageTemplate("not_found", 'email'),        
                         ], Response::HTTP_UNAUTHORIZED);
                     } else if ($user && ($request->password != $user->password)) {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => 'Wrong password',            
+                            'message' => Generator::getMessageTemplate("custom", 'wrong password'),            
                         ], Response::HTTP_UNAUTHORIZED);
                     } else {
                         $token = $user->createToken('login')->plainTextToken;
 
                         return response()->json([
                             'status' => 'success',
-                            'message' => 'Login success',
+                            'message' => Generator::getMessageTemplate("custom", 'login success'),
                             'result' => $user,
                             'token' => $token,                
                         ], Response::HTTP_OK);
@@ -111,14 +113,14 @@ class Commands extends Controller
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'email must be gmail',
+                        'message' => Generator::getMessageTemplate("custom", 'email must be gmail'),
                     ], Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

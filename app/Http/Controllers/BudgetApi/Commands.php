@@ -1,20 +1,20 @@
 <?php
 
 namespace App\Http\Controllers\BudgetApi;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-
-use App\Models\Budget;
-use App\Models\User;
-
-use App\Helpers\Generator;
-use App\Helpers\Validation;
-
 use Kreait\Firebase\Factory;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
+
+// Models
+use App\Models\Budget;
+use App\Models\User;
+
+// Helpers
+use App\Helpers\Generator;
+use App\Helpers\Validation;
 
 class Commands extends Controller
 {
@@ -26,7 +26,7 @@ class Commands extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=201,
-     *         description="Logout success",
+     *         description="Budget create success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="Budget is created"),
@@ -108,20 +108,20 @@ class Commands extends Controller
 
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'Budget is created',
+                        'message' => Generator::getMessageTemplate("create", 'budget'),
                         'data' => $bdt
                     ], Response::HTTP_CREATED);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Budget is already exist',
+                        'message' => Generator::getMessageTemplate("conflict", 'budget'),
                     ], Response::HTTP_CONFLICT);
                 }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -196,18 +196,18 @@ class Commands extends Controller
     
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'Budget is deleted',
+                    'message' => Generator::getMessageTemplate("delete", 'budget'),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Budget not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'budget'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

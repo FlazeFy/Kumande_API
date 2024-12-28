@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\CountApi;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 
+// Models
 use App\Models\CountCalorie;
 
+// Helpers
 use App\Helpers\Validation;
 use App\Helpers\Generator;
 
@@ -86,14 +87,14 @@ class CommandsCalorie extends Controller
                 } else {
                     return response()->json([
                         'status' => 'error',
-                        'message' => 'Something error please contact admin'
+                        'message' => Generator::getMessageTemplate("unknown_error", null)
                     ], Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -194,7 +195,7 @@ class CommandsCalorie extends Controller
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

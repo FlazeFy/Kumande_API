@@ -1,20 +1,20 @@
 <?php
 
 namespace App\Http\Controllers\ConsumeApi;
-
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Kreait\Firebase\Factory;
 
+// Models
 use App\Models\ConsumeGallery;
 
+// Helpers
 use App\Helpers\Validation;
 use App\Helpers\Generator;
 use App\Helpers\Converter;
-
-use Kreait\Firebase\Factory;
 
 class CommandsGallery extends Controller
 {
@@ -82,19 +82,19 @@ class CommandsGallery extends Controller
                 if($res){
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'Gallery is created'
+                        'message' => Generator::getMessageTemplate("create", 'gallery')
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Something error please contact admin',
+                        'message' => Generator::getMessageTemplate("unknown_error", null),
                     ], Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -167,30 +167,30 @@ class CommandsGallery extends Controller
                         $object->delete();
                         return response()->json([
                             'status' => 'success',
-                            'message' => 'Gallery is deleted'
+                            'message' => Generator::getMessageTemplate("delete", 'gallery')
                         ], Response::HTTP_OK);
                     } else {
                         return response()->json([
                             'status' => 'success',
-                            'message' => 'Gallery already been deleted'
+                            'message' => Generator::getMessageTemplate("custom", 'gallery already been deleted')
                         ], Response::HTTP_OK);
                     }
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Something error please contact admin',
+                        'message' => Generator::getMessageTemplate("unknown_error", null),
                     ], Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Gallery not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'gallery'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $err) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'
+                'message' => Generator::getMessageTemplate("unknown_error", null)
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -272,19 +272,19 @@ class CommandsGallery extends Controller
                 if($res > 0){
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'Gallery is updated',
+                        'message' => Generator::getMessageTemplate("update", 'gallery'),
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Gallery not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'gallery'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             }
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something error please contact admin'.$e->getMessage()
+                'message' => Generator::getMessageTemplate("unknown_error", null).$e->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
