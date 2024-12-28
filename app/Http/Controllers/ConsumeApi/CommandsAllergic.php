@@ -35,7 +35,7 @@ class CommandsAllergic extends Controller
      *         description="Allergic update is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Allergic is updated | Nothing to Change"),
+     *             @OA\Property(property="message", type="string", example="Allergic updated | Nothing to Change"),
      *         )
      *     ),
      *     @OA\Response(
@@ -150,11 +150,11 @@ class CommandsAllergic extends Controller
      *     tags={"Analytic"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
-     *         response=200,
+     *         response=201,
      *         description="Allergic update is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Allergic is updated | Nothing to Change"),
+     *             @OA\Property(property="message", type="string", example="Allergic updated | Nothing to Change"),
      *         )
      *     ),
      *     @OA\Response(
@@ -229,7 +229,7 @@ class CommandsAllergic extends Controller
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("create", 'allergic'),
                             'data' => $res
-                        ], Response::HTTP_OK);
+                        ], Response::HTTP_CREATED);
                     } else {
                         return response()->json([
                             'status' => 'success',
@@ -265,7 +265,7 @@ class CommandsAllergic extends Controller
      *         description="Allergic delete is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Allergic is deleted"),
+     *             @OA\Property(property="message", type="string", example="Allergic deleted"),
      *         )
      *     ),
      *     @OA\Response(

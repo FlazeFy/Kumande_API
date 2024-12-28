@@ -34,7 +34,7 @@ class Commands extends Controller
      *         description="Tag delete is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Tag is deleted"),
+     *             @OA\Property(property="message", type="string", example="Tag deleted"),
      *         )
      *     ),
      *     @OA\Response(
@@ -74,12 +74,12 @@ class Commands extends Controller
             if ($res) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Tag is deleted", 
+                    'message' => Generator::getMessageTemplate("delete", 'tag'), 
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Tag not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'tag'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -97,11 +97,11 @@ class Commands extends Controller
      *     tags={"Tag"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
-     *         response=200,
+     *         response=201,
      *         description="Tag create is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Tag is created"),
+     *             @OA\Property(property="message", type="string", example="tag created"),
      *         )
      *     ),
      *     @OA\Response(
@@ -158,7 +158,7 @@ class Commands extends Controller
                 if ($res) {
                     return response()->json([
                         'status' => 'success',
-                        'message' => "Tag is created", 
+                        'message' => Generator::getMessageTemplate("create", 'tag'), 
                     ], Response::HTTP_CREATED);
                 } else {
                     return response()->json([
@@ -169,7 +169,7 @@ class Commands extends Controller
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Tag already exist',
+                    'message' => Generator::getMessageTemplate("conflict", 'tag'),
                 ], Response::HTTP_CONFLICT);
             }
         } catch(\Exception $e) {

@@ -22,11 +22,11 @@ class CommandsBodyInfo extends Controller
      *     tags={"User"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
-     *         response=200,
+     *         response=201,
      *         description="Body info create is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Body info is created"),
+     *             @OA\Property(property="message", type="string", example="Body info created"),
      *         )
      *     ),
      *     @OA\Response(
@@ -80,8 +80,8 @@ class CommandsBodyInfo extends Controller
                 if($check){
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'Body info is created',
-                    ], Response::HTTP_OK);
+                        'message' => Generator::getMessageTemplate("create", 'body info'),
+                    ], Response::HTTP_CREATED);
                 } else {
                     return response()->json([
                         'status' => 'failed',
@@ -116,7 +116,7 @@ class CommandsBodyInfo extends Controller
      *         description="Body info delete is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Body info is deleted"),
+     *             @OA\Property(property="message", type="string", example="Body info deleted"),
      *         )
      *     ),
      *     @OA\Response(
@@ -176,18 +176,18 @@ class CommandsBodyInfo extends Controller
                 if($success > 0){
                     return response()->json([
                         'status' => 'success',
-                        'message' => "$success Body info is deleted",
+                        'message' => Generator::getMessageTemplate("delete", "$success body info"),
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Body info not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'body info'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Body info id not valid'
+                    'message' => Generator::getMessageTemplate("custom", 'body info ID not valid')
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         } catch(\Exception $err) {

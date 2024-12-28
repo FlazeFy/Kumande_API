@@ -268,7 +268,7 @@
                 "operationId": "1466a9741e1ceb6ab655961e905b8b87",
                 "responses": {
                     "201": {
-                        "description": "Logout success",
+                        "description": "Budget create success",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -279,7 +279,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Budget is created"
+                                            "example": "Budget created"
                                         }
                                     },
                                     "type": "object"
@@ -407,7 +407,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Budget is deleted"
+                                            "example": "Budget deleted"
                                         }
                                     },
                                     "type": "object"
@@ -888,7 +888,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Consume is deleted"
+                                            "example": "Consume deleted"
                                         }
                                     },
                                     "type": "object"
@@ -1348,7 +1348,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Allergic is updated | Nothing to Change"
+                                            "example": "Allergic updated | Nothing to Change"
                                         }
                                     },
                                     "type": "object"
@@ -1494,7 +1494,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Allergic is deleted"
+                                            "example": "Allergic deleted"
                                         }
                                     },
                                     "type": "object"
@@ -1717,7 +1717,7 @@
                 "summary": "Create allergic",
                 "operationId": "5353a45d578a59d42d9044d0a99c3324",
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Allergic update is success",
                         "content": {
                             "application/json": {
@@ -1729,7 +1729,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Allergic is updated | Nothing to Change"
+                                            "example": "Allergic updated | Nothing to Change"
                                         }
                                     },
                                     "type": "object"
@@ -1968,7 +1968,7 @@
                 "summary": "Create consume gallery",
                 "operationId": "2cb4f5ffc4c2c6707e7788af91611b41",
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Consume gallery create is success",
                         "content": {
                             "application/json": {
@@ -1980,7 +1980,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Gallery is created"
+                                            "example": "Gallery created"
                                         }
                                     },
                                     "type": "object"
@@ -2088,7 +2088,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Gallery is updated"
+                                            "example": "Gallery updated"
                                         }
                                     },
                                     "type": "object"
@@ -2214,7 +2214,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Gallery is deleted | Gallery already been deleted"
+                                            "example": "Gallery deleted | Gallery already been deleted"
                                         }
                                     },
                                     "type": "object"
@@ -2322,7 +2322,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "List is deleted"
+                                            "example": "List deleted"
                                         }
                                     },
                                     "type": "object"
@@ -2538,7 +2538,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "List is updated"
+                                            "example": "List updated"
                                         }
                                     },
                                     "type": "object"
@@ -2642,7 +2642,7 @@
                 "summary": "Create consume list",
                 "operationId": "9a06c5487188050b7b8f5773eaa287a8",
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Consume list create is success",
                         "content": {
                             "application/json": {
@@ -2654,7 +2654,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "List is created"
+                                            "example": "List created"
                                         }
                                     },
                                     "type": "object"
@@ -2758,7 +2758,7 @@
                 "summary": "Create consume list relation",
                 "operationId": "c0bdc80e660516491413b5ad3f5d3cc3",
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Consume list relation create is success",
                         "content": {
                             "application/json": {
@@ -4556,7 +4556,7 @@
                 "summary": "Create count calorie",
                 "operationId": "f5dc2d77d911b244c9cb5d673e1b4048",
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Count calorie create is success",
                         "content": {
                             "application/json": {
@@ -4568,7 +4568,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Count calorie is created"
+                                            "example": "Count calorie created"
                                         }
                                     },
                                     "type": "object"
@@ -5134,7 +5134,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Payment is updated"
+                                            "example": "Payment updated"
                                         }
                                     },
                                     "type": "object"
@@ -5262,7 +5262,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Payment is deleted"
+                                            "example": "Payment deleted"
                                         }
                                     },
                                     "type": "object"
@@ -5359,7 +5359,40 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Analytic data found"
+                        "description": "Analytic data found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "analytic data fetched"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "context": {
+                                                        "type": "string",
+                                                        "example": "Jan"
+                                                    },
+                                                    "total": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -5460,7 +5493,40 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Analytic data found"
+                        "description": "Analytic data found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "analytic data fetched"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "context": {
+                                                        "type": "string",
+                                                        "example": "2"
+                                                    },
+                                                    "total": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -5561,7 +5627,48 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Analytic data found"
+                        "description": "Analytic data found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "analytic data fetched"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "average": {
+                                                        "type": "integer",
+                                                        "example": 10000
+                                                    },
+                                                    "min": {
+                                                        "type": "integer",
+                                                        "example": 5000
+                                                    },
+                                                    "max": {
+                                                        "type": "integer",
+                                                        "example": 15000
+                                                    },
+                                                    "total": {
+                                                        "type": "integer",
+                                                        "example": 2
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -5819,7 +5926,7 @@
                 "summary": "Create reminder relation",
                 "operationId": "f2b25de3d76b0f90b2d4c4f1e42b9ea6",
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Reminder relation create is success",
                         "content": {
                             "application/json": {
@@ -6047,7 +6154,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Reminder is deleted"
+                                            "example": "Reminder deleted"
                                         }
                                     },
                                     "type": "object"
@@ -6131,7 +6238,7 @@
                 "summary": "Create reminder",
                 "operationId": "6ed48a29c48b198af248e832e7ac1d6d",
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Reminder create is success",
                         "content": {
                             "application/json": {
@@ -6143,7 +6250,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Reminder is created"
+                                            "example": "Reminder created"
                                         }
                                     },
                                     "type": "object"
@@ -6248,7 +6355,84 @@
                 "operationId": "ea180f6c13c6c6a51a734db925e6d9ef",
                 "responses": {
                     "200": {
-                        "description": "Reminder found"
+                        "description": "Reminders found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "reminder fetched"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "reminder_id": {
+                                                        "type": "string",
+                                                        "example": "1c8a4d88-d9b0-11ed-afa1-0242ac120002"
+                                                    },
+                                                    "reminder_name": {
+                                                        "type": "string",
+                                                        "example": "Reminder : Weekly Juice"
+                                                    },
+                                                    "reminder_type": {
+                                                        "type": "string",
+                                                        "example": "Every Year"
+                                                    },
+                                                    "reminder_context": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "time": {
+                                                                    "type": "string",
+                                                                    "example": "02 July"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "reminder_body": {
+                                                        "type": "string",
+                                                        "example": "Drink Orange Juice, Apple Juice, Carrot Juice, or Mango Juice"
+                                                    },
+                                                    "reminder_attachment": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "attachment_type": {
+                                                                    "type": "string",
+                                                                    "example": "location"
+                                                                },
+                                                                "attachment_context": {
+                                                                    "type": "string",
+                                                                    "example": "-6.22686285578315, 106.82139153159926"
+                                                                },
+                                                                "attachment_name": {
+                                                                    "type": "string",
+                                                                    "example": "Alfamidi"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "id_rel_reminder": {
+                                                        "type": "string",
+                                                        "example": "b48111fc-d11a-ffc5-1850-7b03c2e913fa"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -6350,7 +6534,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Schedule is deleted"
+                                            "example": "Schedule deleted"
                                         }
                                     },
                                     "type": "object"
@@ -6458,7 +6642,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Schedule is updated"
+                                            "example": "Schedule updated"
                                         }
                                     },
                                     "type": "object"
@@ -6562,7 +6746,7 @@
                 "summary": "Create schedule",
                 "operationId": "3f8a209b8ccd5f2e5f9d10e63c76546c",
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Schedule create is success",
                         "content": {
                             "application/json": {
@@ -6574,7 +6758,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Schedule is created"
+                                            "example": "Schedule created"
                                         }
                                     },
                                     "type": "object"
@@ -6679,7 +6863,44 @@
                 "operationId": "90ed2dcce12d7b04af8490a5f82681af",
                 "responses": {
                     "200": {
-                        "description": "Schedule found"
+                        "description": "Schedule found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "schedule fetched"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "day": {
+                                                        "type": "string",
+                                                        "example": "Tue"
+                                                    },
+                                                    "time": {
+                                                        "type": "string",
+                                                        "example": "Lunch"
+                                                    },
+                                                    "schedule_consume": {
+                                                        "type": "string",
+                                                        "example": "Semangka potong, Nasi Warteg (Tahu Kari, Sayur Jantung Pisang, Terong Sambal)"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -6758,7 +6979,78 @@
                 "operationId": "46b345164482b36af0e04ceeed65a348",
                 "responses": {
                     "200": {
-                        "description": "Schedule found"
+                        "description": "Schedule found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "schedule fetched"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "example": "51d5660a-4140-4938-2ec8-952d75d08117"
+                                                    },
+                                                    "firebase_id": {
+                                                        "type": "string",
+                                                        "example": "D4rgafGtqo0MoYkDMHOu"
+                                                    },
+                                                    "consume_id": {
+                                                        "type": "string",
+                                                        "example": "48ed1021-bb7c-aa4e-23c8-a0edec2fc2f6"
+                                                    },
+                                                    "schedule_desc": {
+                                                        "type": "string",
+                                                        "example": "Patungan bagi 3 (John, Jane, Doe)"
+                                                    },
+                                                    "schedule_time": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "day": {
+                                                                    "type": "string",
+                                                                    "example": "Fri"
+                                                                },
+                                                                "category": {
+                                                                    "type": "string",
+                                                                    "example": "Breakfast"
+                                                                },
+                                                                "time": {
+                                                                    "type": "string",
+                                                                    "example": "07:00"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2024-09-25T10:01:52.000000Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "example": null,
+                                                        "nullable": true
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -6860,7 +7152,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Tag is deleted"
+                                            "example": "Tag deleted"
                                         }
                                     },
                                     "type": "object"
@@ -6944,7 +7236,7 @@
                 "summary": "Create tag",
                 "operationId": "b4b5147d4a3da2bcc53a1d28c63acb9f",
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Tag create is success",
                         "content": {
                             "application/json": {
@@ -6956,7 +7248,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Tag is created"
+                                            "example": "tag created"
                                         }
                                     },
                                     "type": "object"
@@ -7315,7 +7607,66 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Tag found | Tag found but never been used"
+                        "description": "Tag found | Tag found but never been used",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "tag fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "total_item": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                },
+                                                "total_price": {
+                                                    "type": "integer",
+                                                    "example": 16000
+                                                },
+                                                "average_calorie": {
+                                                    "type": "number",
+                                                    "example": 245
+                                                },
+                                                "max_calorie": {
+                                                    "type": "integer",
+                                                    "example": 90
+                                                },
+                                                "min_calorie": {
+                                                    "type": "integer",
+                                                    "example": 400
+                                                },
+                                                "last_used": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-06-19 13:26:14"
+                                                },
+                                                "last_used_consume_name": {
+                                                    "type": "string",
+                                                    "example": "Es Teh Tawar"
+                                                },
+                                                "last_used_consume_type": {
+                                                    "type": "string",
+                                                    "example": "Drink"
+                                                },
+                                                "last_used_consume_slug": {
+                                                    "type": "string",
+                                                    "example": "es-teh-tawar"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -7405,7 +7756,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "User is created"
+                                            "example": "User created"
                                         }
                                     },
                                     "type": "object"
@@ -7501,7 +7852,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Profile is updated"
+                                            "example": "account updated"
                                         }
                                     },
                                     "type": "object"
@@ -7617,7 +7968,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Telegram id is updated"
+                                            "example": "Telegram id updated"
                                         }
                                     },
                                     "type": "object"
@@ -7713,7 +8064,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Telegram id is updated"
+                                            "example": "Telegram id updated"
                                         }
                                     },
                                     "type": "object"
@@ -7809,7 +8160,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Timezone is updated"
+                                            "example": "Timezone updated"
                                         }
                                     },
                                     "type": "object"
@@ -7905,7 +8256,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Profile image is updated"
+                                            "example": "Profile image updated"
                                         }
                                     },
                                     "type": "object"
@@ -7989,7 +8340,7 @@
                 "summary": "Create body info",
                 "operationId": "fddc52c7a5fbaddd40a27a9e430c1afd",
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Body info create is success",
                         "content": {
                             "application/json": {
@@ -8001,7 +8352,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Body info is created"
+                                            "example": "Body info created"
                                         }
                                     },
                                     "type": "object"
@@ -8109,7 +8460,7 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Body info is deleted"
+                                            "example": "Body info deleted"
                                         }
                                     },
                                     "type": "object"
@@ -8214,7 +8565,59 @@
                 "operationId": "49dd6e1b545013f5874d2f557e9ec0ed",
                 "responses": {
                     "200": {
-                        "description": "User found"
+                        "description": "user fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "account fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "17963858-9771-11ee-8f4a-3216422910r4"
+                                                },
+                                                "username": {
+                                                    "type": "string",
+                                                    "example": "flazefy"
+                                                },
+                                                "fullname": {
+                                                    "type": "string",
+                                                    "example": "testingleonardho"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "flazen.edu@gmail.com"
+                                                },
+                                                "gender": {
+                                                    "type": "string",
+                                                    "example": "male"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-09-20 22:53:47"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-09-20 22:53:47"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -8293,7 +8696,86 @@
                 "operationId": "4bb6b0491b3ab0bbbf14f40f045b2fdc",
                 "responses": {
                     "200": {
-                        "description": "User body info found"
+                        "description": "User body info found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "body info fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "blood_pressure": {
+                                                    "type": "string",
+                                                    "example": "126/90"
+                                                },
+                                                "blood_glucose": {
+                                                    "type": "integer",
+                                                    "example": 82
+                                                },
+                                                "gout": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 5.8
+                                                },
+                                                "cholesterol": {
+                                                    "type": "integer",
+                                                    "example": 178
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-07-10 09:56:46"
+                                                },
+                                                "gender": {
+                                                    "type": "string",
+                                                    "example": "male"
+                                                },
+                                                "weight": {
+                                                    "type": "integer",
+                                                    "example": 62
+                                                },
+                                                "height": {
+                                                    "type": "integer",
+                                                    "example": 182
+                                                },
+                                                "result": {
+                                                    "type": "integer",
+                                                    "example": 1800
+                                                },
+                                                "calorie_updated": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-07-30 23:56:40"
+                                                },
+                                                "born_at": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "2001-08-08"
+                                                },
+                                                "age": {
+                                                    "type": "integer",
+                                                    "example": 23
+                                                },
+                                                "bmi": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 18.72
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -8372,7 +8854,141 @@
                 "operationId": "bd92ce7a93bdb0cc3d9e10f908c9a60b",
                 "responses": {
                     "200": {
-                        "description": "User body history found"
+                        "description": "User body history found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "body history fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "body_info": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "format": "uuid",
+                                                                "example": "0264b734-3e92-11ef-8fb5-3216422910e9"
+                                                            },
+                                                            "blood_pressure": {
+                                                                "type": "string",
+                                                                "example": "126/90"
+                                                            },
+                                                            "blood_glucose": {
+                                                                "type": "integer",
+                                                                "example": 82
+                                                            },
+                                                            "gout": {
+                                                                "type": "number",
+                                                                "format": "float",
+                                                                "example": 5.8
+                                                            },
+                                                            "cholesterol": {
+                                                                "type": "integer",
+                                                                "example": 178
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2024-07-10 09:56:46"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "calorie": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "format": "uuid",
+                                                                "example": "83e64f09-e15f-f1a1-0e97-eafa226008db"
+                                                            },
+                                                            "weight": {
+                                                                "type": "integer",
+                                                                "example": 62
+                                                            },
+                                                            "height": {
+                                                                "type": "integer",
+                                                                "example": 182
+                                                            },
+                                                            "result": {
+                                                                "type": "integer",
+                                                                "example": 1800
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2024-07-30 23:56:40"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "dashboard": {
+                                                    "properties": {
+                                                        "max_blood_glucose": {
+                                                            "type": "integer",
+                                                            "example": 82
+                                                        },
+                                                        "min_blood_glucose": {
+                                                            "type": "integer",
+                                                            "example": 82
+                                                        },
+                                                        "max_gout": {
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 5.8
+                                                        },
+                                                        "min_gout": {
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 5.8
+                                                        },
+                                                        "max_cholesterol": {
+                                                            "type": "integer",
+                                                            "example": 178
+                                                        },
+                                                        "min_cholesterol": {
+                                                            "type": "integer",
+                                                            "example": 178
+                                                        },
+                                                        "max_weight": {
+                                                            "type": "integer",
+                                                            "example": 62
+                                                        },
+                                                        "min_weight": {
+                                                            "type": "integer",
+                                                            "example": 62
+                                                        },
+                                                        "max_height": {
+                                                            "type": "integer",
+                                                            "example": 182
+                                                        },
+                                                        "min_height": {
+                                                            "type": "integer",
+                                                            "example": 182
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",

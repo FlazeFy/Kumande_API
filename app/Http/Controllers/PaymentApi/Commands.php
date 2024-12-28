@@ -37,7 +37,7 @@ class Commands extends Controller
      *         description="Payment update is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Payment is updated"),
+     *             @OA\Property(property="message", type="string", example="Payment updated"),
      *         )
      *     ),
      *     @OA\Response(
@@ -97,12 +97,12 @@ class Commands extends Controller
                 if ($res) {
                     return response()->json([
                         'status' => 'success',
-                        'message' => "Payment is updated"
+                        'message' => Generator::getMessageTemplate("update", 'payment')
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Payment not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'payment'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             }
@@ -133,7 +133,7 @@ class Commands extends Controller
      *         description="Payment delete is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Payment is deleted"),
+     *             @OA\Property(property="message", type="string", example="Payment deleted"),
      *         )
      *     ),
      *     @OA\Response(
@@ -173,12 +173,12 @@ class Commands extends Controller
             if ($res) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Payment is deleted", 
+                    'message' => Generator::getMessageTemplate("delete", 'payment'), 
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Payment not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'payment'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {

@@ -29,7 +29,7 @@ class Commands extends Controller
      *         description="Budget create success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Budget is created"),
+     *             @OA\Property(property="message", type="string", example="Budget created"),
      *         )
      *     ),
      *     @OA\Response(
@@ -145,7 +145,7 @@ class Commands extends Controller
      *         description="Budget delete is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Budget is deleted"),
+     *             @OA\Property(property="message", type="string", example="Budget deleted"),
      *         )
      *     ),
      *     @OA\Response(

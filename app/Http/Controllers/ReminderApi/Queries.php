@@ -22,7 +22,32 @@ class Queries extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Reminder found"
+     *         description="Reminders found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="reminder fetched"),
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="reminder_id", type="string", example="1c8a4d88-d9b0-11ed-afa1-0242ac120002"),
+     *                     @OA\Property(property="reminder_name", type="string", example="Reminder : Weekly Juice"),
+     *                     @OA\Property(property="reminder_type", type="string", example="Every Year"),
+     *                     @OA\Property(property="reminder_context", type="array",
+     *                         @OA\Items(
+     *                             @OA\Property(property="time", type="string", example="02 July")
+     *                         )
+     *                     ),
+     *                     @OA\Property(property="reminder_body", type="string", example="Drink Orange Juice, Apple Juice, Carrot Juice, or Mango Juice"),
+     *                     @OA\Property(property="reminder_attachment", type="array",
+     *                         @OA\Items(
+     *                             @OA\Property(property="attachment_type", type="string", example="location"),
+     *                             @OA\Property(property="attachment_context", type="string", example="-6.22686285578315, 106.82139153159926"),
+     *                             @OA\Property(property="attachment_name", type="string", example="Alfamidi")
+     *                         )
+     *                     ),
+     *                     @OA\Property(property="id_rel_reminder", type="string", example="b48111fc-d11a-ffc5-1850-7b03c2e913fa")
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -64,13 +89,13 @@ class Queries extends Controller
             if (count($res) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Reminder found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'reminder'), 
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Reminder not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'reminder'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {

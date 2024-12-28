@@ -29,7 +29,7 @@ class Commands extends Controller
      *     tags={"Reminder"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
-     *         response=200,
+     *         response=201,
      *         description="Reminder relation create is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
@@ -85,8 +85,8 @@ class Commands extends Controller
                 if ($res) {
                     return response()->json([
                         'status' => 'success',
-                        'message' => "Reminder turned on!", 
-                    ], Response::HTTP_OK);
+                        'message' => Generator::getMessageTemplate("custom", "reminder turned on!"), 
+                    ], Response::HTTP_CREATED);
                 } else {
                     return response()->json([
                         'status' => 'error',
@@ -161,12 +161,12 @@ class Commands extends Controller
             if ($res) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Reminder turned off!", 
+                    'message' => Generator::getMessageTemplate("custom", "reminder turned off!"), 
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Reminder relation not found',
+                    'message' => Generator::getMessageTemplate("not_found", "reminder"),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -196,7 +196,7 @@ class Commands extends Controller
      *         description="Reminder delete is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Reminder is deleted"),
+     *             @OA\Property(property="message", type="string", example="Reminder deleted"),
      *         )
      *     ),
      *     @OA\Response(
@@ -264,12 +264,12 @@ class Commands extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Reminder is deleted", 
+                    'message' => Generator::getMessageTemplate("delete", "reminder"), 
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Reminder not found',
+                    'message' => Generator::getMessageTemplate("not_found", "reminder"),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -287,11 +287,11 @@ class Commands extends Controller
      *     tags={"Reminder"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
-     *         response=200,
+     *         response=201,
      *         description="Reminder create is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Reminder is created"),
+     *             @OA\Property(property="message", type="string", example="Reminder created"),
      *         )
      *     ),
      *     @OA\Response(
@@ -420,8 +420,8 @@ class Commands extends Controller
 
                         return response()->json([
                             'status' => 'success',
-                            'message' => "Reminder is created", 
-                        ], Response::HTTP_OK);
+                            'message' => Generator::getMessageTemplate("create", "reminder"), 
+                        ], Response::HTTP_CREATED);
                     } else {
                         return response()->json([
                             'status' => 'error',
@@ -431,7 +431,7 @@ class Commands extends Controller
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Reminder already exist',
+                        'message' => Generator::getMessageTemplate("conflict", "reminder"),
                     ], Response::HTTP_CONFLICT);
                 }
             }

@@ -30,7 +30,17 @@ class Queries extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Analytic data found"
+     *         description="Analytic data found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="analytic data fetched"),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                          @OA\Property(property="context", type="string", example="Jan"),
+     *                          @OA\Property(property="total", type="integer", example=2)
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -93,13 +103,13 @@ class Queries extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Analytic data found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'analytic data'), 
                     'data' => $collection
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => "Analytic data not found",
+                    'message' => Generator::getMessageTemplate("not_found", 'analytic data'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -134,7 +144,17 @@ class Queries extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Analytic data found"
+     *         description="Analytic data found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="analytic data fetched"),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                          @OA\Property(property="context", type="string", example="2"),
+     *                          @OA\Property(property="total", type="integer", example=2)
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -198,7 +218,7 @@ class Queries extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => "Analytic data retrived", 
+                'message' => Generator::getMessageTemplate("fetch", 'analytic data'), 
                 'data' => $collection
             ], Response::HTTP_OK);
         } catch(\Exception $e) {
@@ -233,7 +253,19 @@ class Queries extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Analytic data found"
+     *         description="Analytic data found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="analytic data fetched"),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(
+     *                          @OA\Property(property="average", type="integer", example=10000),
+     *                          @OA\Property(property="min", type="integer", example=5000),
+     *                          @OA\Property(property="max", type="integer", example=15000),
+     *                          @OA\Property(property="total", type="integer", example=2)
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -288,13 +320,13 @@ class Queries extends Controller
             if(count($pym) > 0){
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Analytic data found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'analytic data'), 
                     'data' => $pym[0]
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => "Analytic data not found", 
+                    'message' => Generator::getMessageTemplate("not_found", 'analytic data'), 
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -364,14 +396,13 @@ class Queries extends Controller
             if (count($csm) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Analytic data found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'analytic data'), 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Analytic not found',
-                    'data' => null
+                    'message' => Generator::getMessageTemplate("not_found", 'analytic data'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -454,13 +485,13 @@ class Queries extends Controller
             if (count($csm) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Payment data found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'payment'), 
                     'data' => $csm
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Payment not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'payment'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {

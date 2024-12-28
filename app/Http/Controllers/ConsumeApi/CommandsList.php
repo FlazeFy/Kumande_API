@@ -41,7 +41,7 @@ class CommandsList extends Controller
      *         description="Consume list delete is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="List is deleted"),
+     *             @OA\Property(property="message", type="string", example="List deleted"),
      *         )
      *     ),
      *     @OA\Response(
@@ -195,7 +195,7 @@ class CommandsList extends Controller
      *         description="Consume list update is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="List is updated"),
+     *             @OA\Property(property="message", type="string", example="List updated"),
      *         )
      *     ),
      *     @OA\Response(
@@ -292,11 +292,11 @@ class CommandsList extends Controller
      *     tags={"Consume"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
-     *         response=200,
+     *         response=201,
      *         description="Consume list create is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="List is created"),
+     *             @OA\Property(property="message", type="string", example="List created"),
      *         )
      *     ),
      *     @OA\Response(
@@ -380,7 +380,7 @@ class CommandsList extends Controller
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("create", 'list'),
                         'data' => $csl
-                    ], Response::HTTP_OK);
+                    ], Response::HTTP_CREATED);
                 } else {
                     return response()->json([
                         'status' => 'failed',
@@ -403,7 +403,7 @@ class CommandsList extends Controller
      *     tags={"Consume"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
-     *         response=200,
+     *         response=201,
      *         description="Consume list relation create is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
@@ -493,7 +493,7 @@ class CommandsList extends Controller
                             return response()->json([
                                 'status' => 'success',
                                 'message' => Generator::getMessageTemplate("custom", 'Consume is added to list'),
-                            ], Response::HTTP_OK);
+                            ], Response::HTTP_CREATED);
                         } else {
                             return response()->json([
                                 'status' => 'failed',

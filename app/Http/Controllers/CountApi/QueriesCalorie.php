@@ -68,13 +68,13 @@ class QueriesCalorie extends Controller
                 }
 
                 return response()->json([
-                    "message"=> "Count data found", 
+                    "message"=> Generator::getMessageTemplate("fetch", 'count data'), 
                     "status"=> 'success',
                     "data"=> $cal
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
-                    "message"=> "Count data not found", 
+                    "message"=> Generator::getMessageTemplate("not_found", 'count data'), 
                     "status"=> 'success',
                 ], Response::HTTP_NOT_FOUND);
             }
@@ -148,13 +148,13 @@ class QueriesCalorie extends Controller
             if($csm){
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Count data found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'count data'), 
                     'data' => $csm[0]
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Count data not found",
+                    'message' => Generator::getMessageTemplate("not_found", 'count data'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {

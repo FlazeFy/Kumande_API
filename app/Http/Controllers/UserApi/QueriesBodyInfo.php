@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 // Helpers
 use App\Helpers\Generator;
+use App\Helpers\Math;
 
 // Models
 use App\Models\BodyInfo;
@@ -23,7 +24,26 @@ class QueriesBodyInfo extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="User body info found"
+     *         description="User body info found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="body info fetched"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="blood_pressure", type="string", example="126/90"),
+     *                 @OA\Property(property="blood_glucose", type="integer", example=82),
+     *                 @OA\Property(property="gout", type="number", format="float", example=5.8),
+     *                 @OA\Property(property="cholesterol", type="integer", example=178),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2024-07-10 09:56:46"),
+     *                 @OA\Property(property="gender", type="string", example="male"),
+     *                 @OA\Property(property="weight", type="integer", example=62),
+     *                 @OA\Property(property="height", type="integer", example=182),
+     *                 @OA\Property(property="result", type="integer", example=1800),
+     *                 @OA\Property(property="calorie_updated", type="string", format="date-time", example="2024-07-30 23:56:40"),
+     *                 @OA\Property(property="born_at", type="string", format="date", example="2001-08-08"),
+     *                 @OA\Property(property="age", type="integer", example=23),
+     *                 @OA\Property(property="bmi", type="number", format="float", example=18.72)
+     *             ),
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -68,7 +88,7 @@ class QueriesBodyInfo extends Controller
                 ->first();
 
             if($cal){
-                $cal->bmi = countBMI($cal->gender,$cal->height,$cal->weight);
+                $cal->bmi = Math::countBMI($cal->gender,$cal->height,$cal->weight);
             }
 
             if ($usr && $cal) {
@@ -77,25 +97,25 @@ class QueriesBodyInfo extends Controller
                 $bodyInfo = array_merge($usrArray, $calArray);
             
                 return response()->json([
-                    "message" => "User body info found",
+                    "message" => Generator::getMessageTemplate("fetch", 'body info'),
                     "status" => 'success',
                     "data" => $bodyInfo
                 ], Response::HTTP_OK);
             } elseif ($usr) {
                 return response()->json([
-                    "message" => "User body info found",
+                    "message" => Generator::getMessageTemplate("fetch", 'body info'),
                     "status" => 'success',
                     "data" => $usr
                 ], Response::HTTP_OK);
             } elseif ($cal) {
                 return response()->json([
-                    "message" => "User body info found",
+                    "message" => Generator::getMessageTemplate("fetch", 'body info'),
                     "status" => 'success',
                     "data" => $cal
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
-                    "message" => "User body info not found",
+                    "message" => Generator::getMessageTemplate("not_found", 'body info'),
                     "status" => 'failed',
                 ], Response::HTTP_NOT_FOUND);
             }
@@ -115,7 +135,44 @@ class QueriesBodyInfo extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="User body history found"
+     *         description="User body history found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="body history fetched"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="body_info", type="array",
+     *                     @OA\Items(type="object",
+     *                         @OA\Property(property="id", type="string", format="uuid", example="0264b734-3e92-11ef-8fb5-3216422910e9"),
+     *                         @OA\Property(property="blood_pressure", type="string", example="126/90"),
+     *                         @OA\Property(property="blood_glucose", type="integer", example=82),
+     *                         @OA\Property(property="gout", type="number", format="float", example=5.8),
+     *                         @OA\Property(property="cholesterol", type="integer", example=178),
+     *                         @OA\Property(property="created_at", type="string", format="date-time", example="2024-07-10 09:56:46")
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="calorie", type="array",
+     *                     @OA\Items(type="object",
+     *                         @OA\Property(property="id", type="string", format="uuid", example="83e64f09-e15f-f1a1-0e97-eafa226008db"),
+     *                         @OA\Property(property="weight", type="integer", example=62),
+     *                         @OA\Property(property="height", type="integer", example=182),
+     *                         @OA\Property(property="result", type="integer", example=1800),
+     *                         @OA\Property(property="created_at", type="string", format="date-time", example="2024-07-30 23:56:40")
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="dashboard", type="object",
+     *                     @OA\Property(property="max_blood_glucose", type="integer", example=82),
+     *                     @OA\Property(property="min_blood_glucose", type="integer", example=82),
+     *                     @OA\Property(property="max_gout", type="number", format="float", example=5.8),
+     *                     @OA\Property(property="min_gout", type="number", format="float", example=5.8),
+     *                     @OA\Property(property="max_cholesterol", type="integer", example=178),
+     *                     @OA\Property(property="min_cholesterol", type="integer", example=178),
+     *                     @OA\Property(property="max_weight", type="integer", example=62),
+     *                     @OA\Property(property="min_weight", type="integer", example=62),
+     *                     @OA\Property(property="max_height", type="integer", example=182),
+     *                     @OA\Property(property="min_height", type="integer", example=182)
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -174,12 +231,12 @@ class QueriesBodyInfo extends Controller
                         "calorie" => $cal,
                         "dashboard" => $dashboard
                     ],
-                    "message" => "User body history found",
+                    "message" => Generator::getMessageTemplate("fetch", 'body history'),
                     "status" => 'success'
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
-                    "message" => "User body history not found",
+                    "message" => Generator::getMessageTemplate("not_found", 'body history'),
                     "status" => 'failed',
                 ], Response::HTTP_NOT_FOUND);
             }

@@ -71,12 +71,12 @@ class Commands extends Controller
             if($rows > 0){
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'History is permentally deleted',
+                    'message' => Generator::getMessageTemplate("permentally delete", 'history'),
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'History not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'history'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {

@@ -124,7 +124,7 @@ class Commands extends Controller
      *         description="Consume delete is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Consume is deleted"),
+     *             @OA\Property(property="message", type="string", example="Consume deleted"),
      *         )
      *     ),
      *     @OA\Response(

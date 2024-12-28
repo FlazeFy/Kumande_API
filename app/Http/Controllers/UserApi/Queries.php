@@ -22,7 +22,20 @@ class Queries extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="User found"
+     *         description="user fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="account fetched"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="string", example="17963858-9771-11ee-8f4a-3216422910r4"),
+     *                 @OA\Property(property="username", type="string", example="flazefy"),
+     *                 @OA\Property(property="fullname", type="string", example="testingleonardho"),
+     *                 @OA\Property(property="email", type="string", example="flazen.edu@gmail.com"),
+     *                 @OA\Property(property="gender", type="string", example="male"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2024-09-20 22:53:47"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2024-09-20 22:53:47")
+     *             ),
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -54,21 +67,20 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $usr = User::select('id','fullname','password','email','gender','born_at','created_at','updated_at')
+            $usr = User::select('id','username','fullname','email','gender','born_at','created_at','updated_at')
                 ->where('id', $user_id)
-                ->limit(1)
-                ->get();
+                ->first();
 
             if($usr){
                 return response()->json([
-                    "message"=> "User found", 
+                    "message"=> Generator::getMessageTemplate("fetch", 'account'), 
                     "status"=> 'success',
                     "data"=> $usr
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
-                    "message"=> "User not found", 
-                    "status"=> 'success',
+                    "message"=> Generator::getMessageTemplate("not_found", 'account'), 
+                    "status"=> 'failed',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {

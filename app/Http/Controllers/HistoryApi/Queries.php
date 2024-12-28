@@ -78,13 +78,13 @@ class Queries extends Controller
             if (count($res) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'History fetched',
+                    'message' => Generator::getMessageTemplate("fetch", 'history'),
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'History not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'history'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {

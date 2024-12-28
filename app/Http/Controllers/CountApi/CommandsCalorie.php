@@ -21,11 +21,11 @@ class CommandsCalorie extends Controller
      *     tags={"Count"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
-     *         response=200,
+     *         response=201,
      *         description="Count calorie create is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Count calorie is created"),
+     *             @OA\Property(property="message", type="string", example="Count calorie created"),
      *         )
      *     ),
      *     @OA\Response(
@@ -81,9 +81,9 @@ class CommandsCalorie extends Controller
                 if($ccl){
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'Count calorie is created',
+                        'message' => Generator::getMessageTemplate("create", 'count calorie'),
                         'data' => $ccl
-                    ], Response::HTTP_OK);
+                    ], Response::HTTP_CREATED);
                 } else {
                     return response()->json([
                         'status' => 'error',
@@ -178,18 +178,18 @@ class CommandsCalorie extends Controller
                 if($success > 0){
                     return response()->json([
                         'status' => 'success',
-                        'message' => "$success Count calorie are deleted",
+                        'message' => Generator::getMessageTemplate("delete", "$success count calorie"),
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Count calorie not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'count calorie'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             } else {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Count calorie id not valid'
+                    'message' => Generator::getMessageTemplate("custom", 'count calorie id not valid')
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         } catch(\Exception $err) {

@@ -39,7 +39,7 @@ class Commands extends Controller
      *         description="Schedule delete is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Schedule is deleted"),
+     *             @OA\Property(property="message", type="string", example="Schedule deleted"),
      *         )
      *     ),
      *     @OA\Response(
@@ -78,13 +78,13 @@ class Commands extends Controller
 
             if($res){
                 return response()->json([
-                    "message"=> "Schedule is deleted", 
+                    "message"=> Generator::getMessageTemplate("delete", 'schedule'), 
                     "status"=> 'success'
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Schedule not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'schedule'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -114,7 +114,7 @@ class Commands extends Controller
      *         description="Schedule update is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Schedule is updated"),
+     *             @OA\Property(property="message", type="string", example="Schedule updated"),
      *         )
      *     ),
      *     @OA\Response(
@@ -177,12 +177,12 @@ class Commands extends Controller
                 if($sch){
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'Schedule is updated'
+                        'message' => Generator::getMessageTemplate("update", 'schedule')
                     ], Response::HTTP_OK);   
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Schedule not found'
+                        'message' => Generator::getMessageTemplate("not_found", 'schedule')
                     ], Response::HTTP_NOT_FOUND);
                 }
             }
@@ -201,11 +201,11 @@ class Commands extends Controller
      *     tags={"Schedule"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
-     *         response=200,
+     *         response=201,
      *         description="Schedule create is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Schedule is created"),
+     *             @OA\Property(property="message", type="string", example="Schedule created"),
      *         )
      *     ),
      *     @OA\Response(
@@ -293,7 +293,7 @@ class Commands extends Controller
                         } else {
                             return response()->json([
                                 'status' => 'failed',
-                                'message' => 'There is a schedule with same day and category',
+                                'message' => Generator::getMessageTemplate("conflict", 'schedule'),
                             ], Response::HTTP_CONFLICT);
                         }
                     }
@@ -339,7 +339,7 @@ class Commands extends Controller
                     } else {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => 'There is a schedule with same day and category',
+                            'message' => Generator::getMessageTemplate("conflict", 'schedule'),
                         ], Response::HTTP_CONFLICT);
                     }
                 }
@@ -361,9 +361,9 @@ class Commands extends Controller
         
                 return response()->json([
                     'status' => 'success',
-                    'message' => 'Schedule is created',
+                    'message' => Generator::getMessageTemplate("create", 'schedule'),
                     'data' => $sch
-                ], Response::HTTP_OK);
+                ], Response::HTTP_CREATED);
             } else {
                 return response()->json([
                     'status' => 'error',

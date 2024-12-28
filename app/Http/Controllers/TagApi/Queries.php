@@ -84,13 +84,13 @@ class Queries extends Controller
 
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Tag found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'tag'), 
                     'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Tag not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'tag'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -162,13 +162,13 @@ class Queries extends Controller
             if (count($sch) > 0) {
                 return response()->json([
                     'status' => 'success',
-                    'message' => "Tag found", 
+                    'message' => Generator::getMessageTemplate("fetch", 'tag'), 
                     'data' => $sch
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Tag not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'tag'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -195,7 +195,22 @@ class Queries extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Tag found | Tag found but never been used"
+     *         description="Tag found | Tag found but never been used",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="tag fetched"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="total_item", type="integer", example=2),
+     *                 @OA\Property(property="total_price", type="integer", example=16000),
+     *                 @OA\Property(property="average_calorie", type="number", example=245),
+     *                 @OA\Property(property="max_calorie", type="integer", example=90),
+     *                 @OA\Property(property="min_calorie", type="integer", example=400),
+     *                 @OA\Property(property="last_used", type="string", format="date-time", example="2024-06-19 13:26:14"),
+     *                 @OA\Property(property="last_used_consume_name", type="string", example="Es Teh Tawar"),
+     *                 @OA\Property(property="last_used_consume_type", type="string", example="Drink"),
+     *                 @OA\Property(property="last_used_consume_slug", type="string", example="es-teh-tawar")
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -250,20 +265,19 @@ class Queries extends Controller
                     
                     return response()->json([
                         'status' => 'success',
-                        'message' => "Tag found", 
+                        'message' => Generator::getMessageTemplate("fetch", 'tag'), 
                         'data' => $res
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'success',
-                        'message' => "Tag found but never been used", 
-                        'data' => null
+                        'message' => Generator::getMessageTemplate("custom", 'tag fetched, but never used'), 
                     ], Response::HTTP_OK);
                 }
             } else {
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Tag not found',
+                    'message' => Generator::getMessageTemplate("not_found", 'tag'),
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {

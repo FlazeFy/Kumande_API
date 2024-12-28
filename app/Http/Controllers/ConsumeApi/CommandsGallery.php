@@ -25,11 +25,11 @@ class CommandsGallery extends Controller
      *     tags={"Consume"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
-     *         response=200,
+     *         response=201,
      *         description="Consume gallery create is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Gallery is created"),
+     *             @OA\Property(property="message", type="string", example="Gallery created"),
      *         )
      *     ),
      *     @OA\Response(
@@ -83,7 +83,7 @@ class CommandsGallery extends Controller
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("create", 'gallery')
-                    ], Response::HTTP_OK);
+                    ], Response::HTTP_CREATED);
                 } else {
                     return response()->json([
                         'status' => 'failed',
@@ -118,7 +118,7 @@ class CommandsGallery extends Controller
      *         description="Consume gallery delete is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Gallery is deleted | Gallery already been deleted"),
+     *             @OA\Property(property="message", type="string", example="Gallery deleted | Gallery already been deleted"),
      *         )
      *     ),
      *     @OA\Response(
@@ -214,7 +214,7 @@ class CommandsGallery extends Controller
      *         description="Consume gallery delete is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Gallery is updated"),
+     *             @OA\Property(property="message", type="string", example="Gallery updated"),
      *         )
      *     ),
      *     @OA\Response(

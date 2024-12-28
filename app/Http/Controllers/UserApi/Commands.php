@@ -26,7 +26,7 @@ class Commands extends Controller
      *         description="User create is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="User is created"),
+     *             @OA\Property(property="message", type="string", example="User created"),
      *         )
      *     ),
      *     @OA\Response(
@@ -88,7 +88,7 @@ class Commands extends Controller
                     if($user){
                         return response()->json([
                             'status' => 'success',
-                            'message' => 'User is created',
+                            'message' => Generator::getMessageTemplate("custom", 'account is registered'),
                             'data' => $user
                         ], Response::HTTP_OK);
                     } else {
@@ -100,7 +100,7 @@ class Commands extends Controller
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => "This email or username is already been used"
+                        'message' => Generator::getMessageTemplate("conflict", 'email or username')
                     ], Response::HTTP_CONFLICT);
                 }
             }
@@ -123,7 +123,7 @@ class Commands extends Controller
      *         description="User update is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Profile is updated"),
+     *             @OA\Property(property="message", type="string", example="account updated"),
      *         )
      *     ),
      *     @OA\Response(
@@ -183,12 +183,12 @@ class Commands extends Controller
                 if($user > 0){
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'Profile is updated'
+                        'message' => Generator::getMessageTemplate("update", 'account')
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'User not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'user'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             }
@@ -211,7 +211,7 @@ class Commands extends Controller
      *         description="User telegram id update is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Telegram id is updated"),
+     *             @OA\Property(property="message", type="string", example="Telegram id updated"),
      *         )
      *     ),
      *     @OA\Response(
@@ -269,12 +269,12 @@ class Commands extends Controller
                     
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'Telegram id is updated'
+                        'message' => Generator::getMessageTemplate("update", 'telegram ID')
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'User not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'user'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             }
@@ -297,7 +297,7 @@ class Commands extends Controller
      *         description="User telegram id update is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Telegram id is updated"),
+     *             @OA\Property(property="message", type="string", example="Telegram id updated"),
      *         )
      *     ),
      *     @OA\Response(
@@ -355,12 +355,12 @@ class Commands extends Controller
                     
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'Telegram id is updated'
+                        'message' => Generator::getMessageTemplate("update", 'telegram ID')
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'User not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'user'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             }
@@ -383,7 +383,7 @@ class Commands extends Controller
      *         description="User timezone update is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Timezone is updated"),
+     *             @OA\Property(property="message", type="string", example="Timezone updated"),
      *         )
      *     ),
      *     @OA\Response(
@@ -434,18 +434,18 @@ class Commands extends Controller
                     if($user > 0){
                         return response()->json([
                             'status' => 'success',
-                            'message' => 'Timezone is updated'
+                            'message' => Generator::getMessageTemplate("update", 'timezone')
                         ], Response::HTTP_OK);
                     } else {
                         return response()->json([
                             'status' => 'failed',
-                            'message' => 'User not found'
+                            'message' => Generator::getMessageTemplate("not_found", 'user')
                         ], Response::HTTP_NOT_FOUND);
                     }
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'result' => 'timezone is invalid'
+                        'result' => Generator::getMessageTemplate("custom", 'timezone is invalid')
                     ], Response::HTTP_UNPROCESSABLE_ENTITY);
                 }
             }
@@ -468,7 +468,7 @@ class Commands extends Controller
      *         description="User image update is success",
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Profile image is updated"),
+     *             @OA\Property(property="message", type="string", example="Profile image updated"),
      *         )
      *     ),
      *     @OA\Response(
@@ -517,12 +517,12 @@ class Commands extends Controller
                 if($user > 0){
                     return response()->json([
                         'status' => 'success',
-                        'message' => 'Profile image is updated'
+                        'message' => Generator::getMessageTemplate("update", 'profile image')
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'User not found'
+                        'message' => Generator::getMessageTemplate("not_found", 'user')
                     ], Response::HTTP_NOT_FOUND);
                 }
             }
