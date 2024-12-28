@@ -76,7 +76,40 @@ class Queries extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Consume found"
+     *         description="Consume found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="consume fetched"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(type="object",
+     *                         @OA\Property(property="id", type="string", example="2775d96f-a25a-b98a-0ef7-d5db8f01b519"),
+     *                         @OA\Property(property="slug_name", type="string", example="pisang-nugget-chocolate-chrunchy"),
+     *                         @OA\Property(property="consume_type", type="string", example="Snack"),
+     *                         @OA\Property(property="consume_name", type="string", example="Pisang Nugget Chocolate Chrunchy"),
+     *                         @OA\Property(property="consume_detail", type="array",
+     *                             @OA\Items(type="object",
+     *                                 @OA\Property(property="provide", type="string", example="Pisang Nugget Kece"),
+     *                                 @OA\Property(property="calorie", type="integer", example=180),
+     *                                 @OA\Property(property="main_ing", type="string", example="Banana")
+     *                             )
+     *                         ),
+     *                         @OA\Property(property="consume_from", type="string", example="GoFood"),
+     *                         @OA\Property(property="is_favorite", type="integer", example=0),
+     *                         @OA\Property(property="consume_tag", type="array",
+     *                             @OA\Items(type="object",
+     *                                 @OA\Property(property="slug_name", type="string", example="cheap"),
+     *                                 @OA\Property(property="tag_name", type="string", example="Cheap")
+     *                             )
+     *                         ),
+     *                         @OA\Property(property="consume_comment", type="string", example="enak tapi cuminya kurang"),
+     *                         @OA\Property(property="created_at", type="string", example="2023-04-16T18:55:53.000000Z"),
+     *                         @OA\Property(property="payment_method", type="string", example="Ovo"),
+     *                         @OA\Property(property="payment_price", type="integer", example=28000)
+     *                     )
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -331,7 +364,53 @@ class Queries extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Consume found"
+     *         description="Consume found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="consume fetched"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="string", example="e3f70e2a-9d46-cdd2-2755-38edf3aa2425"),
+     *                 @OA\Property(property="firebase_id", type="string", example="HBT60VBe5PrDMKvINzuH"),
+     *                 @OA\Property(property="slug_name", type="string", example="nasi-warteg-tahu-bacem-sayur-pare-sayur-nangka"),
+     *                 @OA\Property(property="consume_type", type="string", example="Food"),
+     *                 @OA\Property(property="consume_name", type="string", example="Nasi warteg (tahu bacem, sayur pare, sayur nangka)"),
+     *                 @OA\Property(property="consume_detail", type="array",
+     *                     @OA\Items(type="object",
+     *                         @OA\Property(property="provide", type="string", example="Warteg TLT B2"),
+     *                         @OA\Property(property="calorie", type="integer", example=750),
+     *                         @OA\Property(property="main_ing", type="string", example="Rice")
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="consume_from", type="string", example="Take Away"),
+     *                 @OA\Property(property="is_favorite", type="integer", example=0),
+     *                 @OA\Property(property="consume_tag", type="string", nullable=true),
+     *                 @OA\Property(property="consume_comment", type="string", example="Enak murmer"),
+     *                 @OA\Property(property="created_at", type="string", example="2024-07-01T04:03:19.000000Z"),
+     *                 @OA\Property(property="updated_at", type="string", example="2024-09-25T06:59:55.000000Z"),
+     *                 @OA\Property(property="deleted_at", type="string", nullable=true),
+     *                 @OA\Property(property="payment", type="array",
+     *                     @OA\Items(type="object",
+     *                         @OA\Property(property="id_payment", type="string", example="0b4f351a-4d63-06e7-3675-e5fbb4a0c46c"),
+     *                         @OA\Property(property="payment_method", type="string", example="MBanking"),
+     *                         @OA\Property(property="payment_price", type="integer", example=15000),
+     *                         @OA\Property(property="created_at", type="string", example="2024-07-01T04:03:19.000000Z"),
+     *                         @OA\Property(property="updated_at", type="string", nullable=true)
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="schedule", type="array",
+     *                     @OA\Items(type="object",
+     *                         @OA\Property(property="schedule_time", type="string", example="Warteg TLT B2"),
+     *                         @OA\Property(property="created_at", type="string", example="2024-07-01T04:03:19.000000Z"),
+     *                         @OA\Property(property="updated_at", type="string", example="2024-07-01T04:03:19.000000Z")
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="allergic", type="array",
+     *                     @OA\Items(type="object",
+     *                         @OA\Property(property="allergic_context", type="string", example="Tahu"),
+     *                     )
+     *                 ),
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,

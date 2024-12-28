@@ -2957,7 +2957,113 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Consume found"
+                        "description": "Consume found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "consume fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "2775d96f-a25a-b98a-0ef7-d5db8f01b519"
+                                                            },
+                                                            "slug_name": {
+                                                                "type": "string",
+                                                                "example": "pisang-nugget-chocolate-chrunchy"
+                                                            },
+                                                            "consume_type": {
+                                                                "type": "string",
+                                                                "example": "Snack"
+                                                            },
+                                                            "consume_name": {
+                                                                "type": "string",
+                                                                "example": "Pisang Nugget Chocolate Chrunchy"
+                                                            },
+                                                            "consume_detail": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "provide": {
+                                                                            "type": "string",
+                                                                            "example": "Pisang Nugget Kece"
+                                                                        },
+                                                                        "calorie": {
+                                                                            "type": "integer",
+                                                                            "example": 180
+                                                                        },
+                                                                        "main_ing": {
+                                                                            "type": "string",
+                                                                            "example": "Banana"
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                }
+                                                            },
+                                                            "consume_from": {
+                                                                "type": "string",
+                                                                "example": "GoFood"
+                                                            },
+                                                            "is_favorite": {
+                                                                "type": "integer",
+                                                                "example": 0
+                                                            },
+                                                            "consume_tag": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "slug_name": {
+                                                                            "type": "string",
+                                                                            "example": "cheap"
+                                                                        },
+                                                                        "tag_name": {
+                                                                            "type": "string",
+                                                                            "example": "Cheap"
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                }
+                                                            },
+                                                            "consume_comment": {
+                                                                "type": "string",
+                                                                "example": "enak tapi cuminya kurang"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "example": "2023-04-16T18:55:53.000000Z"
+                                                            },
+                                                            "payment_method": {
+                                                                "type": "string",
+                                                                "example": "Ovo"
+                                                            },
+                                                            "payment_price": {
+                                                                "type": "integer",
+                                                                "example": 28000
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -3272,7 +3378,157 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Consume found"
+                        "description": "Consume found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "consume fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "e3f70e2a-9d46-cdd2-2755-38edf3aa2425"
+                                                },
+                                                "firebase_id": {
+                                                    "type": "string",
+                                                    "example": "HBT60VBe5PrDMKvINzuH"
+                                                },
+                                                "slug_name": {
+                                                    "type": "string",
+                                                    "example": "nasi-warteg-tahu-bacem-sayur-pare-sayur-nangka"
+                                                },
+                                                "consume_type": {
+                                                    "type": "string",
+                                                    "example": "Food"
+                                                },
+                                                "consume_name": {
+                                                    "type": "string",
+                                                    "example": "Nasi warteg (tahu bacem, sayur pare, sayur nangka)"
+                                                },
+                                                "consume_detail": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "provide": {
+                                                                "type": "string",
+                                                                "example": "Warteg TLT B2"
+                                                            },
+                                                            "calorie": {
+                                                                "type": "integer",
+                                                                "example": 750
+                                                            },
+                                                            "main_ing": {
+                                                                "type": "string",
+                                                                "example": "Rice"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "consume_from": {
+                                                    "type": "string",
+                                                    "example": "Take Away"
+                                                },
+                                                "is_favorite": {
+                                                    "type": "integer",
+                                                    "example": 0
+                                                },
+                                                "consume_tag": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "consume_comment": {
+                                                    "type": "string",
+                                                    "example": "Enak murmer"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "example": "2024-07-01T04:03:19.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "example": "2024-09-25T06:59:55.000000Z"
+                                                },
+                                                "deleted_at": {
+                                                    "type": "string",
+                                                    "nullable": true
+                                                },
+                                                "payment": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id_payment": {
+                                                                "type": "string",
+                                                                "example": "0b4f351a-4d63-06e7-3675-e5fbb4a0c46c"
+                                                            },
+                                                            "payment_method": {
+                                                                "type": "string",
+                                                                "example": "MBanking"
+                                                            },
+                                                            "payment_price": {
+                                                                "type": "integer",
+                                                                "example": 15000
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "example": "2024-07-01T04:03:19.000000Z"
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string",
+                                                                "nullable": true
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "schedule": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "schedule_time": {
+                                                                "type": "string",
+                                                                "example": "Warteg TLT B2"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "example": "2024-07-01T04:03:19.000000Z"
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string",
+                                                                "example": "2024-07-01T04:03:19.000000Z"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "allergic": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "allergic_context": {
+                                                                "type": "string",
+                                                                "example": "Tahu"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -4088,7 +4344,57 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Consume Gallery found"
+                        "description": "Consume Gallery found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "consume gallery fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "6cecae97-3e1d-2976-0904-09e14e3c9b5b"
+                                                            },
+                                                            "gallery_url": {
+                                                                "type": "string",
+                                                                "example": "https://firebasestorage.googleapis.com/v0/b/kumande-64a66.appspot.com/o/consume%2FScreenshot%202024-08-07%20at%2015.39.51.png0fasi3j-a89c-441a-8f4e-67829f7306e7?alt=media&token=d675e6e5-217d-46b1-b86d-4a13bd80423f"
+                                                            },
+                                                            "gallery_desc": {
+                                                                "type": "string",
+                                                                "example": "This is an image testings"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "example": "2024-08-08 10:08:34"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -4189,7 +4495,119 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Consume List found"
+                        "description": "Consume List found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "consume list fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "c85a1fb8-5f72-1378-22a7-3a07adfcf4c4"
+                                                            },
+                                                            "slug_name": {
+                                                                "type": "string",
+                                                                "example": "asdasdzzzz"
+                                                            },
+                                                            "list_name": {
+                                                                "type": "string",
+                                                                "example": "asdasdzzzz"
+                                                            },
+                                                            "list_desc": {
+                                                                "type": "string",
+                                                                "example": "asdaaaaaa"
+                                                            },
+                                                            "list_tag": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "slug_name": {
+                                                                            "type": "string",
+                                                                            "example": "fast-food"
+                                                                        },
+                                                                        "tag_name": {
+                                                                            "type": "string",
+                                                                            "example": "Fast Food"
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                }
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2023-05-08T09:49:53.000000Z"
+                                                            },
+                                                            "consume": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "properties": {
+                                                                        "id": {
+                                                                            "type": "string",
+                                                                            "example": "33b162f6-a87a-138e-15d9-98951faa64ac"
+                                                                        },
+                                                                        "slug_name": {
+                                                                            "type": "string",
+                                                                            "example": "nasi-warteg-tahu-kari-sayur-jantung-pisang-terong-sambal"
+                                                                        },
+                                                                        "consume_name": {
+                                                                            "type": "string",
+                                                                            "example": "Nasi Warteg (Tahu Kari, Sayur Jantung Pisang, Terong Sambal)"
+                                                                        },
+                                                                        "consume_type": {
+                                                                            "type": "string",
+                                                                            "example": "Food"
+                                                                        },
+                                                                        "calorie": {
+                                                                            "type": "integer",
+                                                                            "example": 400
+                                                                        },
+                                                                        "provide": {
+                                                                            "type": "string",
+                                                                            "example": "Warteg Basement 2 TLT"
+                                                                        },
+                                                                        "consume_from": {
+                                                                            "type": "string",
+                                                                            "example": "Dine-In"
+                                                                        },
+                                                                        "average_price": {
+                                                                            "type": "integer",
+                                                                            "example": 14000
+                                                                        }
+                                                                    },
+                                                                    "type": "object"
+                                                                },
+                                                                "nullable": true
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -4280,7 +4698,117 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Consume List found"
+                        "description": "Consume List found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Consume List found"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "example": "7b3b0912-bd6f-b4a5-01ab-365d46d12466"
+                                                },
+                                                "slug_name": {
+                                                    "type": "string",
+                                                    "example": "makanan-nusantara"
+                                                },
+                                                "list_name": {
+                                                    "type": "string",
+                                                    "example": "makanan"
+                                                },
+                                                "list_desc": {
+                                                    "type": "string",
+                                                    "example": "murah meriahasdasd"
+                                                },
+                                                "list_tag": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "slug_name": {
+                                                                "type": "string",
+                                                                "example": "cheap"
+                                                            },
+                                                            "tag_name": {
+                                                                "type": "string",
+                                                                "example": "Cheap"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "example": "2023-05-05T04:32:12.000000Z"
+                                                },
+                                                "consume": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "consume_id": {
+                                                                "type": "string",
+                                                                "example": "33b162f6-a87a-138e-15d9-98951faa64ac"
+                                                            },
+                                                            "id": {
+                                                                "type": "string",
+                                                                "example": "2d98f524-de02-11ed-b5ea-0242ac120002"
+                                                            },
+                                                            "slug_name": {
+                                                                "type": "string",
+                                                                "example": "nasi-warteg-tahu-kari-sayur-jantung-pisang-terong-sambal"
+                                                            },
+                                                            "consume_name": {
+                                                                "type": "string",
+                                                                "example": "Nasi Warteg (Tahu Kari, Sayur Jantung Pisang, Terong Sambal)"
+                                                            },
+                                                            "consume_type": {
+                                                                "type": "string",
+                                                                "example": "Food"
+                                                            },
+                                                            "calorie": {
+                                                                "type": "integer",
+                                                                "example": 400
+                                                            },
+                                                            "provide": {
+                                                                "type": "string",
+                                                                "example": "Warteg Basement 2 TLT"
+                                                            },
+                                                            "consume_from": {
+                                                                "type": "string",
+                                                                "example": "Dine-In"
+                                                            },
+                                                            "average_price": {
+                                                                "type": "integer",
+                                                                "example": 14000
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "whole_avg_calorie": {
+                                                    "type": "integer",
+                                                    "example": 336
+                                                },
+                                                "whole_avg_price": {
+                                                    "type": "integer",
+                                                    "example": 21080
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -4381,7 +4909,49 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Consume found"
+                        "description": "Consume found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "consume fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "consume_name": {
+                                                    "type": "string",
+                                                    "example": "Nasi padang"
+                                                },
+                                                "consume_from": {
+                                                    "type": "string",
+                                                    "example": "Dine-In"
+                                                },
+                                                "calorie": {
+                                                    "type": "string",
+                                                    "example": "120"
+                                                },
+                                                "provide": {
+                                                    "type": "string",
+                                                    "example": "Warung"
+                                                },
+                                                "average_price": {
+                                                    "type": "string",
+                                                    "example": "18000"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -4480,7 +5050,46 @@
                 "operationId": "8ea491c93b15936f65f6e54cb7dc8249",
                 "responses": {
                     "200": {
-                        "description": "Count data found"
+                        "description": "analytic data fetched",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "analytic data fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "weight": {
+                                                    "type": "integer",
+                                                    "example": 62
+                                                },
+                                                "height": {
+                                                    "type": "integer",
+                                                    "example": 182
+                                                },
+                                                "result": {
+                                                    "type": "integer",
+                                                    "example": 1800
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-03-14 02:28:37"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -4793,7 +5402,37 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Count data found"
+                        "description": "Count data found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "count data fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 240
+                                                },
+                                                "target": {
+                                                    "type": "integer",
+                                                    "example": 1900
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -5641,28 +6280,25 @@
                                             "example": "analytic data fetched"
                                         },
                                         "data": {
-                                            "type": "array",
-                                            "items": {
-                                                "properties": {
-                                                    "average": {
-                                                        "type": "integer",
-                                                        "example": 10000
-                                                    },
-                                                    "min": {
-                                                        "type": "integer",
-                                                        "example": 5000
-                                                    },
-                                                    "max": {
-                                                        "type": "integer",
-                                                        "example": 15000
-                                                    },
-                                                    "total": {
-                                                        "type": "integer",
-                                                        "example": 2
-                                                    }
+                                            "properties": {
+                                                "average": {
+                                                    "type": "integer",
+                                                    "example": 10000
                                                 },
-                                                "type": "object"
-                                            }
+                                                "min": {
+                                                    "type": "integer",
+                                                    "example": 5000
+                                                },
+                                                "max": {
+                                                    "type": "integer",
+                                                    "example": 15000
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 2
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -5743,11 +6379,41 @@
                 "tags": [
                     "Payment"
                 ],
-                "summary": "Get total payment in whole consume=",
+                "summary": "Get total payment in whole consume",
                 "operationId": "4c8a23316855c7ce2ad4d0ff438f53cb",
                 "responses": {
                     "200": {
-                        "description": "Analytic data found"
+                        "description": "Analytic data found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "analytic data fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "total_days": {
+                                                    "type": "integer",
+                                                    "example": 9
+                                                },
+                                                "total_payment": {
+                                                    "type": "integer",
+                                                    "example": 1750000
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",
@@ -5848,7 +6514,62 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Payment data found"
+                        "description": "Payment data found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "payment fetched"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "consume_name": {
+                                                                "type": "string",
+                                                                "example": "Nasi Warteg (Tahu Kari, Sayur Jantung Pisang, Terong Sambal)"
+                                                            },
+                                                            "consume_type": {
+                                                                "type": "string",
+                                                                "example": "Food"
+                                                            },
+                                                            "consume_id": {
+                                                                "type": "string",
+                                                                "example": "33b162f6-a87a-138e-15d9-98951faa64ac"
+                                                            },
+                                                            "payment_method": {
+                                                                "type": "string",
+                                                                "example": "MBanking"
+                                                            },
+                                                            "payment_price": {
+                                                                "type": "integer",
+                                                                "example": 14000
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2024-06-19T09:28:02.000000Z"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "protected route need to include sign in token as authorization bearer",

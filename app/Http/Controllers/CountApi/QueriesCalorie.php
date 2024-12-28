@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 // Models
 use App\Models\CountCalorie;
+use App\Models\Consume;
 
 // Helpers
 use App\Helpers\Generator;
@@ -22,7 +23,17 @@ class QueriesCalorie extends Controller
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Count data found"
+     *         description="analytic data fetched",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="analytic data fetched"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="weight", type="integer", example=62),
+     *                 @OA\Property(property="height", type="integer", example=182),
+     *                 @OA\Property(property="result", type="integer", example=1800),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2024-03-14 02:28:37"),
+     *             ),
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -57,16 +68,9 @@ class QueriesCalorie extends Controller
             $cal = CountCalorie::select('weight', 'height', 'result','created_at')
                 ->where('created_by', $user_id)
                 ->orderBy('created_at', 'DESC')
-                ->limit(1)->get();
+                ->first();
 
             if($cal){
-                foreach ($cal as $c) {
-                    $c->weight = intval($c->weight);
-                    $c->height = intval($c->height);
-                    $c->result = intval($c->result);
-                    $c->created_at = $c->created_at;
-                }
-
                 return response()->json([
                     "message"=> Generator::getMessageTemplate("fetch", 'count data'), 
                     "status"=> 'success',
@@ -75,7 +79,7 @@ class QueriesCalorie extends Controller
             } else {
                 return response()->json([
                     "message"=> Generator::getMessageTemplate("not_found", 'count data'), 
-                    "status"=> 'success',
+                    "status"=> 'failed',
                 ], Response::HTTP_NOT_FOUND);
             }
         } catch(\Exception $e) {
@@ -102,7 +106,15 @@ class QueriesCalorie extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Count data found"
+     *         description="Count data found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="count data fetched"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="total", type="integer", example=240),
+     *                 @OA\Property(property="target", type="integer", example=1900),
+     *             ),
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -134,26 +146,22 @@ class QueriesCalorie extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $csm = DB::select(DB::raw("SELECT SUM(REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '')) as total, 
-                    (SELECT result FROM count_calorie ORDER BY created_at DESC limit 1) as target
-                    FROM consume
-                    where date(created_at) = '".$date."'
-                "));
-
-            foreach($csm as $c){
-                $c->target = intval($c->target);
-                $c->total = intval($c->total);
-            }
-
+            $csm = Consume::selectRaw(
+                    "SUM(REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '')) as total"
+                )
+                ->selectRaw("(SELECT result FROM count_calorie ORDER BY created_at DESC LIMIT 1) as target")
+                ->whereDate('created_at', $date)
+                ->first();
+            
             if($csm){
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'count data'), 
-                    'data' => $csm[0]
+                    'data' => $csm
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
-                    'status' => 'success',
+                    'status' => 'failed',
                     'message' => Generator::getMessageTemplate("not_found", 'count data'),
                 ], Response::HTTP_NOT_FOUND);
             }

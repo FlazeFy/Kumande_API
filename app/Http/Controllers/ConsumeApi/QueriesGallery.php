@@ -116,7 +116,22 @@ class QueriesGallery extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Consume Gallery found"
+     *         description="Consume Gallery found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="consume gallery fetched"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="current_page", type="integer", example=1),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(type="object",
+     *                         @OA\Property(property="id", type="string", example="6cecae97-3e1d-2976-0904-09e14e3c9b5b"),
+     *                         @OA\Property(property="gallery_url", type="string", example="https://firebasestorage.googleapis.com/v0/b/kumande-64a66.appspot.com/o/consume%2FScreenshot%202024-08-07%20at%2015.39.51.png0fasi3j-a89c-441a-8f4e-67829f7306e7?alt=media&token=d675e6e5-217d-46b1-b86d-4a13bd80423f"),
+     *                         @OA\Property(property="gallery_desc", type="string", example="This is an image testings"),
+     *                         @OA\Property(property="created_at", type="string", example="2024-08-08 10:08:34")
+     *                     )
+     *                 ),
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,

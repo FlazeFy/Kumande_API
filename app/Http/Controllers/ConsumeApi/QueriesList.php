@@ -42,7 +42,41 @@ class QueriesList extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Consume List found"
+     *         description="Consume List found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="consume list fetched"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="current_page", type="integer", example=1),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(type="object",
+     *                         @OA\Property(property="id", type="string", example="c85a1fb8-5f72-1378-22a7-3a07adfcf4c4"),
+     *                         @OA\Property(property="slug_name", type="string", example="asdasdzzzz"),
+     *                         @OA\Property(property="list_name", type="string", example="asdasdzzzz"),
+     *                         @OA\Property(property="list_desc", type="string", example="asdaaaaaa"),
+     *                         @OA\Property(property="list_tag", type="array",
+     *                             @OA\Items(
+     *                                 @OA\Property(property="slug_name", type="string", example="fast-food"),
+     *                                 @OA\Property(property="tag_name", type="string", example="Fast Food")
+     *                             )
+     *                         ),
+     *                         @OA\Property(property="created_at", type="string", format="date-time", example="2023-05-08T09:49:53.000000Z"),
+     *                         @OA\Property(property="consume", type="array", nullable=true,
+     *                             @OA\Items(type="object",
+     *                                 @OA\Property(property="id", type="string", example="33b162f6-a87a-138e-15d9-98951faa64ac"),
+     *                                 @OA\Property(property="slug_name", type="string", example="nasi-warteg-tahu-kari-sayur-jantung-pisang-terong-sambal"),
+     *                                 @OA\Property(property="consume_name", type="string", example="Nasi Warteg (Tahu Kari, Sayur Jantung Pisang, Terong Sambal)"),
+     *                                 @OA\Property(property="consume_type", type="string", example="Food"),
+     *                                 @OA\Property(property="calorie", type="integer", example=400),
+     *                                 @OA\Property(property="provide", type="string", example="Warteg Basement 2 TLT"),
+     *                                 @OA\Property(property="consume_from", type="string", example="Dine-In"),
+     *                                 @OA\Property(property="average_price", type="integer", example=14000)
+     *                             )
+     *                         )
+     *                     )
+     *                 ),
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -141,7 +175,39 @@ class QueriesList extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Consume List found"
+     *         description="Consume List found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Consume List found"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="string", example="7b3b0912-bd6f-b4a5-01ab-365d46d12466"),
+     *                 @OA\Property(property="slug_name", type="string", example="makanan-nusantara"),
+     *                 @OA\Property(property="list_name", type="string", example="makanan"),
+     *                 @OA\Property(property="list_desc", type="string", example="murah meriahasdasd"),
+     *                 @OA\Property(property="list_tag", type="array",
+     *                     @OA\Items(type="object",
+     *                         @OA\Property(property="slug_name", type="string", example="cheap"),
+     *                         @OA\Property(property="tag_name", type="string", example="Cheap")
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="created_at", type="string", example="2023-05-05T04:32:12.000000Z"),
+     *                 @OA\Property(property="consume", type="array",
+     *                     @OA\Items(type="object",
+     *                         @OA\Property(property="consume_id", type="string", example="33b162f6-a87a-138e-15d9-98951faa64ac"),
+     *                         @OA\Property(property="id", type="string", example="2d98f524-de02-11ed-b5ea-0242ac120002"),
+     *                         @OA\Property(property="slug_name", type="string", example="nasi-warteg-tahu-kari-sayur-jantung-pisang-terong-sambal"),
+     *                         @OA\Property(property="consume_name", type="string", example="Nasi Warteg (Tahu Kari, Sayur Jantung Pisang, Terong Sambal)"),
+     *                         @OA\Property(property="consume_type", type="string", example="Food"),
+     *                         @OA\Property(property="calorie", type="integer", example=400),
+     *                         @OA\Property(property="provide", type="string", example="Warteg Basement 2 TLT"),
+     *                         @OA\Property(property="consume_from", type="string", example="Dine-In"),
+     *                         @OA\Property(property="average_price", type="integer", example=14000)
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="whole_avg_calorie", type="integer", example=336),
+     *                 @OA\Property(property="whole_avg_price", type="integer", example=21080)
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -253,7 +319,18 @@ class QueriesList extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Consume found"
+     *         description="Consume found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="consume fetched"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="consume_name", type="string", example="Nasi padang"),
+     *                 @OA\Property(property="consume_from", type="string", example="Dine-In"),
+     *                 @OA\Property(property="calorie", type="string", example="120"),
+     *                 @OA\Property(property="provide", type="string", example="Warung"),
+     *                 @OA\Property(property="average_price", type="string", example="18000")
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -302,8 +379,7 @@ class QueriesList extends Controller
             if($check){
                 return response()->json([
                     'status' => 'failed',
-                    'message' => 'Consume has been used in this list',
-                    'data' => null
+                    'message' => Generator::getMessageTemplate("conflict", 'consume'),
                 ], Response::HTTP_CONFLICT);
             } else {
                 $csl = Consume::selectRaw("consume_name,consume_from,REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '') as calorie, REPLACE(JSON_EXTRACT(consume_detail, '$[0].provide'), '\"', '') as provide,
@@ -316,13 +392,13 @@ class QueriesList extends Controller
                 if ($csl) {
                     return response()->json([
                         'status' => 'success',
-                        'message' => "Consume found", 
+                        'message' => Generator::getMessageTemplate("fetch", 'consume'), 
                         'data' => $csl
                     ], Response::HTTP_OK);
                 } else {
                     return response()->json([
                         'status' => 'failed',
-                        'message' => 'Consume not found',
+                        'message' => Generator::getMessageTemplate("not_found", 'consume'),
                     ], Response::HTTP_NOT_FOUND);
                 }
             }

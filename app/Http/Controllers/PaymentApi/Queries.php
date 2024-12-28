@@ -257,13 +257,11 @@ class Queries extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="analytic data fetched"),
-     *                 @OA\Property(property="data", type="array",
-     *                     @OA\Items(
-     *                          @OA\Property(property="average", type="integer", example=10000),
-     *                          @OA\Property(property="min", type="integer", example=5000),
-     *                          @OA\Property(property="max", type="integer", example=15000),
-     *                          @OA\Property(property="total", type="integer", example=2)
-     *                 )
+     *                 @OA\Property(property="data", type="object",
+     *                      @OA\Property(property="average", type="integer", example=10000),
+     *                      @OA\Property(property="min", type="integer", example=5000),
+     *                      @OA\Property(property="max", type="integer", example=15000),
+     *                      @OA\Property(property="total", type="integer", example=2)
      *             )
      *         )
      *     ),
@@ -297,31 +295,25 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $pym = DB::select(DB::raw("SELECT 
-                    CAST(IFNULL(ROUND(AVG(total)),0) as INT) as average, 
-                    CAST(IFNULL(MAX(total),0) as INT) as max, 
-                    CAST(IFNULL(MIN(total),0) as INT) as min,
-                    CAST(IFNULL(SUM(total),0) as INT) as total 
-                    FROM(
-                        SELECT SUM(payment_price) as total FROM `payment` 
-                        WHERE MONTH(created_at) = '".$month."' AND YEAR(created_at) = '".$year."'
-                        AND created_by = '".$user_id."' 
-                        GROUP BY DAY(created_at)
-                        ) q
-                    "));
-
-            foreach ($pym as $p) {
-                $p->average = intval($p->average);
-                $p->max = intval($p->max);
-                $p->min = intval($p->min);
-                $p->total = intval($p->total);
-            }
+            $pym = DB::table(function ($sub) use ($month, $year, $user_id) {
+                    $sub->selectRaw('SUM(payment_price) as total')
+                        ->from('payment')
+                        ->whereRaw('MONTH(created_at) = ?', [$month])
+                        ->whereRaw('YEAR(created_at) = ?', [$year])
+                        ->where('created_by', $user_id)
+                        ->groupByRaw('DAY(created_at)');
+                }, 'q')
+                ->selectRaw('CAST(IFNULL(ROUND(AVG(total)), 0) as INT) as average')
+                ->selectRaw('CAST(IFNULL(MAX(total), 0) as INT) as max')
+                ->selectRaw('CAST(IFNULL(MIN(total), 0) as INT) as min')
+                ->selectRaw('CAST(IFNULL(SUM(total), 0) as INT) as total')
+                ->first();
             
-            if(count($pym) > 0){
+            if($pym){
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'analytic data'), 
-                    'data' => $pym[0]
+                    'data' => $pym
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
@@ -340,12 +332,20 @@ class Queries extends Controller
     /**
      * @OA\GET(
      *     path="/api/v1/count/payment",
-     *     summary="Get total payment in whole consume=",
+     *     summary="Get total payment in whole consume",
      *     tags={"Payment"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
-     *         description="Analytic data found"
+     *         description="Analytic data found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="analytic data fetched"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="total_days", type="integer", example=9),
+     *                 @OA\Property(property="total_payment", type="integer", example=1750000),
+     *             ),
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -377,23 +377,16 @@ class Queries extends Controller
         try{
             $user_id = $request->user()->id;
 
-            $csm = DB::select(DB::raw("SELECT 
-                    COUNT(payment_date) as total_days, CAST(IFNULL(SUM(total_payment),0) as INT) as total_payment 
-                    FROM
-                    (
-                    SELECT DATE(created_at) as payment_date, SUM(payment_price) as total_payment
-                    FROM payment
-                    WHERE created_by = '".$user_id."'
-                    GROUP BY payment_date
-                    ) q
-                "));
+            $csm = DB::table(function ($sub) use ($user_id) {
+                    $sub->selectRaw('DATE(created_at) as payment_date, SUM(payment_price) as total_payment')
+                        ->from('payment')
+                        ->where('created_by', $user_id)
+                        ->groupByRaw('DATE(created_at)');
+                }, 'q')
+                ->selectRaw('COUNT(payment_date) as total_days, CAST(IFNULL(SUM(total_payment), 0) as INT) as total_payment')
+                ->first();
 
-            foreach ($csm as $c) {
-                $c->total_days = intval($c->total_days);
-                $c->total_payment = intval($c->total_payment );
-            }
-
-            if (count($csm) > 0) {
+            if ($csm) {
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'analytic data'), 
@@ -437,7 +430,24 @@ class Queries extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Payment data found"
+     *         description="Payment data found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="payment fetched"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(type="object",
+     *                         @OA\Property(property="consume_name", type="string", example="Nasi Warteg (Tahu Kari, Sayur Jantung Pisang, Terong Sambal)"),
+     *                         @OA\Property(property="consume_type", type="string", example="Food"),
+     *                         @OA\Property(property="consume_id", type="string", example="33b162f6-a87a-138e-15d9-98951faa64ac"),
+     *                         @OA\Property(property="payment_method", type="string", example="MBanking"),
+     *                         @OA\Property(property="payment_price", type="integer", example=14000),
+     *                         @OA\Property(property="created_at", type="string", format="date-time", example="2024-06-19T09:28:02.000000Z")
+     *                     )
+     *                 )
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
