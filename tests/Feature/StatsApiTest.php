@@ -447,4 +447,38 @@ class StatsApiTest extends TestCase
 
         $this->templateTest->templateCommand($response, "delete", "allergic");
     }
+
+    public function test_post_count_calorie(): void
+    {
+        $data = [
+            'firebase_id' => '123ABC',
+            'weight' => 62,
+            'height' => 182,
+            'result' => 1800
+        ];
+
+        $response = $this->httpClient->post("/api/v1/count/calorie", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+            'json' => $data
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "create", "count calorie");
+    }
+
+    public function test_delete_count_calorie_by_id(): void
+    {
+        $id = '206d2949-bd1a-07a7-3b87-c70d6a521da4';
+
+        $response = $this->httpClient->delete("/api/v1/count/calorie/$id", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "delete", "1 count calorie");
+    }
 }

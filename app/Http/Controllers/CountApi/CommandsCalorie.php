@@ -155,7 +155,7 @@ class CommandsCalorie extends Controller
      *     ),
      * )
      */
-    public function deleteCountCalorie(Request $request, $id){
+    public function deleteCountCalorieById(Request $request, $id){
         try {
             $user_id = $request->user()->id;
             $success = 0;

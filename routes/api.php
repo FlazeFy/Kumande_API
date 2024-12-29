@@ -41,7 +41,6 @@ Route::post('/v1/logout', [QueryAuthApi::class, 'logout'])->middleware(['auth:sa
 Route::prefix('/v1/consume')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/limit/{page_limit}/order/{order}/favorite/{favorite}/type/{type}/provide/{provide}/calorie/{calorie}', [QueryConsumeApi::class, 'getAllConsume']);
     Route::get('/detail/{slug}', [QueryConsumeApi::class, 'getConsumeDetailBySlug']);
-    Route::post('/by/context/{ctx}/{target}', [QueryConsumeApi::class, 'getConsumeByContext']);
     Route::get('/total/byfrom', [QueryConsumeApi::class, 'getTotalConsumeByFrom']);
     Route::get('/total/bytype', [QueryConsumeApi::class, 'getTotalConsumeByType']);
     Route::get('/total/bymain', [QueryConsumeApi::class, 'getTotalConsumeByMainIng']);
@@ -52,15 +51,15 @@ Route::prefix('/v1/consume')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/list/select', [QueryConsumeApi::class, 'getListConsume']);
     Route::get('/gallery', [QueryConsumeGalleryApi::class, 'getAllMyGallery']);
     Route::get('/gallery/{slug}', [QueryConsumeGalleryApi::class, 'getGalleryByConsume']);
+    Route::post('/by/context/{ctx}/{target}', [QueryConsumeApi::class, 'getConsumeByContext']);
     Route::post('/gallery', [CommandConsumeGalleryApi::class, 'createGallery']);
-    Route::delete('/gallery/{gallery_id}', [CommandConsumeGalleryApi::class, 'deleteGalleryById']);
-    Route::put('/gallery/{gallery_id}', [CommandConsumeGalleryApi::class, 'updateGalleryById']);
-    
+    Route::post('/create', [CommandConsumeApi::class, 'createConsume']);
     Route::delete('/destroy/{id}', [CommandConsumeApi::class, 'hardDeleteConsumeById']);
     Route::delete('/delete/{id}', [CommandConsumeApi::class, 'softDeleteConsumeById']);
+    Route::delete('/gallery/{gallery_id}', [CommandConsumeGalleryApi::class, 'deleteGalleryById']);
     Route::put('/update/data/{id}', [CommandConsumeApi::class, 'updateConsumeDataById']);
     Route::put('/update/favorite/{id}', [CommandConsumeApi::class, 'updateConsumeFavorite']);
-    Route::post('/create', [CommandConsumeApi::class, 'createConsume']);
+    Route::put('/gallery/{gallery_id}', [CommandConsumeGalleryApi::class, 'updateGalleryById']);
 });
 
 Route::prefix('/v1/payment')->middleware(['auth:sanctum'])->group(function () {
@@ -97,23 +96,22 @@ Route::prefix('/v1/reminder')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('/v1/count')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/calorie', [QueryCountApi::class, 'getLastCountCalorie']);
-    Route::post('/calorie', [CommandsCountCalorie::class, 'createCountCalorie']);
     Route::get('/calorie/fulfill/{date}', [QueryCountApi::class, 'getFulfillCalorie']);
     Route::get('/payment', [QueryPaymentApi::class, 'getLifetimeSpend']);
-
-    Route::delete('/calorie/{id}', [CommandsCountCalorie::class, 'deleteCountCalorie']);
+    Route::post('/calorie', [CommandsCountCalorie::class, 'createCountCalorie']);
+    Route::delete('/calorie/{id}', [CommandsCountCalorie::class, 'deleteCountCalorieById']);
 });
 
 Route::prefix('/v1/budget')->middleware(['auth:sanctum'])->group(function () {
-    Route::post('/dashboard', [QueryBudgetApi::class, 'getBudgetDashboard']);
     Route::get('/by/{year}', [QueryBudgetApi::class, 'getAllBudgetByYear']);
+    Route::post('/dashboard', [QueryBudgetApi::class, 'getBudgetDashboard']);
     Route::post('/create', [CommandsBudgetApi::class, 'createBudget']);
     Route::delete('/{id}', [CommandsBudgetApi::class, 'deleteBudgetById']);
 });
 
 Route::prefix('/v1/list')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/limit/{page_limit}/order/{order}', [QueryConsumeListApi::class, 'getAllList']);
-    Route::get('/detail/{list_id}', [QueryConsumeListApi::class, 'getListDetail']);
+    Route::get('/detail/{list_id}', [QueryConsumeListApi::class, 'getListDetailById']);
     Route::get('/check/{consume_slug}/{list_id}', [QueryConsumeListApi::class, 'getCheckConsumeBySlug']);
     Route::delete('/delete/{list_id}', [CommandConsumeListApi::class, 'deleteListByListId']);
     Route::delete('/delete_rel/{rel_id}', [CommandConsumeListApi::class, 'deleteListRelationByRelId']);
@@ -134,21 +132,17 @@ Route::prefix('/v1/user')->group(function () {
     Route::get('/', [QueryUserApi::class, 'getMyProfile'])->middleware(['auth:sanctum']);
     Route::get('/body_info', [QueryBodyInfoApi::class, 'getMyLatestBodyInfo'])->middleware(['auth:sanctum']);
     Route::get('/my_body_history', [QueryBodyInfoApi::class, 'getMyBodyHistory'])->middleware(['auth:sanctum']);
-
     Route::put('/edit', [CommandUserApi::class, 'updateUser'])->middleware(['auth:sanctum']);
     Route::put('/edit_telegram_id', [CommandUserApi::class, 'updateTelegramId'])->middleware(['auth:sanctum']);
     Route::put('/edit_telegram_id_qrcode', [CommandUserApi::class, 'updateTelegramIdQRCode']);
     Route::put('/edit_timezone', [CommandUserApi::class, 'updateTimezone'])->middleware(['auth:sanctum']);
     Route::put('/image', [CommandUserApi::class, 'updateImage'])->middleware(['auth:sanctum']);
-    
     Route::post('/create', [CommandUserApi::class, 'createUser']);
     Route::post('/body_info/create', [CommandBodyInfoApi::class, 'createBodyInfo'])->middleware(['auth:sanctum']);;
-
     Route::delete('/body_info/delete/{id}', [CommandBodyInfoApi::class, 'deleteBodyInfo'])->middleware(['auth:sanctum']);;
 });
 
 Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueryHistoryApi::class, 'getAllHistory']);
-    
     Route::delete('/destroy/{id}', [CommandHistoryApi::class, 'hardDeleteHistoryById']);
 });

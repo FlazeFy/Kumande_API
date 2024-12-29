@@ -235,7 +235,7 @@ class QueriesList extends Controller
      *     ),
      * )
      */
-    public function getListDetail(Request $request, $id){
+    public function getListDetailById(Request $request, $id){
         try{
             $user_id = $request->user()->id;
 
@@ -273,6 +273,8 @@ class QueriesList extends Controller
                     $csl->whole_avg_calorie = (int)$whole_csm->average_calorie;
                     $csl->whole_avg_price = (int)$whole_csm->average_price;
                 } else {
+                    $csl->whole_avg_calorie = 0;
+                    $csl->whole_avg_price = 0;
                     $csl->consume = null;
                 }
 
