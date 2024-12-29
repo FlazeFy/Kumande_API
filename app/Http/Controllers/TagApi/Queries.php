@@ -238,13 +238,13 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getAnalyzeMyTag(Request $request, $slug){
+    public function getAnalyzeMyTagBySlug(Request $request, $slug){
         try{
             $user_id = $request->user()->id;
             $calorie_query = "REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '')";
 
             $res = Consume::selectRaw("COUNT(1) as total_item, CAST(SUM(payment_price) as UNSIGNED) as total_price, 
-                    AVG($calorie_query) as average_calorie, CAST(MAX($calorie_query) as UNSIGNED) as max_calorie, CAST(MIN($calorie_query) as UNSIGNED) as min_calorie, 
+                    CAST(AVG($calorie_query) as UNSIGNED) as average_calorie, CAST(MAX($calorie_query) as UNSIGNED) as max_calorie, CAST(MIN($calorie_query) as UNSIGNED) as min_calorie, 
                     MAX(consume.created_at) as last_used")
                 ->leftjoin('payment','payment.consume_id','=','consume.id')
                 ->whereRaw('consume_tag like '."'".'%"slug_name":"'.$slug.'"%'."'")

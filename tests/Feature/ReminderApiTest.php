@@ -22,7 +22,7 @@ class ReminderApiTest extends TestCase
     {
         parent::setUp();
         $this->httpClient = new Client([
-            'base_uri' => 'http://127.0.0.1:8000/',
+            'base_uri' => 'http://127.0.0.1:8000/api/v1/reminder/',
             'http_errors' => false
         ]);
 
@@ -35,12 +35,13 @@ class ReminderApiTest extends TestCase
         $this->templateTest = new TestTemplate();
     }
 
+    // Query Test
     public function test_get_my_reminder(): void
     {
         $is_paginate = false;
 
         $token = $this->authTest->test_post_login();
-        $response = $this->httpClient->get("/api/v1/reminder", [
+        $response = $this->httpClient->get("", [
             'headers' => [
                 'Authorization' => "Bearer {$this->token}"
             ]
@@ -63,5 +64,75 @@ class ReminderApiTest extends TestCase
         $reminderTypeRule = ['Every Day','Every Week','Every Month','Every Year','Custom'];
 
         $this->templateTest->templateValidateContain($data['data'], $reminderTypeRule, 'reminder_type');
+    }
+
+    // Command Test
+    public function test_post_reminder(): void
+    {
+        $data = [
+            'reminder_name' => 'Testing reminder A',
+            'reminder_context' => '[{"time":"06 July"},{"time":"04 July"}]',
+            'reminder_attachment' => '[{"attachment_type":"location","attachment_context":"-6.22686285578315, 106.82139153159926","attachment_name":"Alfamidi"},{"attachment_type":"location","attachment_context":"-6.089146220510728, 106.74184781763985","attachment_name":"Jus Pancoran PIK 2"}]',
+            'reminder_type' => 'Every Year',
+            'reminder_body' => 'Hello, this is just for testing',   
+        ];
+
+        $response = $this->httpClient->post("add", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+            'json' => $data
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "create", "reminder");
+    }
+
+    // public function test_post_reminder_rel(): void
+    // {
+    //     $data = [
+    //         'reminder_id' => '8d175756-0faa-c458-202d-29ef671143bc', 
+    //     ];
+
+    //     $response = $this->httpClient->post("rel", [
+    //         'headers' => [
+    //             'Authorization' => "Bearer {$this->token}"
+    //         ],
+    //         'json' => $data
+    //     ]);
+    //     $data = json_decode($response->getBody(), true);
+
+    //     $this->templateTest->templateCommand($response, "create", null, "reminder turned on!");
+    // }
+
+    public function test_delete_reminder_rel_by_rel_id(): void
+    {
+        $relation_id = "69124d74-d434-a3ae-3d2f-dc9694db903e";
+
+        $response = $this->httpClient->delete("rel/$relation_id", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "delete", null, "reminder turned off!");
+    }
+    public function test_delete_reminder_by_id(): void
+    {
+        $id = "027d824b-5120-e60b-288b-54ca45e6977b";
+        $data = [
+            'reminder_name' => 'Reminder : Testing reminder A'
+        ];
+
+        $response = $this->httpClient->delete("delete/$id", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+            'json' => $data
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "delete", "reminder");
     }
 }
