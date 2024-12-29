@@ -117,7 +117,7 @@ Route::prefix('/v1/list')->middleware(['auth:sanctum'])->group(function () {
     Route::delete('/delete_rel/{rel_id}', [CommandConsumeListApi::class, 'deleteListRelationByRelId']);
     Route::put('/update/data/{list_id}', [CommandConsumeListApi::class, 'updateListDataById']);
     Route::post('/create', [CommandConsumeListApi::class, 'createList']);
-    Route::post('/createRel', [CommandConsumeListApi::class, 'createListRelation']);
+    Route::post('/create_rel', [CommandConsumeListApi::class, 'createListRelation']);
 });
 
 Route::prefix('/v1/schedule')->middleware(['auth:sanctum'])->group(function () {

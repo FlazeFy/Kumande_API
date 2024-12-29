@@ -13,6 +13,7 @@ use Kreait\Firebase\Messaging\Notification;
 // Models
 use App\Models\ConsumeList;
 use App\Models\Consume;
+use App\Models\User;
 use App\Models\RelConsumeList;
 
 // Helpers
@@ -367,14 +368,18 @@ class CommandsList extends Controller
                         'updated_at' => null,
                     ]);
 
-                    $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
-                    $messaging = $factory->createMessaging();
-                    $message = CloudMessage::withTarget('token', $request->token_fcm)
-                        ->withNotification(Notification::create('You have successfully added new list called ', $request->list_name))
-                        ->withData([
-                            'list_name' => $request->list_name,
-                        ]);
-                    $response = $messaging->send($message);
+                    $user = User::getProfile($user_id);
+                    $fcm_token = $user->firebase_fcm_token;
+                    if($fcm_token){
+                        $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
+                        $messaging = $factory->createMessaging();
+                        $message = CloudMessage::withTarget('token', $request->token_fcm)
+                            ->withNotification(Notification::create('You have successfully added new list called ', $request->list_name))
+                            ->withData([
+                                'list_name' => $request->list_name,
+                            ]);
+                        $response = $messaging->send($message);
+                    }
     
                     return response()->json([
                         'status' => 'success',
@@ -398,7 +403,7 @@ class CommandsList extends Controller
 
     /**
      * @OA\POST(
-     *     path="/api/v1/list/createRel",
+     *     path="/api/v1/list/create_rel",
      *     summary="Create consume list relation",
      *     tags={"Consume"},
      *     security={{"bearerAuth":{}}},
@@ -492,7 +497,7 @@ class CommandsList extends Controller
                         if($rel){
                             return response()->json([
                                 'status' => 'success',
-                                'message' => Generator::getMessageTemplate("custom", 'Consume is added to list'),
+                                'message' => Generator::getMessageTemplate("custom", 'consume is added to list'),
                             ], Response::HTTP_CREATED);
                         } else {
                             return response()->json([

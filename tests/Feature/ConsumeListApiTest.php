@@ -91,4 +91,99 @@ class ConsumeListApiTest extends TestCase
         $this->templateTest->templateValidateColumn($data, $arrayNullableFields, 'array', true);
         $this->templateTest->templateValidateColumn($data, $intFields, 'integer', false);
     }
+
+    public function test_get_check_consume_by_slug(): void
+    {
+        $is_paginate = false;
+        $slug = "bakso-campur";
+        $list_id = "27dbf1e0-a9e5-11ee-aa95-3216422210e8";
+
+        $response = $this->httpClient->get("check/$slug/$list_id", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ]
+        ]);
+        $data = json_decode($response->getBody(), true);
+        $this->templateTest->templateGet($response, $is_paginate);
+
+        // Get list key / column
+        $intFields = ['calorie','average_price'];
+        $stringFields = ['consume_name','consume_from','provide'];
+
+        $data = [$data['data']];
+        $this->templateTest->templateValidateColumn($data, $stringFields, 'string', false);
+        $this->templateTest->templateValidateColumn($data, $intFields, 'integer', false);
+
+        // Validate contain
+        $consumeFromRule = ['GoFood','GrabFood','ShopeeFood','Dine-In','Take Away','Cooking'];
+
+        $this->templateTest->templateValidateContain($data, $consumeFromRule, 'consume_from');
+    }
+
+    // Command Test
+    public function test_post_list(): void
+    {
+        $data = [
+            'list_name' => 'Testing New List A',
+            'list_tag' => '[{"slug_name":"chocolate","tag_name":"Chocolate"},{"slug_name":"tasty","tag_name":"Tasty"}]',
+            'list_desc' => 'Testing Description',
+            'firebase_id' => '123ABC'
+        ];
+
+        $response = $this->httpClient->post("create", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+            'json' => $data
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "create", "list");
+    }
+
+    public function test_post_list_relation(): void
+    {
+        $data = [
+            'list_id' => '4044df51-1e7e-1f5d-1cdd-c89b42ce0f22',
+            'consume_slug' => 'bakso-campur',
+        ];
+
+        $response = $this->httpClient->post("create_rel", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+            'json' => $data
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "create", null, "consume is added to list");
+    }
+
+    public function test_delete_list_relation_by_relation_id(): void
+    {
+        $relation_id = "dccbb0d3-394d-6b16-3c16-c35608bccf5e";
+
+        $response = $this->httpClient->delete("delete_rel/$relation_id", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "delete", null, "consume removed from list");
+    }
+
+    public function test_delete_list_by_id(): void
+    {
+        $id = "4044df51-1e7e-1f5d-1cdd-c89b42ce0f22";
+
+        $response = $this->httpClient->delete("delete/$id", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "delete", "consume list");
+    }
 }

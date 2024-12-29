@@ -384,8 +384,8 @@ class QueriesList extends Controller
                     'message' => Generator::getMessageTemplate("conflict", 'consume'),
                 ], Response::HTTP_CONFLICT);
             } else {
-                $csl = Consume::selectRaw("consume_name,consume_from,REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '') as calorie, REPLACE(JSON_EXTRACT(consume_detail, '$[0].provide'), '\"', '') as provide,
-                    COALESCE(CAST(AVG(payment_price) as UNSIGNED), 0) as average_price")
+                $csl = Consume::selectRaw("consume_name,consume_from,CAST(REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '') as UNSIGNED) as calorie, REPLACE(JSON_EXTRACT(consume_detail, '$[0].provide'), '\"', '') as provide,
+                    CAST(COALESCE(CAST(AVG(payment_price) as UNSIGNED), 0) as UNSIGNED) as average_price")
                     ->leftjoin('payment','payment.consume_id','=','consume.id')
                     ->where('consume.created_by', $user_id)
                     ->where('slug_name', $consume_slug)
