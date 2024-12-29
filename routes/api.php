@@ -58,7 +58,7 @@ Route::prefix('/v1/consume')->middleware(['auth:sanctum'])->group(function () {
     
     Route::delete('/destroy/{id}', [CommandConsumeApi::class, 'hardDeleteConsumeById']);
     Route::delete('/delete/{id}', [CommandConsumeApi::class, 'softDeleteConsumeById']);
-    Route::put('/update/data/{id}', [CommandConsumeApi::class, 'updateConsumeData']);
+    Route::put('/update/data/{id}', [CommandConsumeApi::class, 'updateConsumeDataById']);
     Route::put('/update/favorite/{id}', [CommandConsumeApi::class, 'updateConsumeFavorite']);
     Route::post('/create', [CommandConsumeApi::class, 'createConsume']);
 });
@@ -74,7 +74,7 @@ Route::prefix('/v1/payment')->middleware(['auth:sanctum'])->group(function () {
 Route::prefix('/v1/analytic')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/payment/month/{month}/year/{year}', [QueryPaymentApi::class, 'getAnalyticSpendMonth']);
     Route::get('/allergic', [QueryAllergicApi::class, 'getAllAllergic']);
-    Route::put('/allergic/{id}', [CommandAllergicApi::class, 'updateAllergic']);
+    Route::put('/allergic/{id}', [CommandAllergicApi::class, 'updateAllergicById']);
     Route::post('/allergic', [CommandAllergicApi::class, 'createAllergic']);
     Route::delete('/allergic/{id}', [CommandAllergicApi::class, 'deleteAllergicById']);
 });
@@ -116,8 +116,8 @@ Route::prefix('/v1/list')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/detail/{list_id}', [QueryConsumeListApi::class, 'getListDetail']);
     Route::get('/check/{consume_slug}/{list_id}', [QueryConsumeListApi::class, 'getCheckConsumeBySlug']);
     Route::delete('/delete/{list_id}', [CommandConsumeListApi::class, 'deleteListByListId']);
-    Route::delete('/deleteRel/{rel_id}', [CommandConsumeListApi::class, 'deleteListRelationByRelId']);
-    Route::put('/update/data/{list_id}', [CommandConsumeListApi::class, 'updateListData']);
+    Route::delete('/delete_rel/{rel_id}', [CommandConsumeListApi::class, 'deleteListRelationByRelId']);
+    Route::put('/update/data/{list_id}', [CommandConsumeListApi::class, 'updateListDataById']);
     Route::post('/create', [CommandConsumeListApi::class, 'createList']);
     Route::post('/createRel', [CommandConsumeListApi::class, 'createListRelation']);
 });
@@ -126,7 +126,7 @@ Route::prefix('/v1/schedule')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueryScheduleApi::class, 'getMySchedule']);
     Route::get('/day/{day}', [QueryScheduleApi::class, 'getTodaySchedule']);
     Route::delete('/delete/{id}', [CommandScheduleApi::class, 'deleteScheduleById']);
-    Route::put('/update/data/{id}', [CommandScheduleApi::class, 'updateScheduleData']);
+    Route::put('/update/data/{id}', [CommandScheduleApi::class, 'updateScheduleDataById']);
     Route::post('/create', [CommandScheduleApi::class, 'createSchedule']);
 });
 
@@ -148,7 +148,7 @@ Route::prefix('/v1/user')->group(function () {
 });
 
 Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {
-    Route::get('/', [QueryHistoryApi::class, 'get_all_history']);
+    Route::get('/', [QueryHistoryApi::class, 'getAllHistory']);
     
-    Route::delete('/destroy/{id}', [CommandHistoryApi::class, 'hard_delete_history_by_id']);
+    Route::delete('/destroy/{id}', [CommandHistoryApi::class, 'hardDeleteHistoryById']);
 });

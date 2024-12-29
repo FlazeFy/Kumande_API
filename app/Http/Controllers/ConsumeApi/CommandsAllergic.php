@@ -80,7 +80,7 @@ class CommandsAllergic extends Controller
      *     ),
      * )
      */
-    public function updateAllergic(Request $request, $id){
+    public function updateAllergicById(Request $request, $id){
         try{
             $validator = Validation::getValidateAllergic($request);
 

@@ -65,7 +65,7 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function get_all_history(Request $request)
+    public function getAllHistory(Request $request)
     {
         try{
             $user_id = $request->user()->id;

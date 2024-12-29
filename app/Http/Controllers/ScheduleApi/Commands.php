@@ -151,7 +151,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function updateScheduleData(Request $request, $id){
+    public function updateScheduleDataById(Request $request, $id){
         try{
             $validator = Validator::make($request->all(), [
                 'schedule_consume' => 'required|max:75|min:1',

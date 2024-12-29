@@ -238,7 +238,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function updateConsumeData(Request $request, $id){
+    public function updateConsumeDataById(Request $request, $id){
         try{
             $validator = Validation::getValidateUpdateConsume($request,'data');
 

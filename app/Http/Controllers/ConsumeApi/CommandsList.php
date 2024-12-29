@@ -103,7 +103,7 @@ class CommandsList extends Controller
 
     /**
      * @OA\DELETE(
-     *     path="/api/v1/list/deleteRel/{rel_id}",
+     *     path="/api/v1/list/delete_rel/{rel_id}",
      *     summary="Delete consume list relation by list id",
      *     tags={"Consume"},
      *     security={{"bearerAuth":{}}},
@@ -232,7 +232,7 @@ class CommandsList extends Controller
      *     ),
      * )
      */
-    public function updateListData(Request $request, $id){
+    public function updateListDataById(Request $request, $id){
         try{
             $validator = Validation::getValidateListRelData($request);
 

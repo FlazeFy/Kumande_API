@@ -38,6 +38,7 @@ class StatsApiTest extends TestCase
         $this->is_paginate = false;
     }
 
+    // Query Test
     // TC-S001
     public function test_get_today_schedule(): void
     {
@@ -390,5 +391,60 @@ class StatsApiTest extends TestCase
 
         // Validate column
         $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
+    }
+
+    // Command Test
+    public function test_put_update_allergic_by_id(): void
+    {
+        $allergic_id = "72251e48-88e7-0fc9-0114-88872ef787c0";
+        $data = [
+            'allergic_context' => 'red rice',
+            'allergic_desc' => 'Testing description',
+        ];
+
+        $response = $this->httpClient->put("/api/v1/analytic/allergic/$allergic_id", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+            'json' => $data
+        ]);
+        $data = json_decode($response->getBody(), true);
+        print($response->getBody());
+
+        $this->templateTest->templateCommand($response, "update", "allergic");
+    }
+
+    public function test_post_allergic(): void
+    {
+        $data = [
+            'allergic_context' => 'wheat test',
+            'allergic_desc' => 'Testing description',
+        ];
+
+        $response = $this->httpClient->post("/api/v1/analytic/allergic", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+            'json' => $data
+        ]);
+        $data = json_decode($response->getBody(), true);
+        print($response->getBody());
+
+        $this->templateTest->templateCommand($response, "create", "allergic");
+    }
+
+    public function test_delete_allergic_by_id(): void
+    {
+        $allergic_id = "435f3fde-a632-0878-0575-8824a247bef7";
+
+        $response = $this->httpClient->delete("/api/v1/analytic/allergic/$allergic_id", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+        ]);
+        $data = json_decode($response->getBody(), true);
+        print($response->getBody());
+
+        $this->templateTest->templateCommand($response, "delete", "allergic");
     }
 }

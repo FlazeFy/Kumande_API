@@ -35,6 +35,7 @@ class TagApiTest extends TestCase
         $this->templateTest = new TestTemplate();
     }
 
+    // Query Test
     public function test_get_all_tag(): void
     {
         $is_paginate = false;
@@ -81,6 +82,7 @@ class TagApiTest extends TestCase
         $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', true);
     }
 
+    // Command Test
     public function test_post_tag(): void
     {
         $body = [
@@ -96,5 +98,19 @@ class TagApiTest extends TestCase
         $data = json_decode($response->getBody(), true);
 
         $this->templateTest->templateCommand($response, "create", "tag");
+    }
+
+    public function test_delete_tag_by_id(): void
+    {
+        $id = "40c56a4f-ef93-20a5-2a22-57e286e53053"; 
+
+        $response = $this->httpClient->delete("$id", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "delete", "tag");
     }
 }
