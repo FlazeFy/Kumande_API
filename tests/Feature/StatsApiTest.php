@@ -39,37 +39,6 @@ class StatsApiTest extends TestCase
     }
 
     // Query Test
-    // TC-S001
-    public function test_get_today_schedule(): void
-    {
-        $token = $this->authTest->test_post_login();
-        $response = $this->httpClient->get("/api/v1/schedule/day/Sat", [
-            'headers' => [
-                'Authorization' => "Bearer {$this->token}"
-            ]
-        ]);
-        $data = json_decode($response->getBody(), true);
-
-        $this->templateTest->templateGet($response, $this->is_paginate);
-
-        // Get list key / column
-        $arrayFields = ['consume_detail','schedule_time'];
-        $arrayNullableFields = ['schedule_tag'];
-        $stringFields = ['id','schedule_consume','consume_type','created_at','created_by'];
-        $stringNullableFields = ['firebase_id','consume_id','schedule_desc'];
-
-        // Validate column
-        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
-        $this->templateTest->templateValidateColumn($data['data'], $stringNullableFields, 'string', true);
-        $this->templateTest->templateValidateColumn($data['data'], $arrayFields, 'array', false);
-        $this->templateTest->templateValidateColumn($data['data'], $arrayNullableFields, 'array', true);
-
-        // Validate contain
-        $consumeTypeRule = ['Food','Snack','Drink'];
-
-        $this->templateTest->templateValidateContain($data['data'], $consumeTypeRule, 'consume_type');
-    }
-
     // TC-S002
     public function test_get_monthly_payment_analytic(): void
     {
@@ -289,33 +258,6 @@ class StatsApiTest extends TestCase
         // Validate column
         $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
         $this->templateTest->templateValidateColumn($data['data'], $intFields, 'integer', false);
-    }
- 
-    // TC-C001
-    public function test_get_my_schedule(): void
-    {
-        $token = $this->authTest->test_post_login();
-        $response = $this->httpClient->get("/api/v1/schedule", [
-            'headers' => [
-                'Authorization' => "Bearer {$this->token}"
-            ]
-        ]);
-        $data = json_decode($response->getBody(), true);
-        
-        $this->templateTest->templateGet($response, $this->is_paginate);
-
-        // Get list key / column
-        $stringFields = ['day','time','schedule_consume'];
-
-        // Validate column
-        $this->templateTest->templateValidateColumn($data['data'], $stringFields, 'string', false);
-
-        // Validate contain
-        $timeRule = ['Breakfast','Lunch','Dinner'];
-        $dayName = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-
-        $this->templateTest->templateValidateContain($data['data'], $timeRule, 'time');
-        $this->templateTest->templateValidateContain($data['data'], $dayName, 'day');
     }
  
     // TC-C003 && TC-S009

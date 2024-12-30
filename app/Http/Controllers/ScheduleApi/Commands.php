@@ -12,6 +12,7 @@ use Kreait\Firebase\Messaging\Notification;
 // Models
 use App\Models\Schedule;
 use App\Models\User;
+use App\Models\Consume;
 
 // Helpers
 use App\Helpers\Generator;
@@ -68,7 +69,7 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function deleteScheduleById($id){
+    public function deleteScheduleById(Request $request, $id){
         try{
             $user_id = $request->user()->id;
 
@@ -153,12 +154,7 @@ class Commands extends Controller
      */
     public function updateScheduleDataById(Request $request, $id){
         try{
-            $validator = Validator::make($request->all(), [
-                'schedule_consume' => 'required|max:75|min:1',
-                'schedule_desc' => 'nullable|max:255|min:1',
-                'schedule_tag' => 'nullable|json',
-                'schedule_time' => 'required|json',
-            ]);
+            $validator = Validation::getValidateSchedule($request);
 
             if ($validator->fails()) {
                 return response()->json([
@@ -166,13 +162,16 @@ class Commands extends Controller
                     'result' => $validator->errors()
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {        
-                $sch = Schedule::where('id', $id)->update([
-                    'schedule_consume' => $request->schedule_consume,
-                    'schedule_desc' => $request->schedule_desc,
-                    'schedule_tag' => $request->schedule_tag,
-                    'schedule_time' => $request->schedule_time,
-                    'updated_at' => date("Y-m-d H:i:s")
-                ]);
+                $user_id = $request->user()->id;
+
+                $sch = Schedule::where('id', $id)
+                    ->where('created_by',$user_id)
+                    ->update([
+                        'consume_id' => $request->consume_id,
+                        'schedule_desc' => $request->schedule_desc,
+                        'schedule_time' => $request->schedule_time,
+                        'updated_at' => date("Y-m-d H:i:s")
+                    ]);
 
                 if($sch){
                     return response()->json([
@@ -248,11 +247,11 @@ class Commands extends Controller
             $user_id = $request->user()->id;
             $schedule_consume = "";
 
-            if(!$request->schedule_consume){
+            if(!$request->consume_id){
                 $schedule = json_decode($request->getContent(), true);
 
                 foreach($schedule as $dt){
-                    $validator = Validation::getValidateCreateSchedule(new Request($dt));
+                    $validator = Validation::getValidateSchedule(new Request($dt));
                     if ($validator->fails()) {
                         return response()->json([
                             'status' => 'error',
@@ -264,28 +263,18 @@ class Commands extends Controller
 
                         if(!$check){
                             $id = Generator::getUUID();
-
-                            $jsonDetail = Converter::getEncoded($dt['consume_detail']);
-                            $jsonTag = Converter::getEncoded($dt['schedule_tag']);
                             $jsonTime = Converter::getEncoded($dt['schedule_time']);
-                            $detail = json_decode($jsonDetail, true);
-                            $tag = json_decode($jsonTag, true);
                             $time = json_decode($jsonTime, true);
 
                             $sch = Schedule::create([
                                 'id' => $id, 
                                 'firebase_id' => $dt['firebase_id'], 
                                 'consume_id' => $dt['consume_id'], 
-                                'schedule_consume' => $dt['schedule_consume'],
-                                'consume_type' => $dt['consume_type'],
-                                'consume_detail' => $detail,
                                 'schedule_desc' => $dt['schedule_desc'],
-                                'schedule_tag' => $tag,
                                 'schedule_time' => $time,
                                 'created_at' => date("Y-m-d H:i:s"),
                                 'created_by' => $user_id,
                                 'updated_at' => null,
-                                'updated_by' => null
                             ]);
 
                             $success_add++;
@@ -299,7 +288,7 @@ class Commands extends Controller
                     }
                 }
             } else {
-                $validator = Validation::getValidateCreateSchedule($request);
+                $validator = Validation::getValidateSchedule($request);
 
                 if ($validator->fails()) {
                     return response()->json([
@@ -309,33 +298,50 @@ class Commands extends Controller
                 } else {    
                     $check = Generator::checkSchedule($request->schedule_time);
                     if(!$check){
+                        $consume_name = Consume::getConsumeName($user_id, $request->consume_id);
+
+                        if($consume_name){
+                        $id = Generator::getUUID();
                         $id = Generator::getUUID();
 
                         $jsonDetail = Converter::getEncoded($request->consume_detail);
                         $jsonTag = Converter::getEncoded($request->schedule_tag);
+                            $id = Generator::getUUID();
+
+                        $jsonDetail = Converter::getEncoded($request->consume_detail);
+                        $jsonTag = Converter::getEncoded($request->schedule_tag);
+                        $jsonTime = Converter::getEncoded($request->schedule_time);
                         $jsonTime = Converter::getEncoded($request->schedule_time);
                         $detail = json_decode($jsonDetail, true);
                         $tag = json_decode($jsonTag, true);
-                        $time = json_decode($jsonTime, true);
+                            $jsonTime = Converter::getEncoded($request->schedule_time);
+                        $detail = json_decode($jsonDetail, true);
+                        $tag = json_decode($jsonTag, true);
+                            $time = json_decode($jsonTime, true);
 
-                        $sch = Schedule::create([
-                            'id' => $id, 
-                            'firebase_id' => $request->firebase_id, 
-                            'consume_id' => $request->consume_id, 
-                            'schedule_consume' => $request->schedule_consume,
-                            'consume_type' => $request->consume_type,
-                            'consume_detail' => $detail,
+                            $sch = Schedule::create([
+                                'id' => $id, 
+                                'firebase_id' => $request->firebase_id, 
+                                'consume_id' => $request->consume_id, 
+                            'schedule_desc' => $request->schedule_desc,
                             'schedule_desc' => $request->schedule_desc,
                             'schedule_tag' => $tag,
-                            'schedule_time' => $time,
-                            'created_at' => date("Y-m-d H:i:s"),
-                            'created_by' => $user_id,
-                            'updated_at' => null,
-                            'updated_by' => null
-                        ]);
+                                'schedule_desc' => $request->schedule_desc,
+                            'schedule_tag' => $tag,
+                                'schedule_time' => $time,
+                                'created_at' => date("Y-m-d H:i:s"),
+                                'created_by' => $user_id,
+                                'updated_at' => null,
+                            ]);
 
-                        $schedule_consume .= $request->schedule_consume;
-                        $success_add++;
+                            $schedule_consume .= $consume_name;
+                            $success_add++;
+                        } else {
+                            return response()->json([
+                                'status' => 'failed',
+                                'message' => Generator::getMessageTemplate("not_found", 'consume'),
+                            ], Response::HTTP_NOT_FOUND);
+                        }
                     } else {
                         return response()->json([
                             'status' => 'failed',

@@ -114,18 +114,13 @@ class Queries extends Controller
      *             @OA\Property(property="data", type="array",
      *                 @OA\Items(
      *                     @OA\Property(property="id", type="string", example="51d5660a-4140-4938-2ec8-952d75d08117"),
-     *                     @OA\Property(property="firebase_id", type="string", example="D4rgafGtqo0MoYkDMHOu"),
-     *                     @OA\Property(property="consume_id", type="string", example="48ed1021-bb7c-aa4e-23c8-a0edec2fc2f6"),
+     *                     @OA\Property(property="consume_name", type="string", example="Bakso Urat"),
      *                     @OA\Property(property="schedule_desc", type="string", example="Patungan bagi 3 (John, Jane, Doe)"),
-     *                     @OA\Property(property="schedule_time",type="array",
-     *                         @OA\Items(
+     *                     @OA\Property(property="schedule_time",type="object",
      *                             @OA\Property(property="day", type="string", example="Fri"),
      *                             @OA\Property(property="category", type="string", example="Breakfast"),
      *                             @OA\Property(property="time", type="string", example="07:00")
-     *                         )
      *                     ),
-     *                     @OA\Property(property="created_at", type="string", format="date-time", example="2024-09-25T10:01:52.000000Z"),
-     *                     @OA\Property(property="updated_at", type="string", nullable=true, example=null)
      *                 )
      *             )
      *         )
@@ -161,17 +156,28 @@ class Queries extends Controller
             $user_id = $request->user()->id;
             $time_query = Query::querySelect("get_from_json_col_str","schedule_time","time");
 
-            $sch = Schedule::select('*')
-                ->where('created_by', $user_id)
+            $sch = Schedule::select('schedule.id','schedule_desc','consume_name','schedule_time')
+                ->join('consume','consume.id','=','schedule.consume_id')
+                ->where('schedule.created_by', $user_id)
                 ->whereRaw("schedule_time LIKE '%".'"'."day".'"'.":".'"'.$day.'"'."%'")
                 ->orderByRaw("$time_query ASC")
                 ->get();
 
             if(count($sch) > 0){
+                $res = [];
+                foreach ($sch as $dt) {
+                    $res[] = [
+                        'id' => $dt->id,
+                        'schedule_desc' => $dt->schedule_desc,
+                        'consume_name' => $dt->consume_name,
+                        'schedule_time' => $dt->schedule_time[0],
+                    ];    
+                }
+
                 return response()->json([
                     "message"=> Generator::getMessageTemplate("fetch", 'schedule'), 
                     "status"=> 'success',
-                    "data"=> $sch
+                    "data"=> $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([

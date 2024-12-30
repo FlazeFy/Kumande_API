@@ -57,6 +57,14 @@ class Validation
         ]);
     }
 
+    public static function getValidateSchedule($request){ 
+        return Validator::make($request->all(), [
+            'consume_id' => 'required|max:36|min:36',
+            'schedule_desc' => 'nullable|max:255|min:1',
+            'schedule_time' => 'required|json',  
+        ]);
+    }
+
     public static function getValidateCreateConsumeList($request){ 
         return Validator::make($request->all(), [
             'list_name' => 'required|min:3|max:75|string',
@@ -165,18 +173,6 @@ class Validation
     public static function getValidateAddTag($request){ 
         return Validator::make($request->all(), [
             'tag_name' => 'required|min:2|max:36|string',
-        ]);
-    }
-
-    public static function getValidateCreateSchedule($request){ 
-        return Validator::make($request->all(), [
-            'schedule_consume' => 'required|string|min:4|max:75',
-            'consume_id' => 'nullable|string|min:36|max:36',
-            'consume_type' => ['required', new TypeConsume],
-            'consume_detail' => 'required|json',
-            'schedule_desc' =>  'nullable|string|min:1|max:255',
-            'schedule_tag' => 'required|json',
-            'schedule_time' => 'required|json'
         ]);
     }
 

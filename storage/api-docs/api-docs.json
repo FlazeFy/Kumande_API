@@ -970,7 +970,7 @@
                     "Consume"
                 ],
                 "summary": "Update consume by id",
-                "operationId": "dd261d673f936df45d923ccb6b1690b9",
+                "operationId": "29b60a40cc88c891e231cb225872a650",
                 "parameters": [
                     {
                         "name": "id",
@@ -1322,7 +1322,7 @@
                     "Analytic"
                 ],
                 "summary": "Update allergic favorite by id",
-                "operationId": "d53dc21e5e2129e085abe68968bb52bf",
+                "operationId": "46dee596da7964d8a5d0df7e8c0eecb1",
                 "parameters": [
                     {
                         "name": "id",
@@ -2398,13 +2398,13 @@
                 ]
             }
         },
-        "/api/v1/list/deleteRel/{rel_id}": {
+        "/api/v1/list/delete_rel/{rel_id}": {
             "delete": {
                 "tags": [
                     "Consume"
                 ],
                 "summary": "Delete consume list relation by list id",
-                "operationId": "2021c4cf2f4100f828cf1bc8fffdf116",
+                "operationId": "10015826c525fbd5299ac83839e39058",
                 "parameters": [
                     {
                         "name": "rel_id",
@@ -2512,7 +2512,7 @@
                     "Consume"
                 ],
                 "summary": "Update consume list by list id",
-                "operationId": "06a305994c61e9e4049729854d6285a8",
+                "operationId": "e30ad970384904700a0f72e1cb342ea1",
                 "parameters": [
                     {
                         "name": "list_id",
@@ -2750,13 +2750,13 @@
                 ]
             }
         },
-        "/api/v1/list/createRel": {
+        "/api/v1/list/create_rel": {
             "post": {
                 "tags": [
                     "Consume"
                 ],
                 "summary": "Create consume list relation",
-                "operationId": "c0bdc80e660516491413b5ad3f5d3cc3",
+                "operationId": "970e976198e58b83222e0c1d2ee3db06",
                 "responses": {
                     "201": {
                         "description": "Consume list relation create is success",
@@ -4960,7 +4960,7 @@
                     "Consume"
                 ],
                 "summary": "Get consume list detail",
-                "operationId": "1828bfbda2212defc0e8539309891559",
+                "operationId": "b48a1e24063c8e3aa824281b2ee213fd",
                 "parameters": [
                     {
                         "name": "list_id",
@@ -5536,7 +5536,7 @@
                     "Count"
                 ],
                 "summary": "Delete count calorie data by id",
-                "operationId": "0a8a8dd4e55b4d35ea2df0db9daf02e6",
+                "operationId": "84130607f9e135c14182618d5e84a496",
                 "parameters": [
                     {
                         "name": "id",
@@ -5785,7 +5785,7 @@
                     "History"
                 ],
                 "summary": "Delete history by id",
-                "operationId": "e2ce430834218262e26b6620be22112f",
+                "operationId": "293198ed6b7680d4715f98ba26a05ccb",
                 "parameters": [
                     {
                         "name": "id",
@@ -5894,7 +5894,7 @@
                 ],
                 "summary": "Get all history",
                 "description": "This request is used to get all history when user use the App. This request is using MySql database, have a protected routes, and have template pagination.",
-                "operationId": "267b7d532c09853879c41a58ade8f21a",
+                "operationId": "8ebadbb8102f09549fffaf32874047f9",
                 "responses": {
                     "200": {
                         "description": "history fetched",
@@ -7614,7 +7614,7 @@
                     "Schedule"
                 ],
                 "summary": "Update schedule by id",
-                "operationId": "c369b36285fbdc8166b1f0ba62d94fd2",
+                "operationId": "465cdb614f72ff98ce2575c4fb6a123e",
                 "parameters": [
                     {
                         "name": "id",
@@ -7998,47 +7998,30 @@
                                                         "type": "string",
                                                         "example": "51d5660a-4140-4938-2ec8-952d75d08117"
                                                     },
-                                                    "firebase_id": {
+                                                    "consume_name": {
                                                         "type": "string",
-                                                        "example": "D4rgafGtqo0MoYkDMHOu"
-                                                    },
-                                                    "consume_id": {
-                                                        "type": "string",
-                                                        "example": "48ed1021-bb7c-aa4e-23c8-a0edec2fc2f6"
+                                                        "example": "Bakso Urat"
                                                     },
                                                     "schedule_desc": {
                                                         "type": "string",
                                                         "example": "Patungan bagi 3 (John, Jane, Doe)"
                                                     },
                                                     "schedule_time": {
-                                                        "type": "array",
-                                                        "items": {
-                                                            "properties": {
-                                                                "day": {
-                                                                    "type": "string",
-                                                                    "example": "Fri"
-                                                                },
-                                                                "category": {
-                                                                    "type": "string",
-                                                                    "example": "Breakfast"
-                                                                },
-                                                                "time": {
-                                                                    "type": "string",
-                                                                    "example": "07:00"
-                                                                }
+                                                        "properties": {
+                                                            "day": {
+                                                                "type": "string",
+                                                                "example": "Fri"
                                                             },
-                                                            "type": "object"
-                                                        }
-                                                    },
-                                                    "created_at": {
-                                                        "type": "string",
-                                                        "format": "date-time",
-                                                        "example": "2024-09-25T10:01:52.000000Z"
-                                                    },
-                                                    "updated_at": {
-                                                        "type": "string",
-                                                        "example": null,
-                                                        "nullable": true
+                                                            "category": {
+                                                                "type": "string",
+                                                                "example": "Breakfast"
+                                                            },
+                                                            "time": {
+                                                                "type": "string",
+                                                                "example": "07:00"
+                                                            }
+                                                        },
+                                                        "type": "object"
                                                     }
                                                 },
                                                 "type": "object"
@@ -8590,7 +8573,7 @@
                     "Tag"
                 ],
                 "summary": "Get analyze tag used in consume",
-                "operationId": "86f6c044401e178e1900ce21f5806958",
+                "operationId": "307c420af8bb0a8a3b29f98d5ced7d25",
                 "parameters": [
                     {
                         "name": "slug",

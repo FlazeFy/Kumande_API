@@ -186,4 +186,24 @@ class ConsumeListApiTest extends TestCase
 
         $this->templateTest->templateCommand($response, "delete", "consume list");
     }
+
+    public function test_put_update_list_data_by_id(): void
+    {
+        $id = "27dbf1e0-a9e5-11ee-aa95-3216422210e8";
+        $data = [
+            'list_name' => 'Testing Update List A',
+            'list_tag' => '[{"slug_name":"chocolate","tag_name":"Chocolate"},{"slug_name":"tasty","tag_name":"Tasty"}]',
+            'list_desc' => 'Testing Description',
+        ];
+
+        $response = $this->httpClient->put("update/data/$id", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+            'json' => $data
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "update", "consume list");
+    }
 }
