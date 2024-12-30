@@ -5,6 +5,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 use Telegram\Bot\Laravel\Facades\Telegram;
+use Kreait\Firebase\Factory;
+use Illuminate\Support\Facades\Storage;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
 
 // Models
 use App\Models\User;
@@ -12,9 +16,18 @@ use App\Models\User;
 // Helpers
 use App\Helpers\Generator;
 use App\Helpers\Validation;
+use App\Helpers\Firebase;
 
 class Commands extends Controller
 {
+    private $max_size_file;
+    private $allowed_file_type;
+
+    public function __construct()
+    {
+        $this->max_size_file = 7000000; // 7 Mb
+        $this->allowed_file_type = ['jpg','jpeg','png'];
+    }
     /**
      * @OA\POST(
      *     path="/api/v1/user/create",
@@ -69,6 +82,45 @@ class Commands extends Controller
 
                 if(!$check){
                     $id = Generator::getUUID();
+                    $profile_image = null;
+
+                    if ($request->hasFile('file')) {
+                        $file = $request->file('file');
+                        if ($file->isValid()) {
+                            $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
+    
+                            $file_ext = $file->getClientOriginalExtension();
+                            // Validate file type
+                            if (!in_array($file_ext, $this->allowed_file_type)) {
+                                return response()->json([
+                                    'status' => 'failed',
+                                    'message' => Generator::getMessageTemplate("custom", 'The file must be a '.implode(', ', $this->allowed_file_type).' file type'),
+                                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                            }
+                            // Validate file size
+                            if ($file->getSize() > $this->max_size_file) {
+                                return response()->json([
+                                    'status' => 'failed',
+                                    'message' => Generator::getMessageTemplate("custom", 'The file size must be under '.($this->max_size_file/1000000).' Mb'),
+                                ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                            }
+            
+                            // Helper: Upload inventory image
+                            try {
+                                $profile_image = Firebase::uploadFile('user', $id, $request->username, $file, $file_ext); 
+                            } catch (\Exception $e) {
+                                return response()->json([
+                                    'status' => 'error',
+                                    'message' => Generator::getMessageTemplate("unknown_error", null),
+                                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                            }
+                        } else {
+                            return response()->json([
+                                'status' => 'failed',
+                                'message' => Generator::getMessageTemplate("custom", "image is not valid"),
+                            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                        }
+                    }
 
                     $user = User::create([
                         'id' => $id,
@@ -78,7 +130,7 @@ class Commands extends Controller
                         'email' => $request->email,
                         'password' => $request->password,
                         'gender' => $request->gender,
-                        'image_url' => $request->image_url,
+                        'image_url' => $profile_image,
                         'born_at' => $request->born_at,
                         'created_at' => date("Y-m-d H:i:s"),
                         'updated_at' => null,

@@ -140,7 +140,6 @@ class Validation
         return Validator::make($request->all(), [
             'consume_id' => 'required|max:36|min:36',
             'gallery_desc' => 'nullable|max:144|min:1',
-            'gallery_url' => 'required|max:500|min:1'
         ]);
     }
 
