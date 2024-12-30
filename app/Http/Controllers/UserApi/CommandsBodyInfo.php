@@ -153,7 +153,7 @@ class CommandsBodyInfo extends Controller
      *     ),
      * )
      */
-    public function deleteBodyInfo(Request $request, $id){
+    public function deleteBodyInfoById(Request $request, $id){
         try {
             $user_id = $request->user()->id;
             $success = 0;

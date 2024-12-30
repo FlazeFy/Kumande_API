@@ -75,7 +75,6 @@ class Validation
 
     public static function getValidateCreateUser($request){ 
         return Validator::make($request->all(), [
-            'firebase_id' => 'required|min:28|max:28|string',
             'fullname' => 'required|min:2|max:50|string',
             'username' => 'required|min:2|max:50|string',
             'email' => 'required|min:10|max:75|string',

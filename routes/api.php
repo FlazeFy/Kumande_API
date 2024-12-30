@@ -139,7 +139,7 @@ Route::prefix('/v1/user')->group(function () {
     Route::put('/image', [CommandUserApi::class, 'updateImage'])->middleware(['auth:sanctum']);
     Route::post('/create', [CommandUserApi::class, 'createUser']);
     Route::post('/body_info/create', [CommandBodyInfoApi::class, 'createBodyInfo'])->middleware(['auth:sanctum']);;
-    Route::delete('/body_info/delete/{id}', [CommandBodyInfoApi::class, 'deleteBodyInfo'])->middleware(['auth:sanctum']);;
+    Route::delete('/body_info/delete/{id}', [CommandBodyInfoApi::class, 'deleteBodyInfoById'])->middleware(['auth:sanctum']);;
 });
 
 Route::prefix('/v1/history')->middleware(['auth:sanctum'])->group(function () {

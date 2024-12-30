@@ -267,6 +267,14 @@ class ConsumeApiTest extends TestCase
         $this->templateTest->templateValidateContain($data['data'], $consumeFromRule, 'consume_from');
         $this->templateTest->templateValidateContain($data['data'], $isFavoriteRule, 'is_favorite');
         $this->templateTest->templateValidateContain($data['data'], $consumeTypeRule, 'consume_type');
+
+        // Get list key / column for consume detail
+        $stringFieldsConsumeDetail = ['provide','main_ing'];
+        $intFieldsConsumeDetail = ['calorie'];
+        foreach ($data['data'] as $dt) {
+            $this->templateTest->templateValidateColumn([$dt['consume_detail']], $stringFieldsConsumeDetail, 'string', false);
+            $this->templateTest->templateValidateColumn([$dt['consume_detail']], $intFieldsConsumeDetail, 'integer', false);
+        }
     }
 
     // Command Test

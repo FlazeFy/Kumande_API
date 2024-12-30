@@ -175,4 +175,80 @@ class UserApiTest extends TestCase
 
         $this->templateTest->templateCommand($response, "update", "telegram ID");
     }
+
+    public function test_put_update_timezone(): void
+    {
+        $data = [
+            'timezone' => '+07:00',
+        ];
+
+        $response = $this->httpClient->put("edit_timezone", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+            'json' => $data
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "update", "timezone");
+    }
+
+    public function test_post_create_body_info(): void
+    {
+        $data = [
+            'blood_pressure' => "126/90", 
+            'blood_glucose' => 82, 
+            'gout' => 5.8,  
+            'cholesterol' => 178, 
+        ];
+
+        $response = $this->httpClient->post("body_info/create", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+            'json' => $data
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "create", "body info");
+    }
+
+    public function test_delete_body_info_by_id(): void
+    {
+        $id = "8aa2b7cf-5230-813c-3ddb-cd2a38eb4544";
+
+        $response = $this->httpClient->delete("body_info/delete/$id", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+        ]);
+        $data = json_decode($response->getBody(), true);
+
+        $this->templateTest->templateCommand($response, "delete", "1 body info");
+    }
+
+    public function test_post_create_user(): void
+    {
+        $data = [
+            'firebase_id' => 'aBcDeFgHiJkLmNoPqRsTuVwXyZ123',
+            'fullname' => 'Leonardho Test',
+            'username'  => 'flazentest',
+            'email' => 'flazen.test@gmail.com',
+            'password' => 'testpassword',
+            'gender' => 'male',
+            'image_url' => null,
+            'born_at' => '2000-10-11',
+        ];
+
+        $response = $this->httpClient->post("create", [
+            'headers' => [
+                'Authorization' => "Bearer {$this->token}"
+            ],
+            'json' => $data
+        ]);
+        $data = json_decode($response->getBody(), true);
+        print($response->getBody());
+
+        $this->templateTest->templateCommand($response, "create", null, "account is registered");
+    }
 }

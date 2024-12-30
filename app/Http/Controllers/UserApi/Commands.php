@@ -90,7 +90,7 @@ class Commands extends Controller
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("custom", 'account is registered'),
                             'data' => $user
-                        ], Response::HTTP_OK);
+                        ], Response::HTTP_CREATED);
                     } else {
                         return response()->json([
                             'status' => 'error',
