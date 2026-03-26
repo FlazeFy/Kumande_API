@@ -51,9 +51,7 @@ class User extends Authenticatable
     }
 
     public static function getAllCleanReminder() {
-        return User::select('id','telegram_user_id','firebase_fcm_token','line_user_id','username','email','deleted_at')
-            ->whereNotNull('deleted_at')
-            ->get();
+        return User::select('id','telegram_user_id','firebase_fcm_token','line_user_id','username','email','deleted_at')->whereNotNull('deleted_at')->get();
     }
 
     public static function getRandom($null, $is_have_consume = false) {

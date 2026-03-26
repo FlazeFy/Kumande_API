@@ -18,15 +18,9 @@ class History extends Model
         $select_query = $type === "admin" ? 'history.id, username, history_type, history_context, history.created_at' : '*';
         
         $res = History::selectRaw($select_query);
-        if ($type === "admin") {
-            $res = $res->join('users','users.id','=','history.created_by');
-        }
-        if ($type === "user" || $user_id) {
-            $res = $res->where('created_by',$user_id);
-        }    
-        $res = $res->orderby('history.created_at', 'DESC')
-            ->paginate($paginate);
-
-        return $res;
+        if ($type === "admin") $res = $res->join('users','users.id','=','history.created_by');
+        if ($type === "user" || $user_id) $res = $res->where('created_by',$user_id);
+        
+        return $res->orderby('history.created_at', 'DESC')->paginate($paginate);
     }
 }

@@ -115,13 +115,10 @@ class CommandsGallery extends Controller
                             ], Response::HTTP_INTERNAL_SERVER_ERROR);
                         }
 
-                        $res = ConsumeGallery::create([
-                            'id' => Generator::getUUID(),
+                        $res = ConsumeGallery::createConsumeGallery([
                             'consume_id' => $request->consume_id, 
                             'gallery_desc' => $request->gallery_desc,  
                             'gallery_url' => $gallery_image,   
-                            'created_at' => date("Y-m-d H:i:s"),
-                            'created_by' => $user_id,
                         ]);
         
                         if ($res) {

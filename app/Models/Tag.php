@@ -33,14 +33,7 @@ class Tag extends Model
     protected $fillable = ['id', 'firebase_id', 'tag_slug', 'tag_name', 'created_at', 'created_by'];
 
     public static function getRandom($null) {
-        if ($null === 0) {
-            $data = Tag::inRandomOrder()->take(1)->first();
-            $res = $data;
-        } else {
-            $res = null;
-        }
-        
-        return $res;
+        return $null === 0 ? Tag::inRandomOrder()->first() : null;
     }
 
     public static function createTag($data, $user_id) {

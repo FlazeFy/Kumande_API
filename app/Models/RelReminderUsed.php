@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
+// Helper
+use App\Helpers\Generator;
 
 /**
  * @OA\Schema(
@@ -27,4 +29,12 @@ class RelReminderUsed extends Model
     protected $table = 'rel_reminder_used';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'reminder_id', 'created_by', 'created_at'];
+
+    public static function createRelReminderUsed($data, $user_id) {
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['created_by'] = $user_id;
+        $data['id'] = Generator::getUUID();
+            
+        return RelReminderUsed::create($data);
+    }
 }

@@ -447,28 +447,15 @@ class Commands extends Controller
                     $detail = json_decode($jsonDetail, true);
                     $tag = json_decode($jsonTag, true);
 
-                    if ($request->created_at) {
-                        $created_at = $request->created_at;
-                    } else {
-                        $created_at = date("Y-m-d H:i:s");
-                    }
-
-                    $csm = Consume::create([
-                        'id' => $id,
-                        'slug_name' => $slug,
-                        'firebase_id' => $request->firebase_id,
+                    $csm = Consume::createConsume([
                         'consume_type' => $request->consume_type,
                         'consume_name' => $request->consume_name,
                         'consume_detail' => $detail,
                         'consume_from' => $request->consume_from,
                         'is_favorite' => $request->is_favorite,
                         'consume_tag' => $tag,
-                        'consume_comment' => $request->consume_comment,
-                        'created_at' => $created_at,
-                        'updated_at' => null,
-                        'deleted_at' => null,
-                        'created_by' => $user_id,
-                    ]);
+                        'consume_comment' => $request->consume_comment
+                    ], $user_id);
                 } else {
                     $id = $name_ava;
                 }

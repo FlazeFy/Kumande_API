@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Models;
-
 use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
+// Helper
+use App\Helpers\Generator;
 
 /**
  * @OA\Schema(
@@ -74,11 +76,7 @@ class Consume extends Model
             ->where('created_by', $user_id)
             ->first();
             
-        if ($res) {
-            return $res->id;
-        } else {
-            return false;
-        }
+        return $res ? $res->id : false;
     }
 
     public static function getConsumeName($user_id, $id) {
@@ -91,11 +89,17 @@ class Consume extends Model
     }
 
     public static function getRandom($user_id) {
-        $data = Consume::where('created_by',$user_id)
-            ->inRandomOrder()
-            ->take(1)
-            ->first();    
+        return Consume::where('created_by',$user_id)->inRandomOrder()->first();
+    }
 
-        return $data;
+    public static function createConsume($data, $user_id) {
+        $data['slug_name'] = Generator::getSlug($data['consume_name'], "consume");
+        $data['created_at'] = $data['created_at'] ?? date("Y-m-d H:i:s");
+        $data['updated_at'] = null;
+        $data['deleted_at'] = null;
+        $data['created_by'] = $user_id;
+        $data['id'] = Generator::getUUID();
+            
+        return Consume::create($data);
     }
 }

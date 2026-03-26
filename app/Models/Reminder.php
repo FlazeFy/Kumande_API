@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
+// Helper
+use App\Helpers\Generator;
 
 /**
  * @OA\Schema(
@@ -38,23 +40,24 @@ class Reminder extends Model
     ];
 
     public static function getAllReminderJob() {
-        $res = Reminder::select('reminder_name','reminder_type','reminder_context','reminder_body', 'reminder_attachment','username','firebase_fcm_token','telegram_user_id','line_user_id','email','timezone')
+        return Reminder::select('reminder_name','reminder_type','reminder_context','reminder_body', 'reminder_attachment','username','firebase_fcm_token','telegram_user_id','line_user_id','email','timezone')
             ->join('rel_reminder_used','rel_reminder_used.reminder_id','=','reminder.id')
             ->join('user','user.id','=','rel_reminder_used.created_by')
             ->whereNull('user.deleted_at')
             ->orderby('username','asc')
             ->get();
-
-        return $res;
     }
 
     public static function getRandom($is_personal, $user_id) {
-        $data = Reminder::where('created_by',$is_personal === 1 ? $user_id : null)
-            ->inRandomOrder()
-            ->take(1)
-            ->first();    
-        $res = $data->id;
-        
-        return $res;
+        return Reminder::where('created_by', $is_personal === 1 ? $user_id : null)->inRandomOrder()->first()->id;
+    }
+
+    public static function createReminder($data, $user_id) {
+        $data['updated_at'] = null;
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['created_by'] = $user_id;
+        $data['id'] = Generator::getUUID();
+            
+        return Reminder::create($data);
     }
 }

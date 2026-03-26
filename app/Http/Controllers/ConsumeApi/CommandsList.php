@@ -347,8 +347,6 @@ class CommandsList extends Controller
                 $user_id = $request->user()->id;
 
                 if (ConsumeList::getAvailableListName($request->list_name, $user_id)) {
-                    $slug = Generator::getSlug($request->list_name, "consume_list");
-
                     if ($request->list_tag) {
                         $jsonTag = Converter::getEncoded($request->list_tag);
                         $tag = json_decode($jsonTag, true);
@@ -356,17 +354,12 @@ class CommandsList extends Controller
                         $tag = null;
                     }
     
-                    $csl = ConsumeList::create([
-                        'id' => Generator::getUUID(),
-                        'firebase_id' => $request->firebase_id,
+                    $csl = ConsumeList::createConsumeList([
                         'slug_name' => $slug,
                         'list_name' => $request->list_name,
                         'list_desc' => $request->list_desc,
                         'list_tag' => $tag,
-                        'created_at' => date("Y-m-d H:i:s"),
-                        'created_by' => $user_id,
-                        'updated_at' => null,
-                    ]);
+                    ], $user_id);
 
                     $user = User::getProfile($user_id);
                     $fcm_token = $user->firebase_fcm_token;
@@ -486,13 +479,10 @@ class CommandsList extends Controller
                             'message' => Generator::getMessageTemplate("conflict", 'consume'),
                         ], Response::HTTP_CONFLICT);
                     } else {
-                        $rel = RelConsumeList::create([
-                            'id' => Generator::getUUID(),
+                        $rel = RelConsumeList::createRelConsumeList([
                             'consume_id' => $csm->id, 
-                            'list_id' => $request->list_id, 
-                            'created_at' => date('Y-m-d H:i:s'), 
-                            'created_by' => $user_id
-                        ]);
+                            'list_id' => $request->list_id
+                        ], $user_id);
         
                         if ($rel) {
                             return response()->json([

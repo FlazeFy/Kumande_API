@@ -23,6 +23,7 @@ class Admin extends Authenticatable
 
     public static function updateAdminById($data,$id) {
         $data['updated_at'] = date('Y-m-d H:i:s');
+        
         return Admin::where('id',$id)->update($data);
     }
 }

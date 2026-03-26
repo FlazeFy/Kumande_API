@@ -74,15 +74,8 @@ class Commands extends Controller
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {     
                 $user_id = $request->user()->id;
-                $id = Generator::getUUID();
 
-                $res = RelReminderUsed::create([
-                    'id' => $id, 
-                    'reminder_id' => $request->reminder_id, 
-                    'created_by' => $user_id, 
-                    'created_at' => date('Y-m-d H:i:s')
-                ]);
-            
+                $res = RelReminderUsed::createRelReminderUsed(['reminder_id' => $request->reminder_id], $user_id);
                 if ($res) {
                     return response()->json([
                         'status' => 'success',
@@ -359,16 +352,13 @@ class Commands extends Controller
                         $reminder_attachment = null;
                     }
 
-                    $res = Reminder::create([
-                        'id' => $id, 
+                    $res = Reminder::createReminder([
                         'reminder_name' => "Reminder : ".$request->reminder_name, 
                         'reminder_type' => $request->reminder_type, 
                         'reminder_context' => $reminder_context, 
                         'reminder_body' => $request->reminder_body, 
-                        'reminder_attachment' => $reminder_attachment,
-                        'created_by' => $user_id, 
-                        'created_at' => date('Y-m-d H:i:s')
-                    ]);
+                        'reminder_attachment' => $reminder_attachment
+                    ], $user_id);
                 
                     if ($res) {
                         if ($request->test_remind) {

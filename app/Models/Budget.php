@@ -35,13 +35,11 @@ class Budget extends Model
     ];
 
     public static function searchBudgetAvailable($user_id, $month, $year) {
-        $res = Budget::selectRaw("1")
+        return Budget::selectRaw("1")
             ->where('created_by', $user_id)
             ->whereRaw("REPLACE(JSON_EXTRACT(budget_month_year, '$[0].month'), '\"', '') = ?", $month)
             ->whereRaw("REPLACE(JSON_EXTRACT(budget_month_year, '$[0].year'), '\"', '') = ?", $year)
             ->first();
-
-        return $res;
     }
 
     public static function createBudget($data, $user_id) {

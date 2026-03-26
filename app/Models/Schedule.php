@@ -37,14 +37,12 @@ class Schedule extends Model
     ];
 
     public static function getAllScheduleReminder() {
-        $res = Schedule::select('schedule.id','user.id as user_id','username','firebase_fcm_token','telegram_user_id','line_user_id','email','timezone','consume_name','consume_type','consume_detail','consume_tag','schedule_time')
+        return Schedule::select('schedule.id','user.id as user_id','username','firebase_fcm_token','telegram_user_id','line_user_id','email','timezone','consume_name','consume_type','consume_detail','consume_tag','schedule_time')
             ->join('user','user.id','=','schedule.created_by')
             ->join('consume','schedule.consume_id','=','consume.id')
             ->whereNull('user.deleted_at')
             ->orderby('username','asc')
             ->get();
-
-        return $res;
     }
 
     public static function createSchedule($data, $user_id) {

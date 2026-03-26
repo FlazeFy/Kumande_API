@@ -36,26 +36,20 @@ class ConsumeList extends Model
     ];
 
     public static function getAvailableListName($check, $id) {
-        $csl = ConsumeList::select('list_name')
-            ->where('created_by', $id)
-            ->where('list_name', $check)
-            ->get();
-        
-        if (count($csl) > 0) {
-            $res = false;
-        } else {
-            $res = true;
-        }
-
-        return $res;
+        return !ConsumeList::where('created_by', $id)->where('list_name', $check)->exists();
     }
 
     public static function getRandom($user_id) {
-        $data = ConsumeList::where('created_by',$user_id)
-            ->inRandomOrder()
-            ->take(1)
-            ->first();
-        
-        return $data;
+        return ConsumeList::where('created_by',$user_id)->inRandomOrder()->first();
+    }
+
+    public static function createConsumeList($data, $user_id) {
+        $data['slug_name'] = Generator::getSlug($data['list_name'], "consume_list");
+        $data['created_at'] = $data['created_at'] ?? date("Y-m-d H:i:s");
+        $data['updated_at'] = null;
+        $data['created_by'] = $user_id;
+        $data['id'] = Generator::getUUID();
+            
+        return ConsumeList::create($data);
     }
 }

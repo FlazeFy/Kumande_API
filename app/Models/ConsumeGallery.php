@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Models;
-
-use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
+// Helper
+use App\Helpers\Generator;
 
 /**
  * @OA\Schema(
@@ -29,4 +30,11 @@ class ConsumeGallery extends Model
     protected $table = 'consume_gallery';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'consume_id', 'gallery_desc', 'gallery_url', 'created_at'];
+
+    public static function createConsumeGallery($data) {
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['id'] = Generator::getUUID();
+            
+        return ConsumeGallery::create($data);
+    }
 }

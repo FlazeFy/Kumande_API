@@ -51,14 +51,11 @@ class Handler extends ExceptionHandler
 
     private function storeError(Throwable $exception)
     {
-        Error::create([
+        Error::createError([
             'message' => $exception->getMessage(), 
             'stack_trace' => $exception->getTraceAsString(), 
             'file' => $exception->getFile(), 
             'line' => $exception->getLine(), 
-            'faced_by' => null, 
-            'is_fixed' => 0,
-            'created_at' => date('Y-m-d H:i:s')
         ]);
     }
 
