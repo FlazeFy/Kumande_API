@@ -63,8 +63,8 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function createReminderRel(Request $request){
-        try{
+    public function createReminderRel(Request $request) {
+        try {
             $validator = Validation::getValidateAddReminderRel($request);
 
             if ($validator->fails()) {
@@ -151,8 +151,8 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function deleteReminderRelByRelId(Request $request, $id){
-        try{
+    public function deleteReminderRelByRelId(Request $request, $id) {
+        try {
             $user_id = $request->user()->id;
 
             $res = RelReminderUsed::where('created_by',$user_id)
@@ -226,15 +226,15 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function deleteReminderById(Request $request, $id){
-        try{
+    public function deleteReminderById(Request $request, $id) {
+        try {
             $user_id = $request->user()->id;
 
             $reminder = Reminder::where('created_by',$user_id)
                 ->where('id', $id)
                 ->delete();
 
-            if($reminder){
+            if ($reminder) {
                 RelReminderUsed::where('created_by',$user_id)
                     ->where('reminder_id',$id)
                     ->delete();
@@ -245,17 +245,17 @@ class Commands extends Controller
 
                 $message = "Hello $user->username,\n\n$request->reminder_name has been deleted. Please check your current reminder list!";
 
-                if($user->telegram_user_id){
+                if ($user->telegram_user_id) {
                     $response = Telegram::sendMessage([
                         'chat_id' => $user->telegram_user_id,
                         'text' => $message,
                         'parse_mode' => 'HTML'
                     ]);
                 }
-                if($user->line_user_id){
+                if ($user->line_user_id) {
                     LineMessage::sendMessage('text',$message,$user->line_user_id);
                 }
-                if($user->firebase_fcm_token){
+                if ($user->firebase_fcm_token) {
                     $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
                     $messaging = $factory->createMessaging();
                     $message = CloudMessage::withTarget('token', $user->firebase_fcm_token)
@@ -329,8 +329,8 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function createReminder(Request $request){
-        try{
+    public function createReminder(Request $request) {
+        try {
             $validator = Validation::getValidateAddReminder($request);
 
             if ($validator->fails()) {
@@ -347,12 +347,12 @@ class Commands extends Controller
                     ->where('reminder_name', $request->reminder_name)
                     ->first();
 
-                if(!$check){
-                    if($request->reminder_context){
+                if (!$check) {
+                    if ($request->reminder_context) {
                         $jsonReminderContext = Converter::getEncoded($request->reminder_context);
                         $reminder_context = json_decode($jsonReminderContext, true);
                     }
-                    if($request->reminder_attachment){
+                    if ($request->reminder_attachment) {
                         $jsonReminderAttachment = Converter::getEncoded($request->reminder_attachment);
                         $reminder_attachment = json_decode($jsonReminderAttachment, true);
                     } else {
@@ -371,22 +371,22 @@ class Commands extends Controller
                     ]);
                 
                     if ($res) {
-                        if($request->test_remind){
+                        if ($request->test_remind) {
                             $user = User::select('username','telegram_user_id','line_user_id','firebase_fcm_token')
                                 ->where('id',$user_id)
                                 ->first();
 
                             $message = "Hello $user->username,\n\nYou has been created a new reminder. This is the demo with message $request->reminder_body.\n\nThis reminder is set to $request->reminder_type";
 
-                            if($request->reminder_context){
+                            if ($request->reminder_context) {
                                 $message .= " with detail for ";
                                 $contexts = $jsonReminderContext;
                                 $total = count($contexts);
 
-                                foreach($contexts as $idx => $dt){
+                                foreach($contexts as $idx => $dt) {
                                     $message .= $dt['time'];
 
-                                    if($idx < $total - 1){
+                                    if ($idx < $total - 1) {
                                         $message .= ", ";
                                     } else {
                                         $message .= ".";
@@ -397,17 +397,17 @@ class Commands extends Controller
                             }
                             $message .= "\n\nThank You!";
 
-                            if($user->telegram_user_id){
+                            if ($user->telegram_user_id) {
                                 $response = Telegram::sendMessage([
                                     'chat_id' => $user->telegram_user_id,
                                     'text' => $message,
                                     'parse_mode' => 'HTML'
                                 ]);
                             }
-                            if($user->line_user_id){
+                            if ($user->line_user_id) {
                                 LineMessage::sendMessage('text',$message,$user->line_user_id);
                             }
-                            if($user->firebase_fcm_token){
+                            if ($user->firebase_fcm_token) {
                                 $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
                                 $messaging = $factory->createMessaging();
                                 $message = CloudMessage::withTarget('token', $user->firebase_fcm_token)

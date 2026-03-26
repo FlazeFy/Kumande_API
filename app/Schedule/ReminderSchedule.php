@@ -24,11 +24,11 @@ class ReminderSchedule
     {
         $reminder = Reminder::getAllReminderJob();
 
-        if($reminder){
+        if ($reminder) {
             $firebaseRealtime = new FirebaseRealtime();
             $server_datetime = new DateTime();
 
-            foreach($reminder as $dt){
+            foreach($reminder as $dt) {
                 // User time config
                 $user_timezone = $dt->timezone;
                 $status_time_tz = $user_timezone[0];
@@ -42,59 +42,59 @@ class ReminderSchedule
 
                 $exec = false;
 
-                if($dt->reminder_type == 'Every Day'){
+                if ($dt->reminder_type === 'Every Day') {
                     $server_day = $server_datetime->format('H');
                     $reminder_context = $dt->reminder_context;
-                    foreach($reminder_context as $ctx){
+                    foreach($reminder_context as $ctx) {
                         $split_reminder_context = explode(":", $ctx['time']);
                         $day_reminder = $split_reminder_context[0];
-                        if($day_reminder == $server_day){
+                        if ($day_reminder === $server_day) {
                             $exec = true;
                             break;
                         }
                     }
-                } else if($dt->reminder_type == 'Every Week'){
+                } else if ($dt->reminder_type === 'Every Week') {
                     $server_day = $server_datetime->format('D');
                     $reminder_context = $dt->reminder_context;
-                    foreach($reminder_context as $ctx){
+                    foreach($reminder_context as $ctx) {
                         $day_reminder = substr($ctx['time'],0,3);
-                        if($day_reminder == $server_day){
+                        if ($day_reminder === $server_day) {
                             $exec = true;
                             break;
                         }
                     }
-                } else if($dt->reminder_type == 'Every Month' || $dt->reminder_type == 'Every Year'){
-                    if($dt->reminder_type == 'Every Month'){
+                } else if ($dt->reminder_type === 'Every Month' || $dt->reminder_type === 'Every Year') {
+                    if ($dt->reminder_type === 'Every Month') {
                         $server_day = $server_datetime->format('d');
                         $reminder_context = $dt->reminder_context;
-                        foreach($reminder_context as $ctx){
+                        foreach($reminder_context as $ctx) {
                             $day_reminder = $ctx['time'];
                         }
                     } else {
                         $server_day = $server_datetime->format('d F');
                         $reminder_context = $dt->reminder_context;
-                        foreach($reminder_context as $ctx){
+                        foreach($reminder_context as $ctx) {
                             $day_reminder = $ctx['time'];
                         }
                     }
                     
-                    if($day_reminder == $server_day){
+                    if ($day_reminder === $server_day) {
                         $exec = true;
                     }
                 }
 
-                if($exec){
+                if ($exec) {
                     $message = "Hello $dt->username, $dt->reminder_body";
 
-                    if($dt->telegram_user_id){
+                    if ($dt->telegram_user_id) {
                         $response = Telegram::sendMessage([
                             'chat_id' => $dt->telegram_user_id,
                             'text' => $message,
                             'parse_mode' => 'HTML'
                         ]);
-                        if($dt->reminder_attachment){
-                            foreach($dt->reminder_attachment as $att){
-                                if($att['attachment_type'] == 'location'){
+                        if ($dt->reminder_attachment) {
+                            foreach($dt->reminder_attachment as $att) {
+                                if ($att['attachment_type'] === 'location') {
                                     $coor = explode(", ", $att['attachment_context']);
                                     $response = Telegram::sendLocation([
                                         'chat_id' => $dt->telegram_user_id,
@@ -110,11 +110,11 @@ class ReminderSchedule
                             }
                         }
                     }
-                    if($dt->line_user_id){
+                    if ($dt->line_user_id) {
                         LineMessage::sendMessage('text',$message,$dt->line_user_id);
-                        if($dt->reminder_attachment){
-                            foreach($dt->reminder_attachment as $att){
-                                if($att['attachment_type'] == 'location'){
+                        if ($dt->reminder_attachment) {
+                            foreach($dt->reminder_attachment as $att) {
+                                if ($att['attachment_type'] === 'location') {
                                     $coor = explode(", ", $att['attachment_context']);
                                     $message = [
                                         'title'=>$att['attachment_name'],
@@ -126,7 +126,7 @@ class ReminderSchedule
                             }
                         }
                     }
-                    if($dt->firebase_fcm_token){
+                    if ($dt->firebase_fcm_token) {
                         $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
                         $messaging = $factory->createMessaging();
                         $message = CloudMessage::withTarget('token', $dt->firebase_fcm_token)

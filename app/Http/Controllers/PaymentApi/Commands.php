@@ -74,8 +74,8 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function updatePaymentById(Request $request, $id){
-        try{
+    public function updatePaymentById(Request $request, $id) {
+        try {
             $validator = Validation::getValidatePayment($request);
 
             if ($validator->fails()) {
@@ -162,8 +162,8 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function deletePaymentById(Request $request, $id){
-        try{
+    public function deletePaymentById(Request $request, $id) {
+        try {
             $user_id = $request->user()->id;
 
             $res = Payment::where('created_by',$user_id)

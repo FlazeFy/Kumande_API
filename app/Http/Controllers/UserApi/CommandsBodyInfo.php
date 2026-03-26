@@ -55,8 +55,8 @@ class CommandsBodyInfo extends Controller
      *     ),
      * )
      */  
-    public function createBodyInfo(Request $request){
-        try{
+    public function createBodyInfo(Request $request) {
+        try {
             $validator = Validation::getValidateBodyInfo($request);
 
             if ($validator->fails()) {
@@ -77,7 +77,7 @@ class CommandsBodyInfo extends Controller
                     'created_by' => $user_id
                 ]);
 
-                if($check){
+                if ($check) {
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("create", 'body info'),
@@ -153,27 +153,27 @@ class CommandsBodyInfo extends Controller
      *     ),
      * )
      */
-    public function deleteBodyInfoById(Request $request, $id){
+    public function deleteBodyInfoById(Request $request, $id) {
         try {
             $user_id = $request->user()->id;
             $success = 0;
             $failed = 0;
             $ids = explode(",", $id);
 
-            foreach($ids as $dt){
+            foreach($ids as $dt) {
                 $res = BodyInfo::where('created_by',$user_id)
                     ->where('id',$dt)
                     ->delete();
 
-                if($res){
+                if ($res) {
                     $success++;
                 } else {
                     $failed++;
                 }
             }
 
-            if(count($ids) > 0){
-                if($success > 0){
+            if (count($ids) > 0) {
+                if ($success > 0) {
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("delete", "$success body info"),

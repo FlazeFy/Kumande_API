@@ -104,8 +104,8 @@ class QueriesList extends Controller
      *     ),
      * )
      */
-    public function getAllList(Request $request, $page_limit, $order){
-        try{
+    public function getAllList(Request $request, $page_limit, $order) {
+        try {
             $user_id = $request->user()->id;
 
             $csl = ConsumeList::select('id','slug_name','list_name','list_desc','list_tag','created_at')
@@ -114,26 +114,26 @@ class QueriesList extends Controller
                 ->paginate($page_limit);
 
             if ($csl->count() > 0) {
-                foreach($csl as $idx => $dt){
+                foreach($csl as $idx => $dt) {
                     $csm = RelConsumeList::selectRaw("consume.id, consume.slug_name, consume_name, consume_type, CAST(REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '') as unsigned) as calorie, REPLACE(JSON_EXTRACT(consume_detail, '$[0].provide'), '\"', '') as provide, consume_from")
                         ->join('consume','consume.id','=','rel_consume_list.consume_id')
                         ->where('list_id',$dt->id)
                         ->get();
                     
-                    foreach($csm as $jdx => $du){
+                    foreach($csm as $jdx => $du) {
                         $pyt = Payment::selectRaw('CAST(AVG(payment_price) as unsigned) as average_price')
                             ->where('consume_id', $du->id)
                             ->groupby('consume_id')
                             ->first();
 
-                        if($pyt){
+                        if ($pyt) {
                             $csm[$jdx]->average_price = $pyt->average_price;
                         } else {
                             $csm[$jdx]->average_price = null;
                         }
                     }
 
-                    if(count($csm) > 0){
+                    if (count($csm) > 0) {
                         $csl[$idx]->consume = $csm;
                     } else {
                         $csl[$idx]->consume = null;
@@ -235,8 +235,8 @@ class QueriesList extends Controller
      *     ),
      * )
      */
-    public function getListDetailById(Request $request, $id){
-        try{
+    public function getListDetailById(Request $request, $id) {
+        try {
             $user_id = $request->user()->id;
 
             $csl = ConsumeList::select('id','slug_name','list_name','list_desc','list_tag','created_at')
@@ -250,20 +250,20 @@ class QueriesList extends Controller
                     ->where('list_id',$csl->id)
                     ->get();
                 
-                foreach($csm as $jdx => $du){
+                foreach($csm as $jdx => $du) {
                     $pyt = Payment::selectRaw('CAST(AVG(payment_price) as unsigned) as average_price')
                         ->where('consume_id', $du->consume_id)
                         ->groupby('consume_id')
                         ->first();
 
-                    if($pyt){
+                    if ($pyt) {
                         $csm[$jdx]->average_price = $pyt->average_price;
                     } else {
                         $csm[$jdx]->average_price = null;
                     }
                 }
 
-                if(count($csm) > 0){
+                if (count($csm) > 0) {
                     $csl->consume = $csm;
 
                     $whole_csm = Consume::selectRaw("AVG(CAST(REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '') as unsigned)) as average_calorie, AVG(payment_price) as average_price")
@@ -368,8 +368,8 @@ class QueriesList extends Controller
      *     ),
      * )
      */
-    public function getCheckConsumeBySlug(Request $request, $consume_slug, $list_id){
-        try{
+    public function getCheckConsumeBySlug(Request $request, $consume_slug, $list_id) {
+        try {
             $user_id = $request->user()->id;
 
             $check = RelConsumeList::selectRaw('1')
@@ -378,7 +378,7 @@ class QueriesList extends Controller
                 ->where('list_id',$list_id)
                 ->first();
 
-            if($check){
+            if ($check) {
                 return response()->json([
                     'status' => 'failed',
                     'message' => Generator::getMessageTemplate("conflict", 'consume'),

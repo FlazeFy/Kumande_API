@@ -61,8 +61,8 @@ class QueriesCalorie extends Controller
      *     ),
      * )
      */
-    public function getLastCountCalorie(Request $request){
-        try{
+    public function getLastCountCalorie(Request $request) {
+        try {
             $user_id = $request->user()->id;
 
             $cal = CountCalorie::select('weight', 'height', 'result','created_at')
@@ -70,7 +70,7 @@ class QueriesCalorie extends Controller
                 ->orderBy('created_at', 'DESC')
                 ->first();
 
-            if($cal){
+            if ($cal) {
                 return response()->json([
                     "message"=> Generator::getMessageTemplate("fetch", 'count data'), 
                     "status"=> 'success',
@@ -142,8 +142,8 @@ class QueriesCalorie extends Controller
      *     ),
      * )
      */
-    public function getFulfillCalorie(Request $request,$date){
-        try{
+    public function getFulfillCalorie(Request $request,$date) {
+        try {
             $user_id = $request->user()->id;
 
             $csm = Consume::selectRaw(
@@ -153,7 +153,7 @@ class QueriesCalorie extends Controller
                 ->whereDate('created_at', $date)
                 ->first();
             
-            if($csm){
+            if ($csm) {
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'count data'), 

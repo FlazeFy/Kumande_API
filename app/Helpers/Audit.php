@@ -3,7 +3,7 @@ namespace App\Helpers;
 
 class Audit
 {
-    public static function auditRecord($ctx, $name, $data){ 
+    public static function auditRecord($ctx, $name, $data) { 
         $props = time(); 
         $filePath = "tests_reports/text/$name-$props.txt";
 

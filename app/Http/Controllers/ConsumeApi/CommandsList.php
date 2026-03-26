@@ -71,7 +71,7 @@ class CommandsList extends Controller
      *     ),
      * )
      */
-    public function deleteListByListId(Request $request,$list_id){
+    public function deleteListByListId(Request $request,$list_id) {
         try {
             $user_id = $request->user()->id;
 
@@ -83,7 +83,7 @@ class CommandsList extends Controller
                 ->where('created_by',$user_id)
                 ->delete();
 
-            if($res){
+            if ($res) {
                 return response()->json([
                     "status"=> 'success',
                     "message"=> Generator::getMessageTemplate("delete", 'consume list'), 
@@ -150,7 +150,7 @@ class CommandsList extends Controller
      *     ),
      * )
      */
-    public function deleteListRelationByRelId(Request $request,$rel_id){
+    public function deleteListRelationByRelId(Request $request,$rel_id) {
         try {
             $user_id = $request->user()->id;
 
@@ -158,7 +158,7 @@ class CommandsList extends Controller
                 ->where('created_by',$user_id)
                 ->delete();
 
-            if($res){
+            if ($res) {
                 return response()->json([
                     "message"=> Generator::getMessageTemplate("custom", 'consume removed from list'), 
                     "status"=> 'success'
@@ -233,8 +233,8 @@ class CommandsList extends Controller
      *     ),
      * )
      */
-    public function updateListDataById(Request $request, $id){
-        try{
+    public function updateListDataById(Request $request, $id) {
+        try {
             $validator = Validation::getValidateListRelData($request);
 
             if ($validator->fails()) {
@@ -250,7 +250,7 @@ class CommandsList extends Controller
                     ->where('created_by',$user_id)
                     ->first();
 
-                if(!$check){
+                if (!$check) {
                     $csl = ConsumeList::where('id', $id)
                         ->where('created_by',$user_id)
                         ->update([
@@ -259,7 +259,7 @@ class CommandsList extends Controller
                         'updated_at' => date("Y-m-d H:i:s")
                     ]);
 
-                    if($csl){
+                    if ($csl) {
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("update", 'consume list'),
@@ -334,8 +334,8 @@ class CommandsList extends Controller
      *     ),
      * )
      */
-    public function createList(Request $request){
-        try{
+    public function createList(Request $request) {
+        try {
             $validator = Validation::getValidateCreateConsumeList($request);
 
             if ($validator->fails()) {
@@ -346,10 +346,10 @@ class CommandsList extends Controller
             } else {
                 $user_id = $request->user()->id;
 
-                if(ConsumeList::getAvailableListName($request->list_name, $user_id)){
+                if (ConsumeList::getAvailableListName($request->list_name, $user_id)) {
                     $slug = Generator::getSlug($request->list_name, "consume_list");
 
-                    if($request->list_tag){
+                    if ($request->list_tag) {
                         $jsonTag = Converter::getEncoded($request->list_tag);
                         $tag = json_decode($jsonTag, true);
                     } else {
@@ -370,7 +370,7 @@ class CommandsList extends Controller
 
                     $user = User::getProfile($user_id);
                     $fcm_token = $user->firebase_fcm_token;
-                    if($fcm_token){
+                    if ($fcm_token) {
                         $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
                         $messaging = $factory->createMessaging();
                         $message = CloudMessage::withTarget('token', $request->token_fcm)
@@ -457,8 +457,8 @@ class CommandsList extends Controller
      *     ),
      * )
      */
-    public function createListRelation(Request $request){
-        try{
+    public function createListRelation(Request $request) {
+        try {
             $validator = Validation::getValidateConsumeListRel($request);
 
             if ($validator->fails()) {
@@ -473,14 +473,14 @@ class CommandsList extends Controller
                     ->where('slug_name', $request->consume_slug)
                     ->first();
 
-                if($csm){
+                if ($csm) {
                     $check_rel = RelConsumeList::selectRaw('1')
                         ->where('consume_id',$csm->id)
                         ->where('list_id',$request->list_id)
                         ->where('created_by',$user_id)
                         ->first();
 
-                    if($check_rel){
+                    if ($check_rel) {
                         return response()->json([
                             'status' => 'failed',
                             'message' => Generator::getMessageTemplate("conflict", 'consume'),
@@ -494,7 +494,7 @@ class CommandsList extends Controller
                             'created_by' => $user_id
                         ]);
         
-                        if($rel){
+                        if ($rel) {
                             return response()->json([
                                 'status' => 'success',
                                 'message' => Generator::getMessageTemplate("custom", 'consume is added to list'),

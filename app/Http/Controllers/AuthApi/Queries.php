@@ -62,7 +62,7 @@ class Queries extends Controller
      */
     public function logout(Request $request)
     {
-        try{
+        try {
             $request->user()->currentAccessToken()->delete();
 
             return response()->json([

@@ -69,15 +69,15 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function deleteScheduleById(Request $request, $id){
-        try{
+    public function deleteScheduleById(Request $request, $id) {
+        try {
             $user_id = $request->user()->id;
 
             $res = Schedule::where('id', $id)
                 ->where('created_by',$user_id)
                 ->delete();
 
-            if($res){
+            if ($res) {
                 return response()->json([
                     "message"=> Generator::getMessageTemplate("delete", 'schedule'), 
                     "status"=> 'success'
@@ -152,8 +152,8 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function updateScheduleDataById(Request $request, $id){
-        try{
+    public function updateScheduleDataById(Request $request, $id) {
+        try {
             $validator = Validation::getValidateSchedule($request);
 
             if ($validator->fails()) {
@@ -173,7 +173,7 @@ class Commands extends Controller
                         'updated_at' => date("Y-m-d H:i:s")
                     ]);
 
-                if($sch){
+                if ($sch) {
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("update", 'schedule')
@@ -241,16 +241,16 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function createSchedule(Request $request){
-        try{
+    public function createSchedule(Request $request) {
+        try {
             $success_add = 0;
             $user_id = $request->user()->id;
             $schedule_consume = "";
 
-            if(!$request->consume_id){
+            if (!$request->consume_id) {
                 $schedule = json_decode($request->getContent(), true);
 
-                foreach($schedule as $dt){
+                foreach($schedule as $dt) {
                     $validator = Validation::getValidateSchedule(new Request($dt));
                     if ($validator->fails()) {
                         return response()->json([
@@ -261,7 +261,7 @@ class Commands extends Controller
                         $reqnew = new Request($dt);
                         $check = Generator::checkSchedule($reqnew['schedule_time']);
 
-                        if(!$check){
+                        if (!$check) {
                             $id = Generator::getUUID();
                             $jsonTime = Converter::getEncoded($dt['schedule_time']);
                             $time = json_decode($jsonTime, true);
@@ -297,10 +297,10 @@ class Commands extends Controller
                     ], Response::HTTP_UNPROCESSABLE_ENTITY);
                 } else {    
                     $check = Generator::checkSchedule($request->schedule_time);
-                    if(!$check){
+                    if (!$check) {
                         $consume_name = Consume::getConsumeName($user_id, $request->consume_id);
 
-                        if($consume_name){
+                        if ($consume_name) {
                         $id = Generator::getUUID();
                         $id = Generator::getUUID();
 
@@ -351,10 +351,10 @@ class Commands extends Controller
                 }
             }
 
-            if($success_add > 0){
+            if ($success_add > 0) {
                 $user_data = User::getProfile($user_id);
                 $fcm_token = $user_data->firebase_fcm_token;
-                if($fcm_token){
+                if ($fcm_token) {
                     $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
                     $messaging = $factory->createMessaging();
                     $message = CloudMessage::withTarget('token', $fcm_token)

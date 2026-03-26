@@ -72,8 +72,8 @@ class CommandsGallery extends Controller
      *     ),
      * )
      */
-    public function createGallery(Request $request){
-        try{
+    public function createGallery(Request $request) {
+        try {
             $validator = Validation::getValidateCreateConsumeGallery($request);
 
             if ($validator->fails()) {
@@ -124,7 +124,7 @@ class CommandsGallery extends Controller
                             'created_by' => $user_id,
                         ]);
         
-                        if($res){
+                        if ($res) {
                             return response()->json([
                                 'status' => 'success',
                                 'message' => Generator::getMessageTemplate("create", 'gallery'),
@@ -205,23 +205,23 @@ class CommandsGallery extends Controller
      *     ),
      * )
      */
-    public function deleteGalleryById($gallery_id){
-        try{
+    public function deleteGalleryById($gallery_id) {
+        try {
             $data = ConsumeGallery::find($gallery_id);
             $res = ConsumeGallery::destroy($gallery_id);
 
-            if($res){
+            if ($res) {
                 $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
                 $storage = $factory->createStorage();
                 $fileName = Generator::generateUUIDStorageURL('consume',$data->gallery_url);
 
-                if($fileName){
+                if ($fileName) {
                     $bucket = 'kumande-64a66.appspot.com';
                     $fileUrl = "/consume/$asd";
                     $bucket = $storage->getBucket($bucket);
                     $object = $bucket->object($fileUrl);
 
-                    if ($object->exists()){
+                    if ($object->exists()) {
                         $object->delete();
                         return response()->json([
                             'status' => 'success',
@@ -309,8 +309,8 @@ class CommandsGallery extends Controller
      *     ),
      * )
      */
-    public function updateGalleryById(Request $request,$gallery_id){
-        try{
+    public function updateGalleryById(Request $request,$gallery_id) {
+        try {
             $validator = Validation::getValidateUpdateConsumeGallery($request);
 
             if ($validator->fails()) {
@@ -327,7 +327,7 @@ class CommandsGallery extends Controller
                         'gallery_desc' => $request->gallery_desc
                     ]);
 
-                if($res > 0){
+                if ($res > 0) {
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("update", 'gallery'),

@@ -80,8 +80,8 @@ class CommandsAllergic extends Controller
      *     ),
      * )
      */
-    public function updateAllergicById(Request $request, $id){
-        try{
+    public function updateAllergicById(Request $request, $id) {
+        try {
             $validator = Validation::getValidateAllergic($request);
 
             if ($validator->fails()) {
@@ -98,7 +98,7 @@ class CommandsAllergic extends Controller
                     ->where('created_by', $user_id)
                     ->first();
 
-                if($check){
+                if ($check) {
                     return response()->json([
                         'status' => 'failed',
                         'message' => Generator::getMessageTemplate("conflict", 'allergic context'),
@@ -108,7 +108,7 @@ class CommandsAllergic extends Controller
                         ->where('created_by', $user_id)
                         ->first();
 
-                    if($exist){
+                    if ($exist) {
                         $res = Allergic::where('id',$id)
                             ->where('created_by',$user_id)
                             ->update([
@@ -116,7 +116,7 @@ class CommandsAllergic extends Controller
                                 'allergic_desc'  => $request->allergic_desc, 
                             ]);
 
-                        if($res){
+                        if ($res) {
                             return response()->json([
                                 'status' => 'success',
                                 'message' => Generator::getMessageTemplate("update", 'allergic'),
@@ -191,8 +191,8 @@ class CommandsAllergic extends Controller
      *     ),
      * )
      */
-    public function createAllergic(Request $request){
-        try{
+    public function createAllergic(Request $request) {
+        try {
             $validator = Validation::getValidateAllergic($request);
 
             if ($validator->fails()) {
@@ -208,7 +208,7 @@ class CommandsAllergic extends Controller
                     ->where('created_by', $user_id)
                     ->first();
 
-                if($check){
+                if ($check) {
                     return response()->json([
                         'status' => 'failed',
                         'message' => Generator::getMessageTemplate("conflict", 'allergic context'),
@@ -224,7 +224,7 @@ class CommandsAllergic extends Controller
                         'updated_at' => null
                     ]);
 
-                    if($res){
+                    if ($res) {
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("create", 'allergic'),
@@ -294,14 +294,14 @@ class CommandsAllergic extends Controller
      *     ),
      * )
      */
-    public function deleteAllergicById(Request $request,$id){
-        try{
+    public function deleteAllergicById(Request $request,$id) {
+        try {
             $user_id = $request->user()->id;
             $res = Allergic::where('id',$id)
                 ->where('created_by',$user_id)
                 ->delete();
 
-            if($res){
+            if ($res) {
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("delete", 'allergic'),

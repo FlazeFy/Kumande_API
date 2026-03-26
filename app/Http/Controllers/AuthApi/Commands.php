@@ -76,7 +76,7 @@ class Commands extends Controller
      */
     public function login(Request $request)
     {
-        try{
+        try {
             $validator = Validation::getValidateLogin($request);
 
             if ($validator->fails()) {
@@ -95,7 +95,7 @@ class Commands extends Controller
                             'status' => 'failed',
                             'message' => Generator::getMessageTemplate("not_found", 'email'),        
                         ], Response::HTTP_UNAUTHORIZED);
-                    } else if ($user && ($request->password != $user->password)) {
+                    } else if ($user && ($request->password !== $user->password)) {
                         return response()->json([
                             'status' => 'failed',
                             'message' => Generator::getMessageTemplate("custom", 'wrong password'),            

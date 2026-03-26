@@ -68,8 +68,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getTotalSpendMonth(Request $request, $year){
-        try{
+    public function getTotalSpendMonth(Request $request, $year) {
+        try {
             $user_id = $request->user()->id;
 
             $pym = Payment::selectRaw('MONTH(created_at) as context, SUM(payment_price) as total')
@@ -86,7 +86,7 @@ class Queries extends Controller
                 $mon = date('M', $timestamp);
             
                 foreach ($pym as $cs) {
-                    if ($cs->context == $i) {
+                    if ($cs->context === $i) {
                         $spend = $cs->total;
                         break;
                     }
@@ -98,7 +98,7 @@ class Queries extends Controller
                 ];
             }
 
-            if(count($obj) > 0){
+            if (count($obj) > 0) {
                 $collection = collect($obj);
 
                 return response()->json([
@@ -182,8 +182,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getTotalSpendDay(Request $request, $month, $year){
-        try{
+    public function getTotalSpendDay(Request $request, $month, $year) {
+        try {
             $user_id = $request->user()->id;
 
             $pym = Payment::selectRaw('DAY(created_at) as context, SUM(payment_price) as total')
@@ -202,7 +202,7 @@ class Queries extends Controller
                 $spend = 0;
             
                 foreach ($pym as $cs) {
-                    if ($cs->context == $i) {
+                    if ($cs->context === $i) {
                         $spend = $cs->total;
                         break;
                     }
@@ -291,8 +291,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getAnalyticSpendMonth(Request $request, $month, $year){
-        try{
+    public function getAnalyticSpendMonth(Request $request, $month, $year) {
+        try {
             $user_id = $request->user()->id;
 
             $pym = DB::table(function ($sub) use ($month, $year, $user_id) {
@@ -309,7 +309,7 @@ class Queries extends Controller
                 ->selectRaw('CAST(IFNULL(SUM(total), 0) as INT) as total')
                 ->first();
             
-            if($pym){
+            if ($pym) {
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'analytic data'), 
@@ -373,8 +373,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getLifetimeSpend(Request $request){
-        try{
+    public function getLifetimeSpend(Request $request) {
+        try {
             $user_id = $request->user()->id;
 
             $csm = DB::table(function ($sub) use ($user_id) {
@@ -475,8 +475,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getMonthlySpend(Request $request, $month, $year){
-        try{
+    public function getMonthlySpend(Request $request, $month, $year) {
+        try {
             $user_id = $request->user()->id;
 
             $csm = Payment::select('consume_name','consume_type','consume_id','payment_method','payment_price','payment.created_at')
@@ -486,7 +486,7 @@ class Queries extends Controller
                 ->whereRaw('YEAR(payment.created_at) = ?',[$year])
                 ->orderby('payment.created_by','DESC');
 
-            if ($request->has('all') && $request->all == 'true') {
+            if ($request->has('all') && $request->all === 'true') {
                 $csm = $csm->get();
             } else {
                 $csm = $csm->paginate(15);

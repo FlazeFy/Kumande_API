@@ -54,8 +54,8 @@ class CommandsCalorie extends Controller
      *     ),
      * )
      */
-    public function createCountCalorie(Request $request){
-        try{
+    public function createCountCalorie(Request $request) {
+        try {
             $validator = Validation::getValidateCreateCountCalorie($request);
 
             if ($validator->fails()) {
@@ -78,7 +78,7 @@ class CommandsCalorie extends Controller
                     'deleted_by' => null,
                 ]);
 
-                if($ccl){
+                if ($ccl) {
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("create", 'count calorie'),
@@ -155,27 +155,27 @@ class CommandsCalorie extends Controller
      *     ),
      * )
      */
-    public function deleteCountCalorieById(Request $request, $id){
+    public function deleteCountCalorieById(Request $request, $id) {
         try {
             $user_id = $request->user()->id;
             $success = 0;
             $failed = 0;
             $ids = explode(",", $id);
 
-            foreach($ids as $dt){
+            foreach($ids as $dt) {
                 $res = CountCalorie::where('created_by',$user_id)
                     ->where('id',$dt)
                     ->delete();
 
-                if($res){
+                if ($res) {
                     $success++;
                 } else {
                     $failed++;
                 }
             }
 
-            if(count($ids) > 0){
-                if($success > 0){
+            if (count($ids) > 0) {
+                if ($success > 0) {
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("delete", "$success count calorie"),

@@ -17,7 +17,7 @@ class ConsumeListFactory extends Factory
         $fake_firebase_id = substr($id, 0, 10).'-FAKER-'.date('YmdHi');
         $user = User::getRandom(0);
 
-        if(mt_rand(0,1) == 1){
+        if (mt_rand(0,1) === 1) {
             $count_tag = mt_rand(1,5);
             $selected_tag = [];
             for ($i=0; $i < $count_tag; $i++) {

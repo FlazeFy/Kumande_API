@@ -63,8 +63,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getMyTag(Request $request){
-        try{
+    public function getMyTag(Request $request) {
+        try {
             $user_id = $request->user()->id;
 
             $res = Tag::select('id','tag_name','tag_slug')
@@ -73,7 +73,7 @@ class Queries extends Controller
                 ->get();
         
             if (count($res) > 0) {
-                foreach($res as $idx => $dt){
+                foreach($res as $idx => $dt) {
                     $csm = Consume::selectRaw('COUNT(1) as total')
                         ->whereRaw('consume_tag like '."'".'%"slug_name":"'.$dt->tag_slug.'"%'."'")
                         ->where('created_by',$user_id)
@@ -149,8 +149,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getAllTag(Request $request){
-        try{
+    public function getAllTag(Request $request) {
+        try {
             $user_id = $request->user()->id;
 
             $sch = Tag::select('id','tag_name','tag_slug','created_by')
@@ -238,8 +238,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getAnalyzeMyTagBySlug(Request $request, $slug){
-        try{
+    public function getAnalyzeMyTagBySlug(Request $request, $slug) {
+        try {
             $user_id = $request->user()->id;
             $calorie_query = "REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '')";
 
@@ -252,7 +252,7 @@ class Queries extends Controller
                 ->first();
         
             if ($res) {
-                if($res->total_item > 0){
+                if ($res->total_item > 0) {
                     $lastUsedConsume = Consume::select('consume_name','consume_type','slug_name')
                         ->whereRaw('consume_tag like '."'".'%"slug_name":"'.$slug.'"%'."'")
                         ->where('consume.created_by', $user_id)

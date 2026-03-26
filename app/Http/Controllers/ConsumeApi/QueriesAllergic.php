@@ -72,8 +72,8 @@ class QueriesAllergic extends Controller
      *     ),
      * )
      */
-    public function getAllAllergic(Request $request){
-        try{
+    public function getAllAllergic(Request $request) {
+        try {
             $user_id = $request->user()->id;
 
             $csl = Allergic::select('id', 'allergic_context', 'created_at', 'allergic_desc')
@@ -82,13 +82,13 @@ class QueriesAllergic extends Controller
                 ->get();
 
             if ($csl->count() > 0) {
-                foreach($csl as $idx => $dt){
+                foreach($csl as $idx => $dt) {
                     $csm = Consume::select("consume_name","consume_type","slug_name")
                         ->where('created_by', $user_id)
                         ->where('consume_name', 'LIKE',"%$dt->allergic_context%")
                         ->get();
 
-                    if(count($csm) > 0){
+                    if (count($csm) > 0) {
                         $csl[$idx]->detected_on = $csm;
                     } else {
                         $csl[$idx]->detected_on = null;

@@ -20,27 +20,27 @@ class ReminderFactory extends Factory
         $reminder_context = [];
 
         for ($i=0; $i < mt_rand(1,10); $i++) { 
-            if($reminder_type == 'Every Day'){
+            if ($reminder_type === 'Every Day') {
                 array_push($reminder_context, [
                     "time" => Generator::getRandHour()
                 ]);
-            } else if($reminder_type == 'Every Year'){
+            } else if ($reminder_type === 'Every Year') {
                 array_push($reminder_context, [
                     "time" => Generator::getRandDayMonth()
                 ]);
             }
         }
 
-        if($ran == 1){
+        if ($ran === 1) {
             for ($i=0; $i < mt_rand(1,3); $i++) { 
                 $name = fake()->words(mt_rand(2,4), true);
-                if(mt_rand(0,2) == 1){
+                if (mt_rand(0,2) === 1) {
                     array_push($reminder_attachment,[
                         "attachment_type"=> "location",
                         "attachment_context"=> Generator::getRandCoor(),
                         "attachment_name"=> $name
                     ]);
-                } else if(mt_rand(0,2) == 1){
+                } else if (mt_rand(0,2) === 1) {
                     array_push($reminder_attachment,[
                         "attachment_type"=> "url",
                         "attachment_context"=> "https://github.com/",
@@ -64,7 +64,7 @@ class ReminderFactory extends Factory
             'reminder_context' => $reminder_context, 
             'reminder_body' => fake()->paragraph(), 
             'reminder_attachment' => $reminder_attachment, 
-            'created_by' => $ran == 1 ? $user : null,
+            'created_by' => $ran === 1 ? $user : null,
             'created_at' => Generator::getRandDate(0), 
             'updated_at' => Generator::getRandDate($ran),
         ];

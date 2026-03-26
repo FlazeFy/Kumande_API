@@ -71,14 +71,14 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function hardDeleteConsumeById(Request $request, $id){
-        try{ 
+    public function hardDeleteConsumeById(Request $request, $id) {
+        try { 
             $user_id = $request->user()->id;
             $res = Consume::where('id', $id)
                 ->where('created_by',$user_id)
                 ->delete();
 
-            if($res){
+            if ($res) {
                 Schedule::where('consume_id', $id)
                     ->where('created_by',$user_id)
                     ->delete();
@@ -153,8 +153,8 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function softDeleteConsumeById(Request $request, $id){
-        try{ 
+    public function softDeleteConsumeById(Request $request, $id) {
+        try { 
             $user_id = $request->user()->id;
             $res = Consume::where('id', $id)
                 ->where('created_by',$user_id)
@@ -163,7 +163,7 @@ class Commands extends Controller
                     'deleted_at' => date('Y-m-d H:i:s')
                 ]);
 
-            if($res > 0){                
+            if ($res > 0) {                
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("delete", 'consume'),
@@ -238,8 +238,8 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function updateConsumeDataById(Request $request, $id){
-        try{
+    public function updateConsumeDataById(Request $request, $id) {
+        try {
             $validator = Validation::getValidateUpdateConsume($request,'data');
 
             if ($validator->fails()) {
@@ -265,7 +265,7 @@ class Commands extends Controller
                         'updated_at' => date("Y-m-d H:i:s")
                     ]);
 
-                if($csm){
+                if ($csm) {
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("update", 'consume'),
@@ -341,8 +341,8 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function updateConsumeFavorite(Request $request, $id){
-        try{
+    public function updateConsumeFavorite(Request $request, $id) {
+        try {
             $validator = Validation::getValidateUpdateConsume($request,'favorite');
 
             if ($validator->fails()) {
@@ -361,7 +361,7 @@ class Commands extends Controller
                         'updated_at' => date("Y-m-d H:i:s")
                     ]);
 
-                if($csm){
+                if ($csm) {
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("update", 'consume'),
@@ -421,8 +421,8 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function createConsume(Request $request){
-        try{
+    public function createConsume(Request $request) {
+        try {
             $validator = Validation::getValidateCreateConsume($request);
 
             if ($validator->fails()) {
@@ -437,7 +437,7 @@ class Commands extends Controller
                 $name_ava = Consume::searchConsumeNameAvailable($user_id, $clean_name);
                 $payment_only = true;
 
-                if(!$name_ava){
+                if (!$name_ava) {
                     $payment_only = false;
                     $slug = Generator::getSlug($request->consume_name, "consume");
                     $jsonDetail = Converter::getEncoded($request->consume_detail);
@@ -447,7 +447,7 @@ class Commands extends Controller
                     $detail = json_decode($jsonDetail, true);
                     $tag = json_decode($jsonTag, true);
 
-                    if($request->created_at){
+                    if ($request->created_at) {
                         $created_at = $request->created_at;
                     } else {
                         $created_at = date("Y-m-d H:i:s");
@@ -473,7 +473,7 @@ class Commands extends Controller
                     $id = $name_ava;
                 }
 
-                if($request->payment_price != 0 && ($request->payment_method != "Free" || $request->payment_method != "Gift")){
+                if ($request->payment_price !== 0 && ($request->payment_method !== "Free" || $request->payment_method !== "Gift")) {
                     $pym = Payment::create([
                         'id' => Generator::getUUID(),
                         'consume_id' => $id,
@@ -488,7 +488,7 @@ class Commands extends Controller
 
                 $user = User::getProfile($user_id);
                 $fcm_token = $user->firebase_fcm_token;
-                if($fcm_token){
+                if ($fcm_token) {
                     $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
                     $messaging = $factory->createMessaging();
                     $message = CloudMessage::withTarget('token', $fcm_token)

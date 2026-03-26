@@ -26,7 +26,7 @@ class ConsumeFactory extends Factory
             "main_ing" => $main_ing[mt_rand(0,count($main_ing)-1)]
         ];
 
-        if(mt_rand(0,1) == 1){
+        if (mt_rand(0,1) === 1) {
             $count_tag = mt_rand(1,5);
             $selected_tag = [];
             for ($i=0; $i < $count_tag; $i++) {

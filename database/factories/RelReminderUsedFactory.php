@@ -17,7 +17,7 @@ class RelReminderUsedFactory extends Factory
 
         return [
             'id' => $id, 
-            'reminder_id' => Reminder::getRandom(mt_rand(0,1),$ran == 1 ? $user : null), 
+            'reminder_id' => Reminder::getRandom(mt_rand(0,1),$ran === 1 ? $user : null), 
             'created_at' => Generator::getRandDate(0), 
             'created_by' => $user
         ];

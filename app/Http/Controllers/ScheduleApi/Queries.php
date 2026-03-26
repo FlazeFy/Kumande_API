@@ -62,8 +62,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getMySchedule(Request $request){
-        try{
+    public function getMySchedule(Request $request) {
+        try {
             $user_id = $request->user()->id;
             $time_query = Query::querySelect("get_from_json_col_str","schedule_time","category");
             $day_query = Query::querySelect("get_from_json_col_str","schedule_time","day");
@@ -151,8 +151,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getTodaySchedule(Request $request, $day){
-        try{
+    public function getTodaySchedule(Request $request, $day) {
+        try {
             $user_id = $request->user()->id;
             $time_query = Query::querySelect("get_from_json_col_str","schedule_time","time");
 
@@ -163,7 +163,7 @@ class Queries extends Controller
                 ->orderByRaw("$time_query ASC")
                 ->get();
 
-            if(count($sch) > 0){
+            if (count($sch) > 0) {
                 $res = [];
                 foreach ($sch as $dt) {
                     $res[] = [

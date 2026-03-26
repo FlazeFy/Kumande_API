@@ -67,7 +67,7 @@ class Queries extends Controller
      */
     public function getAllHistory(Request $request)
     {
-        try{
+        try {
             $user_id = $request->user()->id;
 
             $res = History::select('id','history_type','history_context','created_at')

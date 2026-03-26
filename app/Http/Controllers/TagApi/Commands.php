@@ -63,8 +63,8 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function deleteTagById(Request $request, $id){
-        try{
+    public function deleteTagById(Request $request, $id) {
+        try {
             $user_id = $request->user()->id;
 
             $res = Tag::where('created_by',$user_id)
@@ -138,8 +138,8 @@ class Commands extends Controller
      *     ),
      * )
      */    
-    public function createMyTag(Request $request){
-        try{
+    public function createMyTag(Request $request) {
+        try {
             $user_id = $request->user()->id;
 
             $check = Tag::where('created_by',$user_id)

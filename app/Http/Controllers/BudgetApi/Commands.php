@@ -66,8 +66,8 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function createBudget(Request $request){
-        try{
+    public function createBudget(Request $request) {
+        try {
             $validator = Validation::getValidateCreateBudget($request);
 
             if ($validator->fails()) {
@@ -80,7 +80,7 @@ class Commands extends Controller
                 $id = Generator::getUUID();
                 $budget_ava = Budget::searchBudgetAvailable($user_id, $request->month, $request->year);
 
-                if($budget_ava == null){
+                if ($budget_ava === null) {
                     $bdt = Budget::create([
                         'id' => $id, 
                         'firebase_id' => $request->firebase_id, 
@@ -98,7 +98,7 @@ class Commands extends Controller
 
                     $user = User::getProfile($user_id);
                     $fcm_token = $user->firebase_fcm_token;
-                    if($fcm_token){
+                    if ($fcm_token) {
                         $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
                         $messaging = $factory->createMessaging();
                         $message = CloudMessage::withTarget('token', $fcm_token)
@@ -174,8 +174,8 @@ class Commands extends Controller
      *     ),
      * )
      */
-    public function deleteBudgetById(Request $request, $id){
-        try{ 
+    public function deleteBudgetById(Request $request, $id) {
+        try { 
             $user_id = $request->user()->id;
 
             $data = Budget::find($id);
@@ -183,10 +183,10 @@ class Commands extends Controller
                 ->where('id',$id)
                 ->delete();
 
-            if($res){
+            if ($res) {
                 $user = User::getProfile($user_id);
                 $fcm_token = $user->firebase_fcm_token;
-                if($fcm_token){
+                if ($fcm_token) {
                     $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
                     $messaging = $factory->createMessaging();
                     $message = CloudMessage::withTarget('token', $fcm_token)

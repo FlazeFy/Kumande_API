@@ -32,7 +32,7 @@ class BudgetFactory extends Factory
         }
 
         $over_at_day = mt_rand(20, 28);
-        $over_at = $ran == 0 ? date("Y-m-d H:i:s", strtotime(date('Y-m', strtotime($date)) . "-$over_at_day")) : null;
+        $over_at = $ran === 0 ? date("Y-m-d H:i:s", strtotime(date('Y-m', strtotime($date)) . "-$over_at_day")) : null;
 
         return [
             'id' => $id,

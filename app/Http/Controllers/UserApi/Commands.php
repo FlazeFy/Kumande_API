@@ -68,8 +68,8 @@ class Commands extends Controller
      *     ),
      * )
      */  
-    public function createUser(Request $request){
-        try{
+    public function createUser(Request $request) {
+        try {
             $validator = Validation::getValidateCreateUser($request);
 
             if ($validator->fails()) {
@@ -80,7 +80,7 @@ class Commands extends Controller
             } else {        
                 $check = Generator::checkUser($request->username, $request->email);
 
-                if(!$check){
+                if (!$check) {
                     $id = Generator::getUUID();
                     $profile_image = null;
 
@@ -137,7 +137,7 @@ class Commands extends Controller
                         'deleted_at' => null
                     ]);
             
-                    if($user){
+                    if ($user) {
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("custom", 'account is registered'),
@@ -212,8 +212,8 @@ class Commands extends Controller
      *     ),
      * )
      */ 
-    public function updateUser(Request $request){
-        try{
+    public function updateUser(Request $request) {
+        try {
             $validator = Validation::getValidateUpdateUser($request);
 
             if ($validator->fails()) {
@@ -232,7 +232,7 @@ class Commands extends Controller
                     'updated_at' => date("Y-m-d H:i:s")
                 ]);
         
-                if($user > 0){
+                if ($user > 0) {
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("update", 'account')
@@ -292,8 +292,8 @@ class Commands extends Controller
      *     ),
      * )
      */ 
-    public function updateTelegramId(Request $request){
-        try{
+    public function updateTelegramId(Request $request) {
+        try {
             $validator = Validation::getValidateUpdateTelegramID($request);
 
             if ($validator->fails()) {
@@ -310,8 +310,8 @@ class Commands extends Controller
                     'telegram_user_id' => $request->telegram_user_id,
                 ]);
 
-                if($user > 0){
-                    if($telegram_user_id_old != null){
+                if ($user > 0) {
+                    if ($telegram_user_id_old !== null) {
                         $response = Telegram::sendMessage([
                             'chat_id' => $telegram_user_id_old,
                             'text' => "Hello $user_data->username,\nYour account has been signout from this device",
@@ -378,8 +378,8 @@ class Commands extends Controller
      *     ),
      * )
      */ 
-    public function updateTelegramIdQRCode(Request $request){
-        try{
+    public function updateTelegramIdQRCode(Request $request) {
+        try {
             $validator = Validation::getValidateUpdateTelegramID($request);
 
             if ($validator->fails()) {
@@ -396,8 +396,8 @@ class Commands extends Controller
                     'telegram_user_id' => $request->telegram_user_id,
                 ]);
 
-                if($user > 0){
-                    if($telegram_user_id_old != null){
+                if ($user > 0) {
+                    if ($telegram_user_id_old !== null) {
                         $response = Telegram::sendMessage([
                             'chat_id' => $telegram_user_id_old,
                             'text' => "Hello $user_data->username,\nYour account has been signout from this device",
@@ -464,8 +464,8 @@ class Commands extends Controller
      *     ),
      * )
      */ 
-    public function updateTimezone(Request $request){
-        try{
+    public function updateTimezone(Request $request) {
+        try {
             $validator = Validation::getValidateUpdateUserTimezone($request);
 
             if ($validator->fails()) {
@@ -476,14 +476,14 @@ class Commands extends Controller
             } else {        
                 $timezone = $request->timezone;
 
-                if(Validation::isValidUTCOffset($timezone)){
+                if (Validation::isValidUTCOffset($timezone)) {
                     $user_id = $request->user()->id;
 
                     $user = User::where('id',$user_id)->update([
                         'timezone' => $timezone,
                     ]);
             
-                    if($user > 0){
+                    if ($user > 0) {
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("update", 'timezone')
@@ -549,8 +549,8 @@ class Commands extends Controller
      *     ),
      * )
      */ 
-    public function updateImage(Request $request){
-        try{
+    public function updateImage(Request $request) {
+        try {
             $validator = Validation::getValidateUpdateImageUser($request);
 
             if ($validator->fails()) {
@@ -566,7 +566,7 @@ class Commands extends Controller
                     'updated_at' => date("Y-m-d H:i:s")
                 ]);
 
-                if($user > 0){
+                if ($user > 0) {
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("update", 'profile image')

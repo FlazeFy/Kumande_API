@@ -206,7 +206,7 @@ class ConsumeApiTest extends TestCase
         $this->templateTest->templateValidateColumn($data['data']['consume_detail'], $intFieldsConsumeDetail, 'integer', false);
 
         // Get list key / column for payment
-        if(!is_null($data['data']['payment'])){
+        if (!is_null($data['data']['payment'])) {
             $stringFieldsPayment = ['id_payment','payment_method','created_at'];
             $intFieldsPayment = ['payment_price'];
             $stringNullableFieldsPayment = ['updated_at'];
@@ -215,7 +215,7 @@ class ConsumeApiTest extends TestCase
             $this->templateTest->templateValidateColumn($data['data']['payment'], $stringNullableFieldsPayment, 'string', true);
         }
 
-        if(!is_null($data['data']['schedule'])){
+        if (!is_null($data['data']['schedule'])) {
             // Get list key / column for schedule
             $stringFieldsSchedule = ['created_at'];
             $stringNullableFieldsSchedule = ['updated_at'];
@@ -225,7 +225,7 @@ class ConsumeApiTest extends TestCase
             $this->templateTest->templateValidateColumn($data['data']['schedule'], $arrayFieldsSchedule, 'array', false);
         }
 
-        if(!is_null($data['data']['allergic'])){
+        if (!is_null($data['data']['allergic'])) {
             // Get list key / column for allergic
             $stringFieldsAllergic = ['allergic_context'];
             $this->templateTest->templateValidateColumn($data['data']['allergic'], $stringFieldsAllergic, 'string', false);

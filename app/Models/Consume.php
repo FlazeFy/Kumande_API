@@ -44,7 +44,7 @@ class Consume extends Model
         'consume_tag' => 'array'
     ];
 
-    public static function getConsumeSummary($type){
+    public static function getConsumeSummary($type) {
         $res = Consume::select('payment.id as payment_id','consume.id as consume_id','username','telegram_user_id','line_user_id','firebase_fcm_token','email','consume_type','consume_name','consume_from','consume_detail','payment.created_at as payment_created_at','consume.created_at as consume_created_at','payment_price','payment_method')
             ->join('user','user.id','=','consume.created_by')
             ->join('payment','payment.consume_id','=','consume.id')
@@ -52,10 +52,10 @@ class Consume extends Model
             ->orderby('payment.created_at','asc')
             ->orderby('consume.created_at','asc');
 
-        if ($type == "daily") {
+        if ($type === "daily") {
             $date = date('Y-m-d');
             $res->whereRaw('date(payment.created_at) = ?', [$date]);
-        } else if($type == "weekly"){
+        } else if ($type === "weekly") {
             $end_date = date('Y-m-d');
 
             $datetime = new DateTime();
@@ -69,20 +69,20 @@ class Consume extends Model
         return $res->get();
     }
 
-    public static function searchConsumeNameAvailable($user_id, $search){
+    public static function searchConsumeNameAvailable($user_id, $search) {
         $res = Consume::select("id")
             ->whereRaw("LOWER(REPLACE(consume_name,' ','')) = ?", [$search])
             ->where('created_by', $user_id)
             ->first();
             
-        if($res){
+        if ($res) {
             return $res->id;
         } else {
             return false;
         }
     }
 
-    public static function getConsumeName($user_id, $id){
+    public static function getConsumeName($user_id, $id) {
         $res = Consume::select("consume_name")
             ->where('id',$id)
             ->where('created_by', $user_id)
@@ -91,7 +91,7 @@ class Consume extends Model
         return $res ? $res->consume_name : null;
     }
 
-    public static function getRandom($user_id){
+    public static function getRandom($user_id) {
         $data = Consume::where('created_by',$user_id)
             ->inRandomOrder()
             ->take(1)

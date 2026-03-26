@@ -75,8 +75,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getListReminder(Request $request){
-        try{
+    public function getListReminder(Request $request) {
+        try {
             $user_id = $request->user()->id;
 
             $res = Reminder::select('reminder.id as reminder_id','reminder_name','reminder_type','reminder_context','reminder_body','reminder_attachment','rel_reminder_used.id as id_rel_reminder')

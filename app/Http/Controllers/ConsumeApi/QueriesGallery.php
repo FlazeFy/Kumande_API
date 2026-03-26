@@ -69,8 +69,8 @@ class QueriesGallery extends Controller
      *     ),
      * )
      */
-    public function getAllMyGallery(Request $request){
-        try{
+    public function getAllMyGallery(Request $request) {
+        try {
             $user_id = $request->user()->id;
 
             $csl = Consume::selectRaw('consume_name, consume_type, consume_from, is_favorite, consume_gallery.created_at, gallery_url, gallery_desc')
@@ -159,8 +159,8 @@ class QueriesGallery extends Controller
      *     ),
      * )
      */
-    public function getGalleryByConsume(Request $request, $slug){
-        try{
+    public function getGalleryByConsume(Request $request, $slug) {
+        try {
             $user_id = $request->user()->id;
 
             $csl = ConsumeGallery::select('consume_gallery.id','gallery_url', 'gallery_desc', 'consume_gallery.created_at')

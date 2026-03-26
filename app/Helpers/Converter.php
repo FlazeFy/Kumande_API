@@ -3,15 +3,15 @@ namespace App\Helpers;
 
 class Converter
 {
-    public static function getEncoded($val){
+    public static function getEncoded($val) {
         $val = json_decode($val);
-        if($val != null){
+        if ($val !== null) {
             //Initial variable
             $res = [];
             $total_val = count($val);
 
             //Iterate all selected val
-            for($i=0; $i < $total_val; $i++){
+            for($i=0; $i < $total_val; $i++) {
                 array_push($res, $val[$i]);
             }
 

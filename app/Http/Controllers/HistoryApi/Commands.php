@@ -63,12 +63,12 @@ class Commands extends Controller
      */
     public function hardDeleteHistoryById(Request $request, $id)
     {
-        try{
+        try {
             $user_id = $request->user()->id;
 
             $rows = History::destroy($id);
 
-            if($rows > 0){
+            if ($rows > 0) {
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("permentally delete", 'history'),

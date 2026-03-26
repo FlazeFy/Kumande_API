@@ -10,31 +10,31 @@ use App\Models\Tag;
 class Generator
 {
     //Fix this shit
-    public static function getFirstCode($type){ 
+    public static function getFirstCode($type) { 
         $randChar = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-        if($type == "list"){
+        if ($type === "list") {
             $column = "list_code";
             $check = ConsumeList::select($column)
                 ->orderBy('created_at', 'DESC')
                 ->limit(1)
                 ->get()
                 ->toArray();
-        } else if($type == "budget"){
+        } else if ($type === "budget") {
             $column = "budget_code";
             $check = Budget::select($column)
                 ->orderBy('created_at', 'DESC')
                 ->limit(1)
                 ->get()
                 ->toArray();
-        } else if($type == "consume"){
+        } else if ($type === "consume") {
             $column = "consume_code";
             $check = Consume::select($column)
                 ->orderBy('created_at', 'DESC')
                 ->limit(1)
                 ->get()
                 ->toArray();
-        } else if($type == "schedule"){
+        } else if ($type === "schedule") {
             $column = "schedule_code";
             $check = Schedule::select('schedule_code')
                 ->orderBy('created_at', 'DESC')
@@ -43,11 +43,11 @@ class Generator
                 ->toArray();
         }
 
-        foreach($check as $ck){
+        foreach($check as $ck) {
             $before_alph = substr($ck[$column],0,2);
             $before_num = substr($ck[$column],2,1);
 
-            if($before_num < 9){
+            if ($before_num < 9) {
                 $after_num = (int)$before_num + 1;
                 $after_alph = $before_alph;
             } else {
@@ -61,53 +61,53 @@ class Generator
         return $res;
     }
 
-    public static function getDateCode(){
+    public static function getDateCode() {
         $res = date("myd");
         
         return $res;
     }
 
-    public static function getInitialCode($name){
+    public static function getInitialCode($name) {
         $res = strtoupper(substr($name, 0,1));
 
         return $res;
     }
 
-    public static function getSlug($val, $type){ 
+    public static function getSlug($val, $type) { 
         $replace = str_replace(" ","-", $val);
         $replace = str_replace("_","-", $replace);
         $replace = preg_replace('/[!:\\\[\/"`;.\'^£$%&*()}{@#~?><>,|=+¬\]]/', '', $replace);
 
-        if($type == "consume"){
+        if ($type === "consume") {
             $check = Consume::select('slug_name')
                 ->where('slug_name', $replace)
                 ->limit(1)
                 ->get();
-        } else if($type == "consume_list"){
+        } else if ($type === "consume_list") {
             $check = ConsumeList::select('slug_name')
                 ->where('slug_name', $replace)
                 ->limit(1)
                 ->get();
-        } else if($type == "schedule"){
+        } else if ($type === "schedule") {
             $check = Schedule::select('slug_name')
                 ->where('slug_name', $replace)
                 ->limit(1)
                 ->get();
-        } else if($type == "tag"){
+        } else if ($type === "tag") {
             $check = Tag::select('tag_name')
                 ->where('tag_name', $replace)
                 ->limit(1)
                 ->get();
         }
 
-        if(count($check) > 0){
+        if (count($check) > 0) {
             $replace = $replace."_".date('mdhis'); 
         }
 
         return strtolower($replace);
     }
 
-    public static function getUUID(){
+    public static function getUUID() {
         $result = '';
         $bytes = random_bytes(16);
         $hex = bin2hex($bytes);
@@ -122,7 +122,7 @@ class Generator
         return $uuid;
     }
 
-    public static function checkSchedule($mytime){
+    public static function checkSchedule($mytime) {
         $res = false;
         $parsedMyTime = json_decode($mytime);
 
@@ -131,15 +131,15 @@ class Generator
             ->limit(1)
             ->get();
 
-        foreach($parsedMyTime as $pmt){
+        foreach($parsedMyTime as $pmt) {
             $myday = $pmt->day;
             $mycategory = $pmt->category;
 
-            foreach($schedule as $sc){
+            foreach($schedule as $sc) {
                 $parsedTime = $sc->schedule_time;
 
-                foreach($parsedTime as $pt){
-                    if($pt['day'] == $myday && $pt['category'] == $mycategory){
+                foreach($parsedTime as $pt) {
+                    if ($pt['day'] === $myday && $pt['category'] === $mycategory) {
                         $res = true;
                     }
                 }
@@ -164,14 +164,14 @@ class Generator
     }
     
 
-    public static function checkUser($username, $email){
+    public static function checkUser($username, $email) {
         $user = User::select('username','email')
             ->where('username', $username)
             ->orWhere('email', $email)
             ->limit(1)
             ->get();
 
-        if(count($user) > 0){
+        if (count($user) > 0) {
             $res = true; 
         } else {
             $res = false;
@@ -180,8 +180,8 @@ class Generator
         return $res;
     }
 
-    public static function getRandDate($null){
-        if($null == 0){
+    public static function getRandDate($null) {
+        if ($null === 0) {
             $start = strtotime('2020-01-01 00:00:00');
             $end = strtotime(date("Y-m-d H:i:s"));
             $res = mt_rand($start, $end); 
@@ -192,11 +192,11 @@ class Generator
         }
     }
 
-    public static function getRandomTimezone(){
+    public static function getRandomTimezone() {
         $symbol = ['+','-'];
         $ran = mt_rand(0, 1);
         $select_symbol = $symbol[$ran];
-        if($select_symbol == '+'){
+        if ($select_symbol === '+') {
             $hour = mt_rand(0, 14);
         } else {
             $hour = mt_rand(0, 12);
@@ -206,27 +206,27 @@ class Generator
         return $timezone;
     }
 
-    public static function getRandGender(){
+    public static function getRandGender() {
         $data = ['male','female'];
         $ran = mt_rand(0,count($data)-1);
 
         return $data[$ran];
     }
 
-    public static function getRandConsumeType(){
+    public static function getRandConsumeType() {
         $data = ['Food','Drink','Snack'];
         $ran = mt_rand(0,count($data)-1);
 
         return $data[$ran];
     }
 
-    public static function getRandHour(){
+    public static function getRandHour() {
         $randomHour = str_pad(rand(0, 23), 2, '0', STR_PAD_LEFT);
         
         return "$randomHour:00";
     }
 
-    public static function getRandDayMonth(){
+    public static function getRandDayMonth() {
         $date = date("d F",strtotime(self::getRandDate(0)));
 
         return $date;
@@ -239,25 +239,25 @@ class Generator
         return "$latitude, $longitude";
     }
 
-    public static function getRandConsumeFrom(){
+    public static function getRandConsumeFrom() {
         $data = ["GoFood","GrabFood","ShopeeFood","Dine-In","Take Away","Cooking","Others"];
         $ran = mt_rand(0,count($data)-1);
 
         return $data[$ran];
     }
 
-    public static function getMonthName($idx, $type){
+    public static function getMonthName($idx, $type) {
         $monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         $res = null;
     
         if ($idx !== 'all') {
-            if ($type == 'full') {
+            if ($type === 'full') {
                 $res = $monthNames[$idx];
-            } elseif ($type == 'short') {
+            } elseif ($type === 'short') {
                 $res = substr($monthNames[$idx], 0, 3);
             }
         } else {
-            if ($type == 'full') {
+            if ($type === 'full') {
                 $res = $monthNames;
             } else {
                 $res = array_map(function($name) {
@@ -269,7 +269,7 @@ class Generator
         return $res;
     }
 
-    public static function generateUUIDStorageURL($root,$url){
+    public static function generateUUIDStorageURL($root,$url) {
         $pattern = '/'.$root.'%2F([\w-]+)\?/';
         preg_match($pattern, $url, $matches);
         
@@ -283,7 +283,7 @@ class Generator
         return $min + mt_rand() / mt_getrandmax() * ($max - $min);
     }
 
-    public static function getRandFoodAsset($type, $is_full = false){
+    public static function getRandFoodAsset($type, $is_full = false) {
         $filePath = public_path('Kumande Asset - Food.csv');
         $values = [];
 
@@ -292,7 +292,7 @@ class Generator
 
             while (($data = fgetcsv($handle, 1000, ',')) !== false) {
                 // Data[1] = Column B : food
-                if(!$is_full){
+                if (!$is_full) {
                     if (isset($data[1]) && $data[1] !== '') { 
                         $values[] = $data[1];
                     }
@@ -308,12 +308,12 @@ class Generator
             fclose($handle);
         }
 
-        if(!empty($values)){
+        if (!empty($values)) {
             $food = $values[array_rand($values)];
 
-            if($type == 'food' || $is_full){
+            if ($type === 'food' || $is_full) {
                 return $food;
-            } else if($type == 'ingredient'){
+            } else if ($type === 'ingredient') {
                 $ingredient = explode(" ",$food);
                 return $ingredient[mt_rand(0,count($ingredient)-1)];
             } else {
@@ -324,21 +324,21 @@ class Generator
         }
     }
 
-    public static function getMessageTemplate($type, $ctx){
+    public static function getMessageTemplate($type, $ctx) {
         if (in_array($type, ['create', 'update', 'delete', 'permentally delete', 'fetch','recover','analyze','generate'])) {
             $ext = in_array($type, ['fetch','recover']) ? "ed" : "d";
             $res = "$ctx ".$type.$ext;            
-        } else if($type == "not_found"){
+        } else if ($type === "not_found") {
             $res = "$ctx not found";
-        } else if($type == "unknown_error"){
+        } else if ($type === "unknown_error") {
             $res = "something wrong. please contact admin";
-        } else if($type == "conflict"){
+        } else if ($type === "conflict") {
             $res = "$ctx is already exist";
-        } else if($type == "custom"){
+        } else if ($type === "custom") {
             $res = "$ctx";
-        } else if($type == "validation_failed"){
+        } else if ($type === "validation_failed") {
             $res = "validation failed : $ctx";
-        } else if($type == "permission"){
+        } else if ($type === "permission") {
             $res = "permission denied. only $ctx can use this feature";
         } else {
             $res = "failed to get respond message";

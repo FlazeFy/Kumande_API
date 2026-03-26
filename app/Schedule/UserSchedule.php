@@ -26,7 +26,7 @@ class UserSchedule
         $user = User::getAllCleanReminder();
         $firebaseRealtime = new FirebaseRealtime();
         
-        foreach($user as $dt){
+        foreach($user as $dt) {
             $status_exec = false;
 
             $soft_del_datetime = $dt->deleted_at;
@@ -35,21 +35,21 @@ class UserSchedule
             $interval = $server_datetime->diff($deleted_at_datetime);
             $diff_in_days = $interval->days;
 
-            if($diff_in_days >= $days){
+            if ($diff_in_days >= $days) {
                 $remain = 30 - $diff_in_days;
                 $message = "Hello $dt->username,\n\nYour account is about to permentally deleted in the next ".$remain." days. Please sign-in again to revert the deleted account\n\nThank You!";
 
-                if($dt->telegram_user_id){
+                if ($dt->telegram_user_id) {
                     $response = Telegram::sendMessage([
                         'chat_id' => $dt->telegram_user_id,
                         'text' => $message,
                         'parse_mode' => 'HTML'
                     ]);
                 }
-                if($dt->line_user_id){
+                if ($dt->line_user_id) {
                     LineMessage::sendMessage('text',$message,$dt->line_user_id);
                 }
-                if($dt->firebase_fcm_token){
+                if ($dt->firebase_fcm_token) {
                     $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
                     $messaging = $factory->createMessaging();
                     $message = CloudMessage::withTarget('token', $dt->firebase_fcm_token)

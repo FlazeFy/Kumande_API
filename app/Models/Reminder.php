@@ -38,7 +38,7 @@ class Reminder extends Model
         'reminder_attachment' => 'array'
     ];
 
-    public static function getAllReminderJob(){
+    public static function getAllReminderJob() {
         $res = Reminder::select('reminder_name','reminder_type','reminder_context','reminder_body', 'reminder_attachment','username','firebase_fcm_token','telegram_user_id','line_user_id','email','timezone')
             ->join('rel_reminder_used','rel_reminder_used.reminder_id','=','reminder.id')
             ->join('user','user.id','=','rel_reminder_used.created_by')
@@ -49,8 +49,8 @@ class Reminder extends Model
         return $res;
     }
 
-    public static function getRandom($is_personal, $user_id){
-        $data = Reminder::where('created_by',$is_personal == 1 ? $user_id : null)
+    public static function getRandom($is_personal, $user_id) {
+        $data = Reminder::where('created_by',$is_personal === 1 ? $user_id : null)
             ->inRandomOrder()
             ->take(1)
             ->first();    

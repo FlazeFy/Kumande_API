@@ -137,8 +137,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getAllConsume(Request $request, $page_limit, $order, $favorite, $type, $provide, $calorie){
-        try{
+    public function getAllConsume(Request $request, $page_limit, $order, $favorite, $type, $provide, $calorie) {
+        try {
             $user_id = $request->user()->id;
 
             $csm = Consume::selectRaw('consume.id, slug_name, consume_type, consume_name, consume_detail, consume_from, is_favorite, consume_tag, consume_comment, consume.created_at, payment_method, payment_price')
@@ -146,15 +146,15 @@ class Queries extends Controller
                 ->whereNull('deleted_at')
                 ->where('consume.created_by', $user_id);
 
-            if ($favorite != "all") {
+            if ($favorite !== "all") {
                 $csm->where('is_favorite', $favorite);
             }
 
-            if ($type != "all") {
+            if ($type !== "all") {
                 $csm->where('consume_type', $type);
             }
 
-            if($calorie != "all"){
+            if ($calorie !== "all") {
                 $calQuery = Query::querySelect("get_from_json_col","consume_detail","calorie");
                 $splitCal = explode("-", $calorie);
                 $csm->whereRaw("$calQuery >= ".$splitCal[0]);
@@ -232,8 +232,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getTotalConsumeByFrom(Request $request){
-        try{
+    public function getTotalConsumeByFrom(Request $request) {
+        try {
             $user_id = $request->user()->id;
 
             $csm = Consume::selectRaw('consume_from as context, count(1) as total')
@@ -242,7 +242,7 @@ class Queries extends Controller
                 ->orderBy('total', 'DESC')
                 ->get();
             
-            foreach($csm as $c){
+            foreach($csm as $c) {
                 $c->context = $c->context;
                 $c->total = intval($c->total);
             }
@@ -313,8 +313,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getTotalConsumeByType(Request $request){
-        try{
+    public function getTotalConsumeByType(Request $request) {
+        try {
             $user_id = $request->user()->id;
 
             $csm = Consume::selectRaw('consume_type as context, count(1) as total')
@@ -323,7 +323,7 @@ class Queries extends Controller
                 ->orderBy('total', 'DESC')
                 ->get();
 
-            foreach($csm as $c){
+            foreach($csm as $c) {
                 $c->context = $c->context;
                 $c->total = intval($c->total);
             }
@@ -438,8 +438,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getConsumeDetailBySlug(Request $request, $slug){
-        try{
+    public function getConsumeDetailBySlug(Request $request, $slug) {
+        try {
             $user_id = $request->user()->id;
 
             $consume = Consume::selectRaw('*')
@@ -465,8 +465,8 @@ class Queries extends Controller
                 $consume_split = explode(" ",$consume->consume_name);
                 $allergic_query = Allergic::select('allergic_context');
 
-                foreach($consume_split as $idx => $cs){
-                    if($idx == 0){
+                foreach($consume_split as $idx => $cs) {
+                    if ($idx === 0) {
                         $allergic_query->where('allergic_context', 'like', "%$cs%");
                     } else {
                         $allergic_query->orWhere('allergic_context', 'like', "%$cs%");
@@ -547,8 +547,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getTotalConsumeByMainIng(Request $request){
-        try{
+    public function getTotalConsumeByMainIng(Request $request) {
+        try {
             $user_id = $request->user()->id;
 
             $csm = DB::select(DB::raw("SELECT 
@@ -560,7 +560,7 @@ class Queries extends Controller
                     LIMIT 8
                 "));
 
-            foreach($csm as $c){
+            foreach($csm as $c) {
                 $c->context = $c->context;
                 $c->total = intval($c->total);
             }
@@ -631,8 +631,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getTotalConsumeByProvide(Request $request){
-        try{
+    public function getTotalConsumeByProvide(Request $request) {
+        try {
             $user_id = $request->user()->id;
 
             $csm = DB::select(DB::raw("SELECT 
@@ -644,7 +644,7 @@ class Queries extends Controller
                     LIMIT 8
                 "));
 
-            foreach($csm as $c){
+            foreach($csm as $c) {
                 $c->context = $c->context;
                 $c->total = intval($c->total);
             }
@@ -731,8 +731,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getDailyConsumeCal(Request $request, $month, $year){
-        try{
+    public function getDailyConsumeCal(Request $request, $month, $year) {
+        try {
             $user_id = $request->user()->id;
 
             $csm = DB::select(DB::raw("SELECT 
@@ -753,7 +753,7 @@ class Queries extends Controller
                 $spend = 0;
             
                 foreach ($csm as $cs) {
-                    if ($cs->context == $i) {
+                    if ($cs->context === $i) {
                         $spend = $cs->total;
                         break;
                     }
@@ -833,8 +833,8 @@ class Queries extends Controller
      * )
      */
 
-    public function getMaxMinCalorie(Request $request){
-        try{
+    public function getMaxMinCalorie(Request $request) {
+        try {
             $user_id = $request->user()->id;
             $cal = Query::querySelect("get_from_json_col","consume_detail","calorie");
 
@@ -928,11 +928,11 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getCalorieTotalByConsumeType(Request $request, $view){
-        try{
+    public function getCalorieTotalByConsumeType(Request $request, $view) {
+        try {
             $user_id = $request->user()->id;
 
-            if($view == "all" || $view == "day" || $view == "week" || $view == "month" || $view == "year"){
+            if ($view === "all" || $view === "day" || $view === "week" || $view === "month" || $view === "year") {
                 $cal = Query::querySelect("get_from_json_col","consume_detail","calorie");
 
                 $csm = Consume::selectRaw("
@@ -941,11 +941,11 @@ class Queries extends Controller
                 ->where('created_by', $user_id)
                 ->groupby('consume_type');
 
-                if($view == "day"){
+                if ($view === "day") {
                     $csm->whereDate('created_at', Carbon::today());
-                } else if($view == "month"){
+                } else if ($view === "month") {
                     $csm->whereMonth('created_at', Carbon::now()->month);
-                } else if($view == "year"){
+                } else if ($view === "year") {
                     $csm->whereYear('created_at', Carbon::now()->year);
                 }
 
@@ -1084,8 +1084,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getConsumeByContext(Request $request, $ctx, $target){
-        try{
+    public function getConsumeByContext(Request $request, $ctx, $target) {
+        try {
             $user_id = $request->user()->id;
             $is_ctx_valid = true;
 
@@ -1093,14 +1093,14 @@ class Queries extends Controller
                 ->where('created_by',$user_id)
                 ->orderby('created_at','desc');
 
-            if($ctx != "all"){
-                if ($ctx == 'provide' || $ctx == 'main_ing') {
+            if ($ctx !== "all") {
+                if ($ctx === 'provide' || $ctx === 'main_ing') {
                     $consume->whereRaw("REPLACE(JSON_UNQUOTE(JSON_EXTRACT(consume_detail, '$[0].$ctx')), '\"', '') = ?", $target);
-                } else if($ctx == 'consume_from' || $ctx == 'consume_type'){
+                } else if ($ctx === 'consume_from' || $ctx === 'consume_type') {
                     $consume->where($ctx,$target);
-                } else if($ctx == 'month'){
+                } else if ($ctx === 'month') {
                     $consume->whereRaw("MONTH(created_at) = ?",$target);
-                } else if($ctx == 'month_year'){
+                } else if ($ctx === 'month_year') {
                     $date = explode("_", $target);
                     $consume->whereRaw("MONTH(created_at) = ?",$date[0])
                         ->whereRaw("YEAR(created_at) = ?",$date[1]);
@@ -1108,7 +1108,7 @@ class Queries extends Controller
                     $is_ctx_valid = false;
                 }
 
-                if($request->limit){
+                if ($request->limit) {
                     $consume = $consume->limit($request->limit)
                         ->get();
                 } 
@@ -1126,7 +1126,7 @@ class Queries extends Controller
             }
             $consume = $consume->get();
 
-            if($is_ctx_valid){
+            if ($is_ctx_valid) {
                 if ($consume->count() > 0) {
                     foreach ($consume as $idx => $csm) {
                         $schedule = Schedule::select('schedule_time')
@@ -1209,8 +1209,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getListConsume(Request $request){
-        try{
+    public function getListConsume(Request $request) {
+        try {
             $user_id = $request->user()->id;
 
             $consume = Consume::select('slug_name', 'consume_name','consume_type')

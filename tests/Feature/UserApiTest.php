@@ -103,7 +103,7 @@ class UserApiTest extends TestCase
 
         // Body Info
         $body_info = $data['data']['body_info'];
-        if(!is_null($body_info)){
+        if (!is_null($body_info)) {
             // Get list key / column
             $stringBodyInfoFields = ['id','blood_pressure','created_at'];
             $doubleBodyInfoFields = ['blood_glucose','gout','cholesterol'];
@@ -115,7 +115,7 @@ class UserApiTest extends TestCase
 
         // Calorie
         $calorie = $data['data']['calorie'];
-        if(!is_null($calorie)){
+        if (!is_null($calorie)) {
             // Get list key / column
             $stringCalorieFields = ['id','created_at'];
             $intCalorieFields = ['weight','height','result'];
@@ -127,7 +127,7 @@ class UserApiTest extends TestCase
 
         // Dashboard
         $dashboard = [$data['data']['dashboard']];
-        if(!is_null($dashboard)){
+        if (!is_null($dashboard)) {
             // Get list key / column
             $doubleDashboardFields = ['max_gout','min_gout'];
             $intDashboardFields = ['max_blood_glucose','min_blood_glucose','max_cholesterol','min_cholesterol','max_weight','min_weight','max_height','min_height'];

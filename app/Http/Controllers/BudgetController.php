@@ -21,7 +21,7 @@ class BudgetController extends Controller
         //
     }
 
-    public function deleteBudgetById($id){
+    public function deleteBudgetById($id) {
         Budget::where('id', $id)->delete();
 
         return response()->json([
@@ -30,8 +30,8 @@ class BudgetController extends Controller
         ]);
     }
 
-    public function updateBudgetData(Request $request, $id){
-        try{
+    public function updateBudgetData(Request $request, $id) {
+        try {
             $validator = Validator::make($request->all(), [
                 'budget_total' => 'required|max:10|min:4',
                 'budget_month_year' => 'required|json',
@@ -65,8 +65,8 @@ class BudgetController extends Controller
         }
     }
 
-    public function updateBudgetStatus(Request $request, $id){
-        try{
+    public function updateBudgetStatus(Request $request, $id) {
+        try {
             $validator = Validator::make($request->all(), [
                 'budget_status' => 'nullable|json'
             ]);
@@ -97,8 +97,8 @@ class BudgetController extends Controller
         }
     }
 
-    public function createBudget(Request $request){
-        try{
+    public function createBudget(Request $request) {
+        try {
             $validator = Validator::make($request->all(), [
                 'budget_total' => 'required|max:10|min:4',
                 'budget_month_year' => 'required|json',

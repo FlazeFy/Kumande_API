@@ -69,8 +69,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getAllBudgetByYear(Request $request,$year){
-        try{
+    public function getAllBudgetByYear(Request $request,$year) {
+        try {
             $user_id = $request->user()->id;
             
             $bdt = DB::select("
@@ -92,7 +92,7 @@ class Queries extends Controller
                     $mon = date('M', $timestamp);
                 
                     foreach ($bdt as $bd) {
-                        if ($bd->context == $mon) {
+                        if ($bd->context === $mon) {
                             $total = $bd->total;
                             break;
                         }
@@ -180,8 +180,8 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getBudgetDashboard(Request $request){
-        try{
+    public function getBudgetDashboard(Request $request) {
+        try {
             $user_id = $request->user()->id;
             $month_search = $request->month ?? null;
             $year_search = $request->year ?? null;
@@ -212,7 +212,7 @@ class Queries extends Controller
                 ->where('created_by', $user_id)
                 ->orderByRaw("$date_json DESC");
 
-            if($year_search && $month_search){
+            if ($year_search && $month_search) {
                 $bdt->whereRaw("$month_json = ?", [$month_search])
                     ->whereRaw("$year_json = ?", [$year_search]);
             }
@@ -223,19 +223,19 @@ class Queries extends Controller
                 ->where('created_by', $user_id)
                 ->first();
 
-            if($bdt){
+            if ($bdt) {
                 $pyt = [];
-                foreach($bdt as $idx => $dt){
+                foreach($bdt as $idx => $dt) {
                     $pyt = Payment::selectRaw('CAST(SUM(payment_price) as UNSIGNED) as total_price, COUNT(1) as total_item, CAST(AVG(payment_price) as UNSIGNED) as average_payment')
                         ->where('created_by', $user_id)
                         ->whereRaw('YEAR(created_at) = ?', [$dt->year])
                         ->whereRaw("DATE_FORMAT(created_at, '%b') = ?", [$dt->month])
                         ->first();
 
-                    if($pyt->total_price == null){
+                    if ($pyt->total_price === null) {
                         $pyt->total_price = 0;
                     }
-                    if($pyt->average_payment == null){
+                    if ($pyt->average_payment === null) {
                         $pyt->average_payment = 0;
                     }
 

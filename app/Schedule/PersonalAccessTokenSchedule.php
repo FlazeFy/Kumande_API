@@ -25,7 +25,7 @@ class PersonalAccessTokenSchedule
         $access = [];
         $access = PersonalAccessToken::whereDate('created_at', '<', Carbon::now()->subDays($days))->delete();
 
-        if($access > 0){
+        if ($access > 0) {
             $context = "Successfully removed ".$access." access token with ".$days." days as it days limiter";
         } else {
             $context = "No data removed from access token with ".$days." days as it days limiter";

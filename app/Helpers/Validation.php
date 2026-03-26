@@ -9,14 +9,14 @@ use App\Rules\TypeGender;
 
 class Validation
 {
-    public static function getValidateLogin($request){ 
+    public static function getValidateLogin($request) { 
         return Validator::make($request->all(), [
             'email' => 'required|min:10|max:75|email|string',
             'password' => 'required|min:6|max:50|string'
         ]);
     }
 
-    public static function getValidateCreateConsume($request){ 
+    public static function getValidateCreateConsume($request) { 
         return Validator::make($request->all(), [
             // Consume table
             'consume_type' => ['required', new TypeConsume],
@@ -33,12 +33,12 @@ class Validation
         ]);
     }
 
-    public static function getValidateUpdateConsume($request,$type){ 
-        if($type == 'favorite'){
+    public static function getValidateUpdateConsume($request,$type) { 
+        if ($type === 'favorite') {
             return Validator::make($request->all(), [
                 'is_favorite' => 'required|min:0|max:1',  
             ]);
-        } else if($type == 'data'){
+        } else if ($type === 'data') {
             return Validator::make($request->all(), [
                 'consume_type' => ['required', new TypeConsume],
                 'consume_name' => 'required|string|min:4|max:75',
@@ -49,7 +49,7 @@ class Validation
         }
     }
 
-    public static function getValidateCreateBudget($request){ 
+    public static function getValidateCreateBudget($request) { 
         return Validator::make($request->all(), [
             'budget_total' => 'required|numeric|min:1',
             'month' => ['required', new TypeMonth],
@@ -57,7 +57,7 @@ class Validation
         ]);
     }
 
-    public static function getValidateSchedule($request){ 
+    public static function getValidateSchedule($request) { 
         return Validator::make($request->all(), [
             'consume_id' => 'required|max:36|min:36',
             'schedule_desc' => 'nullable|max:255|min:1',
@@ -65,7 +65,7 @@ class Validation
         ]);
     }
 
-    public static function getValidateCreateConsumeList($request){ 
+    public static function getValidateCreateConsumeList($request) { 
         return Validator::make($request->all(), [
             'list_name' => 'required|min:3|max:75|string',
             'list_desc' => 'nullable|min:1|max:255|string',
@@ -73,7 +73,7 @@ class Validation
         ]);
     }
 
-    public static function getValidateCreateUser($request){ 
+    public static function getValidateCreateUser($request) { 
         return Validator::make($request->all(), [
             'fullname' => 'required|min:2|max:50|string',
             'username' => 'required|min:2|max:50|string',
@@ -85,7 +85,7 @@ class Validation
         ]);
     }
 
-    public static function getValidateUpdateUser($request){ 
+    public static function getValidateUpdateUser($request) { 
         return Validator::make($request->all(), [
             'fullname' => 'required|min:2|max:50|string',
             'email' => 'required|string|email',
@@ -94,19 +94,19 @@ class Validation
         ]);
     }
 
-    public static function getValidateUpdateTelegramID($request){ 
+    public static function getValidateUpdateTelegramID($request) { 
         return Validator::make($request->all(), [
             'telegram_user_id' => 'nullable|min:10|max:10|string',
         ]);
     }
 
-    public static function getValidateAddReminderRel($request){ 
+    public static function getValidateAddReminderRel($request) { 
         return Validator::make($request->all(), [
             'reminder_id' => 'required|min:36|max:36|string',
         ]);
     }
 
-    public static function getValidateAddReminder($request){ 
+    public static function getValidateAddReminder($request) { 
         return Validator::make($request->all(), [
             'reminder_name' => 'required|string|min:2|max:75',
             'reminder_body' =>  'required|string|min:2|max:255',
@@ -115,35 +115,35 @@ class Validation
         ]);
     }
 
-    public static function getValidatePayment($request){ 
+    public static function getValidatePayment($request) { 
         return Validator::make($request->all(), [
             'payment_method' => ['required', new TypePayment],
             'payment_price' => 'required|numeric|min:0|max:10000000',
         ]);
     }
 
-    public static function getValidateConsumeListRel($request){ 
+    public static function getValidateConsumeListRel($request) { 
         return Validator::make($request->all(), [
             'consume_slug' => 'required|min:4|max:80|string',
             'list_id' => 'required|min:36|max:36|string',
         ]);
     }
 
-    public static function getValidateListRelData($request){ 
+    public static function getValidateListRelData($request) { 
         return Validator::make($request->all(), [
             'list_name' => 'required|max:75|min:1',
             'list_desc' => 'nullable|max:255|min:1'
         ]);
     }
 
-    public static function getValidateCreateConsumeGallery($request){ 
+    public static function getValidateCreateConsumeGallery($request) { 
         return Validator::make($request->all(), [
             'consume_id' => 'required|max:36|min:36',
             'gallery_desc' => 'nullable|max:144|min:1',
         ]);
     }
 
-    public static function getValidateUpdateConsumeGallery($request){ 
+    public static function getValidateUpdateConsumeGallery($request) { 
         return Validator::make($request->all(), [
             'gallery_desc' => 'nullable|max:144|min:1'
         ]);
@@ -156,25 +156,25 @@ class Validation
         ]);
     }
 
-    public static function getValidateUpdateUserTimezone($request){ 
+    public static function getValidateUpdateUserTimezone($request) { 
         return Validator::make($request->all(), [
             'timezone' => 'nullable|min:6|max:6|string',
         ]);
     }
 
-    public static function getValidateUpdateImageUser($request){ 
+    public static function getValidateUpdateImageUser($request) { 
         return Validator::make($request->all(), [
             'image_url' => 'nullable|min:2|max:255|string',
         ]);
     }
 
-    public static function getValidateAddTag($request){ 
+    public static function getValidateAddTag($request) { 
         return Validator::make($request->all(), [
             'tag_name' => 'required|min:2|max:36|string',
         ]);
     }
 
-    public static function getValidateCreateCountCalorie($request){ 
+    public static function getValidateCreateCountCalorie($request) { 
         return Validator::make($request->all(), [
             'weight' => 'required|numeric|min:35|max:150',
             'height' => 'required|numeric|min:120|max:200',
@@ -182,7 +182,7 @@ class Validation
         ]);
     }
 
-    public static function getValidateBodyInfo($request){ 
+    public static function getValidateBodyInfo($request) { 
         return Validator::make($request->all(), [
             'blood_pressure' => 'required|string|min:5|max:7',
             'blood_glucose' => 'required|numeric|min:0|max:400',

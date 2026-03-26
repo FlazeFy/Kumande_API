@@ -71,8 +71,8 @@ class QueriesBodyInfo extends Controller
      *     ),
      * )
      */
-    public function getMyLatestBodyInfo(Request $request){
-        try{
+    public function getMyLatestBodyInfo(Request $request) {
+        try {
             $user_id = $request->user()->id;
 
             $usr = BodyInfo::select('blood_pressure', 'blood_glucose', 'gout', 'cholesterol', 'body_info.created_at','gender')
@@ -87,9 +87,7 @@ class QueriesBodyInfo extends Controller
                 ->orderby('count_calorie.created_at','desc')
                 ->first();
 
-            if($cal){
-                $cal->bmi = Math::countBMI($cal->gender,$cal->height,$cal->weight);
-            }
+            if ($cal) $cal->bmi = Math::countBMI($cal->gender,$cal->height,$cal->weight);
 
             if ($usr && $cal) {
                 $usrArray = $usr->toArray();
@@ -200,8 +198,8 @@ class QueriesBodyInfo extends Controller
      *     ),
      * )
      */
-    public static function getMyBodyHistory(Request $request){
-        try{
+    public static function getMyBodyHistory(Request $request) {
+        try {
             $user_id = $request->user()->id;
 
             $usr = BodyInfo::select('body_info.id','blood_pressure', 'blood_glucose', 'gout', 'cholesterol', 'body_info.created_at')
