@@ -66,17 +66,11 @@ class CommandsCalorie extends Controller
             } else {
                 $user_id = $request->user()->id;
 
-                $ccl = CountCalorie::create([
-                    'id' => Generator::getUUID(),
-                    'firebase_id' => $request->firebase_id,
+                $ccl = CountCalorie::createCountCalorie([
                     'weight' => $request->weight,
                     'height' => $request->height,
                     'result' => $request->result,
-                    'created_at' => date("Y-m-d H:i:s"),
-                    'created_by' => $user_id,
-                    'deleted_at' => null,
-                    'deleted_by' => null,
-                ]);
+                ], $user_id);
 
                 if ($ccl) {
                     return response()->json([

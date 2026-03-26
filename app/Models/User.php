@@ -1,11 +1,14 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 //use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Hash;
+
+// Helper
+use App\Helpers\Generator;
 
 /**
  * @OA\Schema(
@@ -39,22 +42,18 @@ class User extends Authenticatable
     use HasFactory;
     use HasApiTokens;
     public $incrementing = false;
-
     protected $table = 'user';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'firebase_id','telegram_user_id','firebase_fcm_token','line_user_id', 'fullname', 'username', 'email', 'password', 'gender', 'image_url', 'timezone', 'born_at', 'created_at', 'updated_at', 'deleted_at'];
 
     public static function getProfile($id) {
-        $res = User::find($id);
-        return $res;
+        return User::find($id);
     }
 
     public static function getAllCleanReminder() {
-        $res = User::select('id','telegram_user_id','firebase_fcm_token','line_user_id','username','email','deleted_at')
+        return User::select('id','telegram_user_id','firebase_fcm_token','line_user_id','username','email','deleted_at')
             ->whereNotNull('deleted_at')
             ->get();
-
-        return $res;
     }
 
     public static function getRandom($null, $is_have_consume = false) {
@@ -78,5 +77,15 @@ class User extends Authenticatable
         }
         
         return $res;
+    }
+
+    public static function createUser($data, $user_id = null) {
+        $data['updated_at'] = null;
+        $data['deleted_at'] = null;
+        $data['password'] = $data['password'] !== "GOOGLE_SIGN_IN" ? Hash::make($data->password) : $data['password'];
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['id'] = $user_id ?? Generator::getUUID();
+            
+        return User::create($data);
     }
 }

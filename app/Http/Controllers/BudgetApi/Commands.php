@@ -81,20 +81,13 @@ class Commands extends Controller
                 $budget_ava = Budget::searchBudgetAvailable($user_id, $request->month, $request->year);
 
                 if ($budget_ava === null) {
-                    $bdt = Budget::create([
-                        'id' => $id, 
-                        'firebase_id' => $request->firebase_id, 
+                    $bdt = Budget::createBudget([
                         'budget_total' => $request->budget_total, 
                         'budget_month_year' => [
                             'year' => $request->year,
                             'month' => $request->month
-                        ], 
-                        'created_at' => date('Y-m-d H:i:s'), 
-                        'created_by' => $user_id, 
-                        'updated_at' => null, 
-                        'updated_by' => null, 
-                        'over_at' => null
-                    ]);
+                        ]
+                    ], $user_id);
 
                     $user = User::getProfile($user_id);
                     $fcm_token = $user->firebase_fcm_token;

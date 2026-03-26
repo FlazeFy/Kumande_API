@@ -262,20 +262,14 @@ class Commands extends Controller
                         $check = Generator::checkSchedule($reqnew['schedule_time']);
 
                         if (!$check) {
-                            $id = Generator::getUUID();
                             $jsonTime = Converter::getEncoded($dt['schedule_time']);
                             $time = json_decode($jsonTime, true);
 
-                            $sch = Schedule::create([
-                                'id' => $id, 
-                                'firebase_id' => $dt['firebase_id'], 
+                            $sch = Schedule::createSchedule([
                                 'consume_id' => $dt['consume_id'], 
                                 'schedule_desc' => $dt['schedule_desc'],
                                 'schedule_time' => $time,
-                                'created_at' => date("Y-m-d H:i:s"),
-                                'created_by' => $user_id,
-                                'updated_at' => null,
-                            ]);
+                            ], $user_id);
 
                             $success_add++;
                             $schedule_consume .= $dt['schedule_consume'];
@@ -301,38 +295,14 @@ class Commands extends Controller
                         $consume_name = Consume::getConsumeName($user_id, $request->consume_id);
 
                         if ($consume_name) {
-                        $id = Generator::getUUID();
-                        $id = Generator::getUUID();
-
-                        $jsonDetail = Converter::getEncoded($request->consume_detail);
-                        $jsonTag = Converter::getEncoded($request->schedule_tag);
-                            $id = Generator::getUUID();
-
-                        $jsonDetail = Converter::getEncoded($request->consume_detail);
-                        $jsonTag = Converter::getEncoded($request->schedule_tag);
-                        $jsonTime = Converter::getEncoded($request->schedule_time);
-                        $jsonTime = Converter::getEncoded($request->schedule_time);
-                        $detail = json_decode($jsonDetail, true);
-                        $tag = json_decode($jsonTag, true);
                             $jsonTime = Converter::getEncoded($request->schedule_time);
-                        $detail = json_decode($jsonDetail, true);
-                        $tag = json_decode($jsonTag, true);
                             $time = json_decode($jsonTime, true);
 
-                            $sch = Schedule::create([
-                                'id' => $id, 
-                                'firebase_id' => $request->firebase_id, 
+                            $sch = Schedule::createSchedule([
                                 'consume_id' => $request->consume_id, 
-                            'schedule_desc' => $request->schedule_desc,
-                            'schedule_desc' => $request->schedule_desc,
-                            'schedule_tag' => $tag,
                                 'schedule_desc' => $request->schedule_desc,
-                            'schedule_tag' => $tag,
                                 'schedule_time' => $time,
-                                'created_at' => date("Y-m-d H:i:s"),
-                                'created_by' => $user_id,
-                                'updated_at' => null,
-                            ]);
+                            ], $user_id);
 
                             $schedule_consume .= $consume_name;
                             $success_add++;

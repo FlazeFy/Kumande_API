@@ -67,17 +67,14 @@ class CommandsBodyInfo extends Controller
             } else {        
                 $user_id = $request->user()->id;
 
-                $check = BodyInfo::create([
-                    'id' => Generator::getUUID(), 
+                $res = BodyInfo::createBodyInfo([
                     'blood_pressure' => $request->blood_pressure, 
                     'blood_glucose' => $request->blood_glucose, 
                     'gout' => $request->gout,  
                     'cholesterol' => $request->cholesterol, 
-                    'created_at' => date('Y-m-d H:i:s'), 
-                    'created_by' => $user_id
-                ]);
+                ], $user_id);
 
-                if ($check) {
+                if ($res) {
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("create", 'body info'),

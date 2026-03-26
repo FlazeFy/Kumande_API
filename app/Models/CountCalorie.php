@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+
+// Helper
+use App\Helpers\Generator;
 
 /**
  * @OA\Schema(
@@ -26,12 +28,17 @@ use Illuminate\Support\Facades\DB;
 class CountCalorie extends Model
 {
     use HasFactory;
-
     public $incrementing = false;
-
     protected $table = 'count_calorie';
     protected $primaryKey = 'id';
     public $timestamps = false;
     protected $fillable = ['id', 'firebase_id', 'weight', 'height', 'result', 'created_at', 'created_by'];
 
+    public static function createCountCalorie($data, $user_id) {
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['created_by'] = $user_id;
+        $data['id'] = Generator::getUUID();
+            
+        return CountCalorie::create($data);
+    }
 }

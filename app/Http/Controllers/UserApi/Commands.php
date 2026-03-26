@@ -122,9 +122,7 @@ class Commands extends Controller
                         }
                     }
 
-                    $user = User::create([
-                        'id' => $id,
-                        'firebase_id' => $request->firebase_id,
+                    $user = User::createUser([
                         'fullname' => $request->fullname,
                         'username'  => $request->username,
                         'email' => $request->email,
@@ -132,10 +130,7 @@ class Commands extends Controller
                         'gender' => $request->gender,
                         'image_url' => $profile_image,
                         'born_at' => $request->born_at,
-                        'created_at' => date("Y-m-d H:i:s"),
-                        'updated_at' => null,
-                        'deleted_at' => null
-                    ]);
+                    ], $id);
             
                     if ($user) {
                         return response()->json([

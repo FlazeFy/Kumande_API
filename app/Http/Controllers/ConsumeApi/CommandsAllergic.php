@@ -214,15 +214,10 @@ class CommandsAllergic extends Controller
                         'message' => Generator::getMessageTemplate("conflict", 'allergic context'),
                     ], Response::HTTP_CONFLICT);
                 } else {
-                    $id = Generator::getUUID();
-                    $res = Allergic::create([
-                        'id' => $id,
+                    $res = Allergic::createAllergic([
                         'allergic_context' => $request->allergic_context, 
-                        'allergic_desc'  => $request->allergic_desc, 
-                        'created_by' => $user_id,
-                        'created_at' => date('Y-m-d H:i:s'),
-                        'updated_at' => null
-                    ]);
+                        'allergic_desc'  => $request->allergic_desc
+                    ], $user_id);
 
                     if ($res) {
                         return response()->json([

@@ -25,7 +25,6 @@ class RelConsumeList extends Model
     use HasFactory;
     public $incrementing = false;
     public $timestamps = false;
-
     protected $table = 'rel_consume_list';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'consume_id', 'list_id', 'created_at', 'created_by'];

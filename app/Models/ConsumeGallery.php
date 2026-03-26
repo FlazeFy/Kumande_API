@@ -26,7 +26,6 @@ class ConsumeGallery extends Model
     use HasFactory;
     public $incrementing = false;
     public $timestamps = false;
-
     protected $table = 'consume_gallery';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'consume_id', 'gallery_desc', 'gallery_url', 'created_at'];

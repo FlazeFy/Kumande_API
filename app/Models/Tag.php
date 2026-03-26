@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
+// Helper
+use App\Helpers\Generator;
 
 /**
  * @OA\Schema(
@@ -26,7 +28,6 @@ class Tag extends Model
     use HasFactory;
     public $incrementing = false;
     public $timestamps = false;
-
     protected $table = 'tag';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'firebase_id', 'tag_slug', 'tag_name', 'created_at', 'created_by'];
@@ -40,5 +41,14 @@ class Tag extends Model
         }
         
         return $res;
+    }
+
+    public static function createTag($data, $user_id) {
+        $data['tag_slug'] = Generator::getSlug($data['tag_name'], 'tag'); 
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['created_by'] = $user_id;
+        $data['id'] = Generator::getUUID();
+            
+        return Tag::create($data);
     }
 }

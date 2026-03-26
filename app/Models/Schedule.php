@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
+// Helper
+use App\Helpers\Generator;
 
 /**
  * @OA\Schema(
@@ -27,7 +29,6 @@ class Schedule extends Model
 {
     use HasFactory;
     public $incrementing = false;
-
     protected $table = 'schedule';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'firebase_id', 'consume_id', 'schedule_desc', 'schedule_time', 'created_at', 'created_by', 'updated_at'];
@@ -44,5 +45,14 @@ class Schedule extends Model
             ->get();
 
         return $res;
+    }
+
+    public static function createSchedule($data, $user_id) {
+        $data['updated_at'] = null;
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['created_by'] = $user_id;
+        $data['id'] = Generator::getUUID();
+            
+        return Schedule::create($data);
     }
 }

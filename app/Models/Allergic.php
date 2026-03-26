@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
+// Helper
+use App\Helpers\Generator;
 
 /**
  * @OA\Schema(
@@ -27,8 +29,16 @@ class Allergic extends Model
     use HasFactory;
     public $incrementing = false;
     public $timestamps = false;
-
     protected $table = 'allergic';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'firebase_id', 'allergic_context', 'allergic_desc', 'created_at', 'created_by', 'updated_at'];
+
+    public static function createAllergic($data, $user_id) {
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['updated_at'] = null;
+        $data['created_by'] = $user_id;
+        $data['id'] = Generator::getUUID();
+            
+        return Allergic::create($data);
+    }
 }

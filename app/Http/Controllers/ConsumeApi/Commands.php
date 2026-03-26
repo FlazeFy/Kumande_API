@@ -474,15 +474,11 @@ class Commands extends Controller
                 }
 
                 if ($request->payment_price !== 0 && ($request->payment_method !== "Free" || $request->payment_method !== "Gift")) {
-                    $pym = Payment::create([
-                        'id' => Generator::getUUID(),
+                    $pym = Payment::createPayment([
                         'consume_id' => $id,
                         'payment_method' => $request->payment_method,  
                         'payment_price' => $request->payment_price,
-                        'created_at' => $created_at,
-                        'updated_at' => null,
-                        'created_by' => $user_id,
-                    ]);
+                    ], $user_id);
                     $payment_only = false;
                 }
 

@@ -29,7 +29,6 @@ class Reminder extends Model
 {
     use HasFactory;
     public $incrementing = false;
-
     protected $table = 'reminder';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'firebase_id', 'reminder_name', 'reminder_type', 'reminder_context', 'reminder_body', 'reminder_attachment', 'created_at', 'created_by','updated_at'];

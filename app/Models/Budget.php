@@ -27,7 +27,6 @@ class Budget extends Model
 {
     use HasFactory;
     public $incrementing = false;
-
     protected $table = 'budget';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'firebase_id', 'budget_total', 'budget_month_year', 'created_at', 'created_by', 'updated_at', 'over_at'];
@@ -43,5 +42,15 @@ class Budget extends Model
             ->first();
 
         return $res;
+    }
+
+    public static function createBudget($data, $user_id) {
+        $data['over_at'] = null;
+        $data['updated_at'] = null;
+        $data['created_at'] = date('Y-m-d H:i:s');
+        $data['created_by'] = $user_id;
+        $data['id'] = Generator::getUUID();
+            
+        return Budget::create($data);
     }
 }

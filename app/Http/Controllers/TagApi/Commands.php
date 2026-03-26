@@ -147,14 +147,7 @@ class Commands extends Controller
                 ->first();
         
             if (!$check) {
-                $res = Tag::create([
-                    'id' => Generator::getUUID(),
-                    'tag_slug' =>  Generator::getSlug($request->tag_name, 'tag'), 
-                    'tag_name' => $request->tag_name, 
-                    'created_at' => date('Y-m-d H:i:s'), 
-                    'created_by' => $user_id
-                ]);
-
+                $res = Tag::createTag(['tag_name' => $request->tag_name], $user_id);
                 if ($res) {
                     return response()->json([
                         'status' => 'success',

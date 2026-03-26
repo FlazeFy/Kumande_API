@@ -11,7 +11,6 @@ class Admin extends Authenticatable
     use HasFactory;
     use HasApiTokens;
     public $incrementing = false;
-
     protected $table = 'admin';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'username', 'password', 'email', 'telegram_user_id', 'telegram_is_valid', 'created_at', 'updated_at'];

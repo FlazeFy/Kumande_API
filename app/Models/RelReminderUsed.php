@@ -24,7 +24,6 @@ class RelReminderUsed extends Model
     use HasFactory;
     public $incrementing = false;
     public $timestamps = false;
-
     protected $table = 'rel_reminder_used';
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'reminder_id', 'created_by', 'created_at'];
