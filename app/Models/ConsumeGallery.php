@@ -37,4 +37,11 @@ class ConsumeGallery extends Model
             
         return ConsumeGallery::create($data);
     }
+
+    public static function updateConsumeGalleryById($data, $user_id, $id) {
+        return ConsumeGallery::where('consume_gallery.id', $id)
+            ->join('consume','consume.id','=','consume_gallery.consume_id')
+            ->where('created_by',$user_id)
+            ->update($data);
+    }
 }

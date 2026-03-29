@@ -40,4 +40,12 @@ class Payment extends Model
             
         return Payment::create($data);
     }
+
+    public static function updatePaymentById($data, $user_id, $id) {
+        $data['updated_at'] = date('Y-m-d H:i:s');
+
+        return Payment::where('created_by', $user_id)
+            ->where('id', $id)
+            ->update($data);
+    }
 }

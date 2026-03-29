@@ -251,13 +251,10 @@ class CommandsList extends Controller
                     ->first();
 
                 if (!$check) {
-                    $csl = ConsumeList::where('id', $id)
-                        ->where('created_by',$user_id)
-                        ->update([
+                    $csl = ConsumeList::updateConsumeListById([
                         'list_name' => $request->list_name,
-                        'list_desc' => $request->list_desc,
-                        'updated_at' => date("Y-m-d H:i:s")
-                    ]);
+                        'list_desc' => $request->list_desc
+                    ], $user_id, $id);
 
                     if ($csl) {
                         return response()->json([

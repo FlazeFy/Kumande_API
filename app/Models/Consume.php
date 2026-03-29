@@ -102,4 +102,14 @@ class Consume extends Model
             
         return Consume::create($data);
     }
+
+    public static function updateConsumeById($data, $id, $user_id) {
+        $keys = array_keys($data);
+        if (!(count($keys) === 1 && $keys[0] === 'deleted_at')) $data['updated_at'] = date('Y-m-d H:i:s');
+
+        return Consume::where('id',$id)
+            ->whereNull('deleted_at')
+            ->where('created_by',$user_id)
+            ->update($data);
+    }
 }

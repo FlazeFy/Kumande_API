@@ -164,15 +164,11 @@ class Commands extends Controller
             } else {        
                 $user_id = $request->user()->id;
 
-                $sch = Schedule::where('id', $id)
-                    ->where('created_by',$user_id)
-                    ->update([
-                        'consume_id' => $request->consume_id,
-                        'schedule_desc' => $request->schedule_desc,
-                        'schedule_time' => $request->schedule_time,
-                        'updated_at' => date("Y-m-d H:i:s")
-                    ]);
-
+                $sch = Schedule::updateScheduleById([
+                    'consume_id' => $request->consume_id,
+                    'schedule_desc' => $request->schedule_desc,
+                    'schedule_time' => $request->schedule_time
+                ], $user_id, $id);
                 if ($sch) {
                     return response()->json([
                         'status' => 'success',

@@ -53,4 +53,12 @@ class Schedule extends Model
             
         return Schedule::create($data);
     }
+
+    public static function updateScheduleById($data, $user_id, $id) {
+        $data['updated_at'] = date('Y-m-d H:i:s');
+
+        return Schedule::where('id', $id)
+            ->where('created_by', $user_id)
+            ->update($data);
+    }
 }

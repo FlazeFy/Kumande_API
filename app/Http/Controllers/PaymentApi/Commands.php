@@ -86,14 +86,10 @@ class Commands extends Controller
             } else {      
                 $user_id = $request->user()->id;
 
-                $res = Payment::where('created_by',$user_id)
-                    ->where('id',$id)
-                    ->update([
-                        'payment_method' => $request->payment_method,
-                        'payment_price' => $request->payment_price,
-                        'updated_at' => date('Y-m-d H:i:s')
-                    ]);
-            
+                $res = Payment::updatePaymentById([
+                    'payment_method' => $request->payment_method,
+                    'payment_price' => $request->payment_price
+                ], $user_id, $id);
                 if ($res) {
                     return response()->json([
                         'status' => 'success',

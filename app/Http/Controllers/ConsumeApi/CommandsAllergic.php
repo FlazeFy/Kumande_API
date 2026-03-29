@@ -109,13 +109,10 @@ class CommandsAllergic extends Controller
                         ->first();
 
                     if ($exist) {
-                        $res = Allergic::where('id',$id)
-                            ->where('created_by',$user_id)
-                            ->update([
-                                'allergic_context' => $request->allergic_context, 
-                                'allergic_desc'  => $request->allergic_desc, 
-                            ]);
-
+                        $res = Allergic::updateAllergicById([
+                            'allergic_context' => $request->allergic_context, 
+                            'allergic_desc'  => $request->allergic_desc, 
+                        ], $user_id, $id);
                         if ($res) {
                             return response()->json([
                                 'status' => 'success',

@@ -156,13 +156,8 @@ class Commands extends Controller
     public function softDeleteConsumeById(Request $request, $id) {
         try { 
             $user_id = $request->user()->id;
-            $res = Consume::where('id', $id)
-                ->where('created_by',$user_id)
-                ->whereNull('deleted_at')
-                ->update([
-                    'deleted_at' => date('Y-m-d H:i:s')
-                ]);
 
+            $res = Consume::updateConsumeById(['deleted_at' => date('Y-m-d H:i:s')], $id, $user_id);
             if ($res > 0) {                
                 return response()->json([
                     'status' => 'success',
@@ -252,18 +247,14 @@ class Commands extends Controller
                 $jsonDetail = Converter::getEncoded($request->consume_detail);
                 $detail = json_decode($jsonDetail, true);
 
-                $csm = Consume::where('id', $id)
-                    ->whereNull('deleted_at')
-                    ->where('created_by',$user_id)
-                    ->update([
+                $csm = Consume::updateConsumeById([
                         'consume_type' => $request->consume_type,
                         'consume_name' => $request->consume_name,
                         'consume_from' => $request->consume_from,
                         'consume_tag' => $request->consume_tag,
                         'consume_detail' => $detail,
-                        'consume_comment' => $request->consume_comment,
-                        'updated_at' => date("Y-m-d H:i:s")
-                    ]);
+                        'consume_comment' => $request->consume_comment
+                    ], $id, $user_id);
 
                 if ($csm) {
                     return response()->json([
@@ -353,13 +344,9 @@ class Commands extends Controller
             } else {        
                 $user_id = $request->user()->id;
 
-                $csm = Consume::where('id', $id)
-                    ->whereNull('deleted_at')
-                    ->where('created_by',$user_id)
-                    ->update([
+                $csm = Consume::updateConsumeById([
                         'is_favorite' => $request->is_favorite,
-                        'updated_at' => date("Y-m-d H:i:s")
-                    ]);
+                    ], $id, $user_id);
 
                 if ($csm) {
                     return response()->json([

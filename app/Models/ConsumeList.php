@@ -52,4 +52,12 @@ class ConsumeList extends Model
             
         return ConsumeList::create($data);
     }
+
+    public static function updateConsumeListById($data, $user_id, $id) {
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        
+        return ConsumeList::where('id', $id)
+            ->where('created_by', $user_id)
+            ->update($data);
+    }
 }

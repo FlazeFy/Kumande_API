@@ -306,7 +306,7 @@ class CommandsGallery extends Controller
      *     ),
      * )
      */
-    public function updateGalleryById(Request $request,$gallery_id) {
+    public function updateGalleryById(Request $request, $gallery_id) {
         try {
             $validator = Validation::getValidateUpdateConsumeGallery($request);
 
@@ -317,13 +317,8 @@ class CommandsGallery extends Controller
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
                 $user_id = $request->user()->id;
-                $res = ConsumeGallery::where('consume_gallery.id',$gallery_id)
-                    ->join('consume','consume.id','=','consume_gallery.consume_id')
-                    ->where('created_by',$user_id)
-                    ->update([
-                        'gallery_desc' => $request->gallery_desc
-                    ]);
 
+                $res = ConsumeGallery::updateConsumeGalleryById(['gallery_desc' => $request->gallery_desc], $user_id, $gallery_id);
                 if ($res > 0) {
                     return response()->json([
                         'status' => 'success',

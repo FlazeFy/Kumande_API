@@ -219,15 +219,13 @@ class Commands extends Controller
             } else {        
                 $user_id = $request->user()->id;
 
-                $user = User::where('id',$user_id)->update([
+                $res = User::updateUserById([
                     'fullname' => $request->fullname,
                     'email' => $request->email,
                     'gender' => $request->gender,
-                    'born_at' => $request->born_at,
-                    'updated_at' => date("Y-m-d H:i:s")
-                ]);
-        
-                if ($user > 0) {
+                    'born_at' => $request->born_at
+                ], $user_id);
+                if ($res > 0) {
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("update", 'account')
@@ -301,11 +299,8 @@ class Commands extends Controller
                 $user_data = User::getProfile($user_id);
                 $telegram_user_id_old = $user_data->telegram_user_id;
 
-                $user = User::where('id',$user_id)->update([
-                    'telegram_user_id' => $request->telegram_user_id,
-                ]);
-
-                if ($user > 0) {
+                $res = User::updateUserById(['telegram_user_id' => $request->telegram_user_id], $user_id);
+                if ($res > 0) {
                     if ($telegram_user_id_old !== null) {
                         $response = Telegram::sendMessage([
                             'chat_id' => $telegram_user_id_old,
@@ -387,11 +382,8 @@ class Commands extends Controller
                 $user_data = User::getProfile($user_id);
                 $telegram_user_id_old = $user_data->telegram_user_id;
 
-                $user = User::where('id',$user_id)->update([
-                    'telegram_user_id' => $request->telegram_user_id,
-                ]);
-
-                if ($user > 0) {
+                $res = User::updateUserById(['telegram_user_id' => $request->telegram_user_id], $user_id);
+                if ($res > 0) {
                     if ($telegram_user_id_old !== null) {
                         $response = Telegram::sendMessage([
                             'chat_id' => $telegram_user_id_old,
@@ -474,11 +466,8 @@ class Commands extends Controller
                 if (Validation::isValidUTCOffset($timezone)) {
                     $user_id = $request->user()->id;
 
-                    $user = User::where('id',$user_id)->update([
-                        'timezone' => $timezone,
-                    ]);
-            
-                    if ($user > 0) {
+                    $res = User::updateUserById(['timezone' => $timezone], $user_id);
+                    if ($res > 0) {
                         return response()->json([
                             'status' => 'success',
                             'message' => Generator::getMessageTemplate("update", 'timezone')
@@ -556,12 +545,8 @@ class Commands extends Controller
             } else {        
                 $user_id = $request->user()->id;
 
-                $user = User::where('id',$user_id)->update([
-                    'image_url' => $request->image_url,
-                    'updated_at' => date("Y-m-d H:i:s")
-                ]);
-
-                if ($user > 0) {
+                $res = User::updateUserById(['image_url' => $request->image_url], $user_id);
+                if ($res > 0) {
                     return response()->json([
                         'status' => 'success',
                         'message' => Generator::getMessageTemplate("update", 'profile image')

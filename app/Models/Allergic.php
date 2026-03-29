@@ -41,4 +41,12 @@ class Allergic extends Model
             
         return Allergic::create($data);
     }
+
+    public static function updateAllergicById($data, $user_id, $id) {
+        $data['updated_at'] = date('Y-m-d H:i:s');
+
+        return Allergic::where('id',$id)
+            ->where('created_by',$user_id)
+            ->update($data);
+    }
 }
