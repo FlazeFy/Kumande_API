@@ -172,10 +172,7 @@ class Commands extends Controller
             $user_id = $request->user()->id;
 
             $data = Budget::find($id);
-            $res = Budget::where('created_by',$user_id)
-                ->where('id',$id)
-                ->delete();
-
+            $res = Budget::deleteBudgetById($user_id, $id);
             if ($res) {
                 $user = User::getProfile($user_id);
                 $fcm_token = $user->firebase_fcm_token;

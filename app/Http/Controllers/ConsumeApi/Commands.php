@@ -74,18 +74,11 @@ class Commands extends Controller
     public function hardDeleteConsumeById(Request $request, $id) {
         try { 
             $user_id = $request->user()->id;
-            $res = Consume::where('id', $id)
-                ->where('created_by',$user_id)
-                ->delete();
 
+            $res = Consume::deleteConsumeById($user_id, $id);
             if ($res) {
-                Schedule::where('consume_id', $id)
-                    ->where('created_by',$user_id)
-                    ->delete();
-
-                RelConsumeList::where('consume_id', $id)
-                    ->where('created_by',$user_id)
-                    ->delete();
+                Schedule::deleteScheduleByContextId($user_id, $id, 'consume_id');;
+                RelConsumeList::deleteRelConsumeListByContextId($user_id, $id, 'consume_id');
                 
                 return response()->json([
                     'status' => 'success',

@@ -71,18 +71,12 @@ class CommandsList extends Controller
      *     ),
      * )
      */
-    public function deleteListByListId(Request $request,$list_id) {
+    public function deleteListByListId(Request $request, $list_id) {
         try {
             $user_id = $request->user()->id;
 
-            $rel_res = RelConsumeList::where('list_id',$list_id)
-                ->where('created_by',$user_id)
-                ->delete();
-
-            $res = ConsumeList::where('id', $list_id)
-                ->where('created_by',$user_id)
-                ->delete();
-
+            $rel_res = RelConsumeList::deleteRelConsumeListByContextId($user_id, $list_id, 'list_id');
+            $res = ConsumeList::deleteConsumeListById($user_id, $list_id);
             if ($res) {
                 return response()->json([
                     "status"=> 'success',
@@ -154,10 +148,7 @@ class CommandsList extends Controller
         try {
             $user_id = $request->user()->id;
 
-            $res = RelConsumeList::where('id', $rel_id)
-                ->where('created_by',$user_id)
-                ->delete();
-
+            $res = RelConsumeList::deleteRelConsumeListByContextId($user_id, $rel_id, 'id');
             if ($res) {
                 return response()->json([
                     "message"=> Generator::getMessageTemplate("custom", 'consume removed from list'), 

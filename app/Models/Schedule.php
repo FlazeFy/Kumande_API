@@ -61,4 +61,8 @@ class Schedule extends Model
             ->where('created_by', $user_id)
             ->update($data);
     }
+
+    public static function deleteScheduleByContextId($user_id, $context_id, $context_col) {
+        return Schedule::where('created_by', $user_id)->where($context_col, $context_id)->delete();
+    }
 }

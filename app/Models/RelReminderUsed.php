@@ -37,4 +37,8 @@ class RelReminderUsed extends Model
             
         return RelReminderUsed::create($data);
     }
+
+    public static function deleteRelReminderUsedByContextId($user_id, $context_id, $context_col) {
+        return RelReminderUsed::where('created_by', $user_id)->where($context_col, $context_id)->delete();
+    }
 }

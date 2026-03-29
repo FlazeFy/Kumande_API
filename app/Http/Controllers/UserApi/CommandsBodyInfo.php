@@ -158,15 +158,8 @@ class CommandsBodyInfo extends Controller
             $ids = explode(",", $id);
 
             foreach($ids as $dt) {
-                $res = BodyInfo::where('created_by',$user_id)
-                    ->where('id',$dt)
-                    ->delete();
-
-                if ($res) {
-                    $success++;
-                } else {
-                    $failed++;
-                }
+                $res = BodyInfo::deleteBodyInfoById($user_id, $dt);
+                $res ? $success++ : $failed++;
             }
 
             if (count($ids) > 0) {

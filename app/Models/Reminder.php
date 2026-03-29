@@ -60,4 +60,8 @@ class Reminder extends Model
             
         return Reminder::create($data);
     }
+
+    public static function deleteReminderById($user_id, $id) {
+        return Reminder::where('created_by', $user_id)->where('id', $id)->delete();
+    }
 }

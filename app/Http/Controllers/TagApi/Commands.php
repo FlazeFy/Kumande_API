@@ -67,10 +67,7 @@ class Commands extends Controller
         try {
             $user_id = $request->user()->id;
 
-            $res = Tag::where('created_by',$user_id)
-                ->where('id',$id)
-                ->delete();
-        
+            $res = Tag::deleteTagById($user_id, $id);
             if ($res) {
                 return response()->json([
                     'status' => 'success',

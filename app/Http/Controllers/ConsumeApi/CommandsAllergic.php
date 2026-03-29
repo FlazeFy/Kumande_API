@@ -286,13 +286,11 @@ class CommandsAllergic extends Controller
      *     ),
      * )
      */
-    public function deleteAllergicById(Request $request,$id) {
+    public function deleteAllergicById(Request $request, $id) {
         try {
             $user_id = $request->user()->id;
-            $res = Allergic::where('id',$id)
-                ->where('created_by',$user_id)
-                ->delete();
 
+            $res = Allergic::deleteAllergicById($user_id, $id);
             if ($res) {
                 return response()->json([
                     'status' => 'success',

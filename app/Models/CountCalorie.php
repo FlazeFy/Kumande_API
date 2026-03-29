@@ -41,4 +41,8 @@ class CountCalorie extends Model
             
         return CountCalorie::create($data);
     }
+
+    public static function deleteCountCalorieById($user_id, $id) {
+        return CountCalorie::where('created_by', $user_id)->where('id', $id)->delete();
+    }
 }

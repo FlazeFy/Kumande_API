@@ -51,4 +51,8 @@ class Budget extends Model
             
         return Budget::create($data);
     }
+
+    public static function deleteBudgetById($user_id, $id) {
+        return Budget::where('created_by', $user_id)->where('id', $id)->delete();
+    }
 }

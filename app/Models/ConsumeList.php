@@ -60,4 +60,8 @@ class ConsumeList extends Model
             ->where('created_by', $user_id)
             ->update($data);
     }
+
+    public static function deleteConsumeListById($user_id, $id) {
+        return ConsumeList::where('created_by', $user_id)->where('id', $id)->delete();
+    }
 }

@@ -48,4 +48,8 @@ class Payment extends Model
             ->where('id', $id)
             ->update($data);
     }
+
+    public static function deletePaymentById($user_id, $id) {
+        return Payment::where('created_by', $user_id)->where('id', $id)->delete();
+    }
 }

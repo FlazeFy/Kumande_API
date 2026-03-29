@@ -157,15 +157,8 @@ class CommandsCalorie extends Controller
             $ids = explode(",", $id);
 
             foreach($ids as $dt) {
-                $res = CountCalorie::where('created_by',$user_id)
-                    ->where('id',$dt)
-                    ->delete();
-
-                if ($res) {
-                    $success++;
-                } else {
-                    $failed++;
-                }
+                $res = CountCalorie::deleteCountCalorieById($user_id, $id);
+                $res ? $success++ : $failed++;
             }
 
             if (count($ids) > 0) {

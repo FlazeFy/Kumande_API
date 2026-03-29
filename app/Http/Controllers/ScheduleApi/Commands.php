@@ -73,10 +73,7 @@ class Commands extends Controller
         try {
             $user_id = $request->user()->id;
 
-            $res = Schedule::where('id', $id)
-                ->where('created_by',$user_id)
-                ->delete();
-
+            $res = Schedule::deleteScheduleByContextId($user_id, $id, 'id');
             if ($res) {
                 return response()->json([
                     "message"=> Generator::getMessageTemplate("delete", 'schedule'), 

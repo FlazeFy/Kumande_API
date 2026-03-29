@@ -112,4 +112,8 @@ class Consume extends Model
             ->where('created_by',$user_id)
             ->update($data);
     }
+
+    public static function deleteConsumeById($user_id, $id) {
+        return Consume::where('created_by', $user_id)->where('id', $id)->delete();
+    }
 }

@@ -49,4 +49,8 @@ class Allergic extends Model
             ->where('created_by',$user_id)
             ->update($data);
     }
+
+    public static function deleteAllergicById($user_id, $id) {
+        return Allergic::where('created_by', $user_id)->where('id', $id)->delete();
+    }
 }

@@ -41,4 +41,8 @@ class BodyInfo extends Model
             
         return BodyInfo::create($data);
     }
+
+    public static function deleteBodyInfoById($user_id, $id) {
+        return BodyInfo::where('created_by', $user_id)->where('id', $id)->delete();
+    }
 }

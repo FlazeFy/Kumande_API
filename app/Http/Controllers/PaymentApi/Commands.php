@@ -162,10 +162,7 @@ class Commands extends Controller
         try {
             $user_id = $request->user()->id;
 
-            $res = Payment::where('created_by',$user_id)
-                ->where('id', $id)
-                ->delete();
-
+            $res = Payment::deletePaymentById($user_id, $id);
             if ($res) {
                 return response()->json([
                     'status' => 'success',

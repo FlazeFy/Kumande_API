@@ -44,4 +44,8 @@ class Tag extends Model
             
         return Tag::create($data);
     }
+
+    public static function deleteTagById($user_id, $id) {
+        return Tag::where('created_by', $user_id)->where('id', $id)->delete();
+    }
 }

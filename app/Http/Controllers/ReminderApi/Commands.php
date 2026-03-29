@@ -148,10 +148,7 @@ class Commands extends Controller
         try {
             $user_id = $request->user()->id;
 
-            $res = RelReminderUsed::where('created_by',$user_id)
-                ->where('id',$id)
-                ->delete();
-        
+            $res = RelReminderUsed::deleteRelReminderUsedByContextId($user_id, $id, 'id');
             if ($res) {
                 return response()->json([
                     'status' => 'success',
@@ -223,14 +220,9 @@ class Commands extends Controller
         try {
             $user_id = $request->user()->id;
 
-            $reminder = Reminder::where('created_by',$user_id)
-                ->where('id', $id)
-                ->delete();
-
+            $reminder = Reminder::deleteReminderById($user_id, $id);
             if ($reminder) {
-                RelReminderUsed::where('created_by',$user_id)
-                    ->where('reminder_id',$id)
-                    ->delete();
+                RelReminderUsed::deleteRelReminderUsedByContextId($user_id, $id, 'reminder_id');
 
                 $user = User::select('username','telegram_user_id','line_user_id','firebase_fcm_token')
                     ->where('id',$user_id)

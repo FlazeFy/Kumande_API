@@ -38,4 +38,8 @@ class RelConsumeList extends Model
             
         return RelConsumeList::create($data);
     }
+
+    public static function deleteRelConsumeListByContextId($user_id, $context_id, $context_col) {
+        return RelConsumeList::where('created_by', $user_id)->where($context_col, $context_id)->delete();
+    }
 }
