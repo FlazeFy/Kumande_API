@@ -122,7 +122,7 @@ Route::prefix('/v1/list')->middleware(['auth:sanctum'])->group(function () {
 
 Route::prefix('/v1/schedule')->middleware(['auth:sanctum'])->group(function () {
     Route::get('/', [QueryScheduleApi::class, 'getMySchedule']);
-    Route::get('/day/{day}', [QueryScheduleApi::class, 'getTodaySchedule']);
+    Route::get('/day/{day}', [QueryScheduleApi::class, 'getScheduleByDay']);
     Route::delete('/delete/{id}', [CommandScheduleApi::class, 'deleteScheduleById']);
     Route::put('/update/data/{id}', [CommandScheduleApi::class, 'updateScheduleDataById']);
     Route::post('/create', [CommandScheduleApi::class, 'createSchedule']);

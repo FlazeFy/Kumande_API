@@ -72,46 +72,12 @@ class Queries extends Controller
         try {
             $user_id = $request->user()->id;
 
-            $pym = Payment::selectRaw('MONTH(created_at) as context, SUM(payment_price) as total')
-                ->groupBy('context')
-                ->where('created_by', $user_id)
-                ->whereRaw('YEAR(created_at) = '.$year)
-                ->orderBy('context','ASC')
-                ->get();
-
-            $obj = [];
-            for ($i = 1; $i <= 12; $i++) {
-                $spend = 0;
-                $timestamp = mktime(0, 0, 0, $i, 1, date('Y'));
-                $mon = date('M', $timestamp);
-            
-                foreach ($pym as $cs) {
-                    if ($cs->context === $i) {
-                        $spend = $cs->total;
-                        break;
-                    }
-                }
-            
-                $obj[] = [
-                    'context' => $mon,
-                    'total' => (int)$spend,
-                ];
-            }
-
-            if (count($obj) > 0) {
-                $collection = collect($obj);
-
-                return response()->json([
-                    'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'analytic data'), 
-                    'data' => $collection
-                ], Response::HTTP_OK);
-            } else {
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'analytic data'),
-                ], Response::HTTP_NOT_FOUND);
-            }
+            $res = Payment::findAllMonthlyPayment($user_id, $year);
+            return response()->json([
+                'status' => 'success',
+                'message' => Generator::getMessageTemplate("fetch", 'analytic data'), 
+                'data' => $res
+            ], Response::HTTP_OK);
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -186,40 +152,11 @@ class Queries extends Controller
         try {
             $user_id = $request->user()->id;
 
-            $pym = Payment::selectRaw('DAY(created_at) as context, SUM(payment_price) as total')
-                ->groupBy('context')
-                ->where('created_by', $user_id)
-                ->whereRaw('YEAR(created_at) = '.$year)
-                ->whereRaw('MONTH(created_at) = '.$month)
-                ->orderBy('context','ASC')
-                ->get();
-
-            $obj = [];
-            $date = $year."-".$month."-01";
-            $max = date("t", strtotime($date));
-
-            for ($i = 1; $i <= $max; $i++) {
-                $spend = 0;
-            
-                foreach ($pym as $cs) {
-                    if ($cs->context === $i) {
-                        $spend = $cs->total;
-                        break;
-                    }
-                }
-            
-                $obj[] = [
-                    'context' => (string)$i,
-                    'total' => (int)$spend,
-                ];
-            }
-
-            $collection = collect($obj);
-
+            $res = Payment::findAllDailyPayment($user_id, $year, $month);
             return response()->json([
                 'status' => 'success',
                 'message' => Generator::getMessageTemplate("fetch", 'analytic data'), 
-                'data' => $collection
+                'data' => $res
             ], Response::HTTP_OK);
         } catch(\Exception $e) {
             return response()->json([
@@ -295,32 +232,12 @@ class Queries extends Controller
         try {
             $user_id = $request->user()->id;
 
-            $pym = DB::table(function ($sub) use ($month, $year, $user_id) {
-                    $sub->selectRaw('SUM(payment_price) as total')
-                        ->from('payment')
-                        ->whereRaw('MONTH(created_at) = ?', [$month])
-                        ->whereRaw('YEAR(created_at) = ?', [$year])
-                        ->where('created_by', $user_id)
-                        ->groupByRaw('DAY(created_at)');
-                }, 'q')
-                ->selectRaw('CAST(IFNULL(ROUND(AVG(total)), 0) as INT) as average')
-                ->selectRaw('CAST(IFNULL(MAX(total), 0) as INT) as max')
-                ->selectRaw('CAST(IFNULL(MIN(total), 0) as INT) as min')
-                ->selectRaw('CAST(IFNULL(SUM(total), 0) as INT) as total')
-                ->first();
-            
-            if ($pym) {
-                return response()->json([
-                    'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'analytic data'), 
-                    'data' => $pym
-                ], Response::HTTP_OK);
-            } else {
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'analytic data'), 
-                ], Response::HTTP_NOT_FOUND);
-            }
+            $res = Payment::getMonthlyPaymentStats($user_id, $year, $month);
+            return response()->json([
+                'status' => 'success',
+                'message' => Generator::getMessageTemplate("fetch", 'analytic data'),
+                'data' => $res
+            ], Response::HTTP_OK);
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -377,27 +294,12 @@ class Queries extends Controller
         try {
             $user_id = $request->user()->id;
 
-            $csm = DB::table(function ($sub) use ($user_id) {
-                    $sub->selectRaw('DATE(created_at) as payment_date, SUM(payment_price) as total_payment')
-                        ->from('payment')
-                        ->where('created_by', $user_id)
-                        ->groupByRaw('DATE(created_at)');
-                }, 'q')
-                ->selectRaw('COUNT(payment_date) as total_days, CAST(IFNULL(SUM(total_payment), 0) as INT) as total_payment')
-                ->first();
-
-            if ($csm) {
-                return response()->json([
-                    'status' => 'success',
-                    'message' => Generator::getMessageTemplate("fetch", 'analytic data'), 
-                    'data' => $csm
-                ], Response::HTTP_OK);
-            } else {
-                return response()->json([
-                    'status' => 'failed',
-                    'message' => Generator::getMessageTemplate("not_found", 'analytic data'),
-                ], Response::HTTP_NOT_FOUND);
-            }
+            $res = Payment::getLifeTimeSpend($user_id);
+            return response()->json([
+                'status' => 'success',
+                'message' => Generator::getMessageTemplate("fetch", 'analytic data'), 
+                'data' => $res
+            ], Response::HTTP_OK);
         } catch(\Exception $e) {
             return response()->json([
                 'status' => 'error',
@@ -478,21 +380,10 @@ class Queries extends Controller
     public function getMonthlySpend(Request $request, $month, $year) {
         try {
             $user_id = $request->user()->id;
+            $paginate = $request->query('per_page_key') ?? null;
 
-            $csm = Payment::select('consume_name','consume_type','consume_id','payment_method','payment_price','payment.created_at')
-                ->join('consume','consume.id','=','payment.consume_id')
-                ->where('payment.created_by',$user_id)
-                ->whereRaw("DATE_FORMAT(payment.created_at, '%b') = ?",[$month])
-                ->whereRaw('YEAR(payment.created_at) = ?',[$year])
-                ->orderby('payment.created_by','DESC');
-
-            if ($request->has('all') && $request->all === 'true') {
-                $csm = $csm->get();
-            } else {
-                $csm = $csm->paginate(15);
-            }
-
-            if (count($csm) > 0) {
+            $res = Payment::getAllMonthlySpend($user_id, $year, $month, $paginate);
+            if (count($res) > 0) {
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'payment'), 

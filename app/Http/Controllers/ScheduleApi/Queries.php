@@ -65,25 +65,13 @@ class Queries extends Controller
     public function getMySchedule(Request $request) {
         try {
             $user_id = $request->user()->id;
-            $time_query = Query::querySelect("get_from_json_col_str","schedule_time","category");
-            $day_query = Query::querySelect("get_from_json_col_str","schedule_time","day");
 
-            $sch = Schedule::selectRaw("
-                    $day_query AS day,
-                    $time_query AS time,
-                    GROUP_CONCAT(consume_name SEPARATOR ', ') AS schedule_consume
-                ")
-                ->join('consume','consume.id','=','schedule.consume_id')
-                ->where('schedule.created_by', $user_id)
-                ->groupBy(DB::raw("$day_query"), DB::raw("$time_query"))
-                ->orderByRaw("DAYNAME($day_query)")
-                ->get();
-        
-            if (count($sch) > 0) {
+            $res = Schedule::findMySchedule($user_id);        
+            if (count($res) > 0) {
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'schedule'), 
-                    'data' => $sch
+                    'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
@@ -151,29 +139,12 @@ class Queries extends Controller
      *     ),
      * )
      */
-    public function getTodaySchedule(Request $request, $day) {
+    public function getScheduleByDay(Request $request, $day) {
         try {
             $user_id = $request->user()->id;
-            $time_query = Query::querySelect("get_from_json_col_str","schedule_time","time");
 
-            $sch = Schedule::select('schedule.id','schedule_desc','consume_name','schedule_time')
-                ->join('consume','consume.id','=','schedule.consume_id')
-                ->where('schedule.created_by', $user_id)
-                ->whereRaw("schedule_time LIKE '%".'"'."day".'"'.":".'"'.$day.'"'."%'")
-                ->orderByRaw("$time_query ASC")
-                ->get();
-
-            if (count($sch) > 0) {
-                $res = [];
-                foreach ($sch as $dt) {
-                    $res[] = [
-                        'id' => $dt->id,
-                        'schedule_desc' => $dt->schedule_desc,
-                        'consume_name' => $dt->consume_name,
-                        'schedule_time' => $dt->schedule_time[0],
-                    ];    
-                }
-
+            $res = Schedule::findScheduleByDay($user_id, $day);
+            if (count($res) > 0) {
                 return response()->json([
                     "message"=> Generator::getMessageTemplate("fetch", 'schedule'), 
                     "status"=> 'success',

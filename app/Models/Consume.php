@@ -70,6 +70,27 @@ class Consume extends Model
         return $res->get();
     }
 
+    public static function findConsumeBySlug($user_id, $slug) {
+        return Consume::selectRaw("consume_name, consume_from, 
+                CAST(REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '') as UNSIGNED) as calorie, 
+                REPLACE(JSON_EXTRACT(consume_detail, '$[0].provide'), '\"', '') as provide,
+                CAST(COALESCE(CAST(AVG(payment_price) as UNSIGNED), 0) as UNSIGNED) as average_price")
+            ->leftjoin('payment','payment.consume_id','=','consume.id')
+            ->where('consume.created_by', $user_id)
+            ->where('slug_name', $slug)
+            ->groupby('consume.id')
+            ->first();
+    }
+
+    public static function findAverageCalorieAndPrice($user_id, $list_id) {
+        return Consume::selectRaw("AVG(CAST(REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '') as unsigned)) as average_calorie, AVG(payment_price) as average_price")
+            ->leftjoin('payment','payment.consume_id','=','consume.id')
+            ->leftjoin('rel_consume_list','consume.id','=','rel_consume_list.consume_id')
+            ->where('consume.created_by', $user_id)
+            ->where('rel_consume_list.list_id', $list_id)
+            ->first();
+    }
+
     public static function searchConsumeNameAvailable($user_id, $search) {
         $res = Consume::select("id")
             ->whereRaw("LOWER(REPLACE(consume_name,' ','')) = ?", [$search])
@@ -115,11 +136,11 @@ class Consume extends Model
             ->first();
     }
 
-    public static function findLastConsumedByTagSlugAndCreatedAt() {
+    public static function findLastConsumedByTagSlugAndCreatedAt($user_id, $slug, $last_used) {
         return Consume::select('consume_name','consume_type','slug_name')
             ->whereRaw('consume_tag like '."'".'%"slug_name":"'.$slug.'"%'."'")
             ->where('consume.created_by', $user_id)
-            ->where('consume.created_at', $res->last_used)
+            ->where('consume.created_at', $last_used)
             ->first();
     }
 

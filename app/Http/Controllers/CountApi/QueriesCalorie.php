@@ -65,16 +65,12 @@ class QueriesCalorie extends Controller
         try {
             $user_id = $request->user()->id;
 
-            $cal = CountCalorie::select('weight', 'height', 'result','created_at')
-                ->where('created_by', $user_id)
-                ->orderBy('created_at', 'DESC')
-                ->first();
-
-            if ($cal) {
+            $res = CountCalorie::findLatestCountCalorie($user_id);
+            if ($res) {
                 return response()->json([
                     "message"=> Generator::getMessageTemplate("fetch", 'count data'), 
                     "status"=> 'success',
-                    "data"=> $cal
+                    "data"=> $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([

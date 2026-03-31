@@ -43,6 +43,19 @@ class ConsumeList extends Model
         return ConsumeList::where('created_by',$user_id)->inRandomOrder()->first();
     }
 
+    public static function findConsumeListById($user_id, $id) {
+        return ConsumeList::select('slug_name','list_name','list_desc','list_tag','created_at')
+            ->where('created_by', $user_id)
+            ->where('id', $id)
+            ->first();
+    }
+
+    public static function findAllConsumeList($user_id, $paginate, $order = 'desc') {
+        return ConsumeList::select('id','slug_name','list_name','list_desc','list_tag','created_at')
+            ->where('created_by', $user_id)
+            ->paginate($paginate);
+    }
+
     public static function createConsumeList($data, $user_id) {
         $data['slug_name'] = Generator::getSlug($data['list_name'], "consume_list");
         $data['created_at'] = $data['created_at'] ?? date("Y-m-d H:i:s");

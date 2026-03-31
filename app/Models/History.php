@@ -14,7 +14,7 @@ class History extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'history_type', 'history_context', 'created_at', 'created_by'];
 
-    public static function getAllHistory($type, $user_id, $paginate) {
+    public static function findAllHistory($type, $user_id, $paginate) {
         $select_query = $type === "admin" ? 'history.id, username, history_type, history_context, history.created_at' : '*';
         
         $res = History::selectRaw($select_query);

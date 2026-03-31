@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 // Helper
 use App\Helpers\Generator;
+use App\Helpers\Query;
 
 /**
  * @OA\Schema(
@@ -36,6 +37,41 @@ class Schedule extends Model
         'schedule_time' => 'array',
     ];
 
+    public static function findScheduleByDay($user_id, $day) {
+        $time_query = Query::querySelect("get_from_json_col_str","schedule_time","time");
+
+        return Schedule::select('schedule.id', 'schedule_desc', 'consume_name', 'schedule_time')
+            ->join('consume', 'consume.id', '=', 'schedule.consume_id')
+            ->where('schedule.created_by', $user_id)
+            ->whereRaw('schedule_time LIKE ?', ['%"day":"'.$day.'"%'])
+            ->orderByRaw("$time_query ASC")
+            ->get()
+            ->map(function ($dt) {
+                return [
+                    'id' => $dt->id,
+                    'schedule_desc' => $dt->schedule_desc,
+                    'consume_name' => $dt->consume_name,
+                    'schedule_time' => $dt->schedule_time[0],
+                ];
+            });
+    }
+
+    public static function findMySchedule($user_id) {
+        $time_query = Query::querySelect("get_from_json_col_str","schedule_time","category");
+        $day_query = Query::querySelect("get_from_json_col_str","schedule_time","day");
+
+        return Schedule::selectRaw("
+                $day_query AS day,
+                $time_query AS time,
+                GROUP_CONCAT(consume_name SEPARATOR ', ') AS schedule_consume
+            ")
+            ->join('consume','consume.id','=','schedule.consume_id')
+            ->where('schedule.created_by', $user_id)
+            ->groupBy(DB::raw("$day_query"), DB::raw("$time_query"))
+            ->orderByRaw("DAYNAME($day_query)")
+            ->get();
+    }
+
     public static function getAllScheduleReminder() {
         return Schedule::select('schedule.id','user.id as user_id','username','firebase_fcm_token','telegram_user_id','line_user_id','email','timezone','consume_name','consume_type','consume_detail','consume_tag','schedule_time')
             ->join('user','user.id','=','schedule.created_by')
@@ -57,9 +93,7 @@ class Schedule extends Model
     public static function updateScheduleById($data, $user_id, $id) {
         $data['updated_at'] = date('Y-m-d H:i:s');
 
-        return Schedule::where('id', $id)
-            ->where('created_by', $user_id)
-            ->update($data);
+        return Schedule::where('id', $id)->where('created_by', $user_id)->update($data);
     }
 
     public static function deleteScheduleByContextId($user_id, $context_id, $context_col) {

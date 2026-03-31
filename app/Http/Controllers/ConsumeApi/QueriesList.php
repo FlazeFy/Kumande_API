@@ -107,37 +107,13 @@ class QueriesList extends Controller
     public function getAllList(Request $request, $page_limit, $order) {
         try {
             $user_id = $request->user()->id;
-
-            $csl = ConsumeList::select('id','slug_name','list_name','list_desc','list_tag','created_at')
-                ->orderBy('created_at', $order)
-                ->where('created_by', $user_id)
-                ->paginate($page_limit);
-
+            $paginate = $request->query('per_page_key') ?? null;
+            
+            $csl = ConsumeList::findAllConsumeList($user_id, $paginate, $order);
             if ($csl->count() > 0) {
                 foreach($csl as $idx => $dt) {
-                    $csm = RelConsumeList::selectRaw("consume.id, consume.slug_name, consume_name, consume_type, CAST(REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '') as unsigned) as calorie, REPLACE(JSON_EXTRACT(consume_detail, '$[0].provide'), '\"', '') as provide, consume_from")
-                        ->join('consume','consume.id','=','rel_consume_list.consume_id')
-                        ->where('list_id',$dt->id)
-                        ->get();
-                    
-                    foreach($csm as $jdx => $du) {
-                        $pyt = Payment::selectRaw('CAST(AVG(payment_price) as unsigned) as average_price')
-                            ->where('consume_id', $du->id)
-                            ->groupby('consume_id')
-                            ->first();
-
-                        if ($pyt) {
-                            $csm[$jdx]->average_price = $pyt->average_price;
-                        } else {
-                            $csm[$jdx]->average_price = null;
-                        }
-                    }
-
-                    if (count($csm) > 0) {
-                        $csl[$idx]->consume = $csm;
-                    } else {
-                        $csl[$idx]->consume = null;
-                    }
+                    $csm = RelConsumeList::findRelConsumeList($user_id, $dt->id);
+                    $csl[$idx]->consume = count($csm) > 0 ? $csm : null;
                 }
 
                 return response()->json([
@@ -239,37 +215,12 @@ class QueriesList extends Controller
         try {
             $user_id = $request->user()->id;
 
-            $csl = ConsumeList::select('id','slug_name','list_name','list_desc','list_tag','created_at')
-                ->where('created_by', $user_id)
-                ->where('id', $id)
-                ->first();
-
+            $csl = ConsumeList::findConsumeListById($user_id, $id);
             if ($csl) {
-                $csm = RelConsumeList::selectRaw("consume.id as consume_id, rel_consume_list.id, consume.slug_name, consume_name, consume_type, CAST(REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '') as unsigned) as calorie, REPLACE(JSON_EXTRACT(consume_detail, '$[0].provide'), '\"', '') as provide, consume_from")
-                    ->join('consume','consume.id','=','rel_consume_list.consume_id')
-                    ->where('list_id',$csl->id)
-                    ->get();
-                
-                foreach($csm as $jdx => $du) {
-                    $pyt = Payment::selectRaw('CAST(AVG(payment_price) as unsigned) as average_price')
-                        ->where('consume_id', $du->consume_id)
-                        ->groupby('consume_id')
-                        ->first();
-
-                    if ($pyt) {
-                        $csm[$jdx]->average_price = $pyt->average_price;
-                    } else {
-                        $csm[$jdx]->average_price = null;
-                    }
-                }
-
+                $csm = RelConsumeList::findRelConsumeList($user_id, $id);
                 if (count($csm) > 0) {
                     $csl->consume = $csm;
-
-                    $whole_csm = Consume::selectRaw("AVG(CAST(REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '') as unsigned)) as average_calorie, AVG(payment_price) as average_price")
-                        ->leftjoin('payment','payment.consume_id','=','consume.id')
-                        ->first();
-
+                    $whole_csm = Consume::findAverageCalorieAndPrice($user_id, $id);
                     $csl->whole_avg_calorie = (int)$whole_csm->average_calorie;
                     $csl->whole_avg_price = (int)$whole_csm->average_price;
                 } else {
@@ -372,25 +323,14 @@ class QueriesList extends Controller
         try {
             $user_id = $request->user()->id;
 
-            $check = RelConsumeList::selectRaw('1')
-                ->join('consume','consume.id','=','rel_consume_list.consume_id')
-                ->where('slug_name',$consume_slug)
-                ->where('list_id',$list_id)
-                ->first();
-
+            $check = RelConsumeList::isRelConsumeListExist($consume_slug, $list_id);
             if ($check) {
                 return response()->json([
                     'status' => 'failed',
                     'message' => Generator::getMessageTemplate("conflict", 'consume'),
                 ], Response::HTTP_CONFLICT);
             } else {
-                $csl = Consume::selectRaw("consume_name,consume_from,CAST(REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '') as UNSIGNED) as calorie, REPLACE(JSON_EXTRACT(consume_detail, '$[0].provide'), '\"', '') as provide,
-                    CAST(COALESCE(CAST(AVG(payment_price) as UNSIGNED), 0) as UNSIGNED) as average_price")
-                    ->leftjoin('payment','payment.consume_id','=','consume.id')
-                    ->where('consume.created_by', $user_id)
-                    ->where('slug_name', $consume_slug)
-                    ->first();
-
+                $csl = Consume::findConsumeBySlug($user_id, $consume_slug);
                 if ($csl) {
                     return response()->json([
                         'status' => 'success',

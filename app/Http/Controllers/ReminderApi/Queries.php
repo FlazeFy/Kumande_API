@@ -79,13 +79,7 @@ class Queries extends Controller
         try {
             $user_id = $request->user()->id;
 
-            $res = Reminder::select('reminder.id as reminder_id','reminder_name','reminder_type','reminder_context','reminder_body','reminder_attachment','rel_reminder_used.id as id_rel_reminder')
-                ->leftjoin('rel_reminder_used','rel_reminder_used.reminder_id','=','reminder.id')
-                ->orderby('reminder.created_at','DESC')
-                ->where('reminder.created_by',$user_id)
-                ->orwhereNull('reminder.created_by')
-                ->get();
-
+            $res = Reminder::findAllReminder($user_id);
             if (count($res) > 0) {
                 return response()->json([
                     'status' => 'success',
