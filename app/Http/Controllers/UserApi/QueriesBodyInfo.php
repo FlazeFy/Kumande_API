@@ -75,29 +75,21 @@ class QueriesBodyInfo extends Controller
         try {
             $user_id = $request->user()->id;
 
-            $usr = BodyInfo::select('blood_pressure', 'blood_glucose', 'gout', 'cholesterol', 'body_info.created_at','gender')
-                ->join('user','user.id','=','body_info.created_by')
-                ->where('body_info.created_by', $user_id)
-                ->orderby('body_info.created_at','desc')
-                ->first();
+            $bodyInfo = BodyInfo::findLatestBodyInfo($user_id);
+            $calorie = CountCalorie::findLatestCountCalorie($user_id);
+            $user = User::getProfile($user_id);
+            if ($calorie) $calorie->bmi = Math::countBMI($user->gender, $calorie->height, $calorie->weight);
 
-            $cal = CountCalorie::selectRaw('weight,height,result,count_calorie.created_at as calorie_updated,gender,born_at,TIMESTAMPDIFF(YEAR, born_at, CURDATE()) AS age')
-                ->join('user','user.id','=','count_calorie.created_by')
-                ->where('count_calorie.created_by',$user_id)
-                ->orderby('count_calorie.created_at','desc')
-                ->first();
+            if ($bodyInfo || $calorie) {
+                $res = array_merge(
+                    $bodyInfo ? $bodyInfo->toArray() : [],
+                    $calorie ? $calorie->toArray() : []
+                );
 
-            if ($cal) $cal->bmi = Math::countBMI($cal->gender,$cal->height,$cal->weight);
-
-            if ($usr && $cal) {
-                $usrArray = $usr->toArray();
-                $calArray = $cal->toArray();
-                $bodyInfo = array_merge($usrArray, $calArray);
-            
                 return response()->json([
                     "message" => Generator::getMessageTemplate("fetch", 'body info'),
                     "status" => 'success',
-                    "data" => $bodyInfo
+                    "data" => $res
                 ], Response::HTTP_OK);
             } elseif ($usr) {
                 return response()->json([
@@ -202,32 +194,15 @@ class QueriesBodyInfo extends Controller
         try {
             $user_id = $request->user()->id;
 
-            $usr = BodyInfo::select('body_info.id','blood_pressure', 'blood_glucose', 'gout', 'cholesterol', 'body_info.created_at')
-                ->join('user','user.id','=','body_info.created_by')
-                ->where('body_info.created_by', $user_id)
-                ->orderby('body_info.created_at','desc')
-                ->get();
-
-            $cal = CountCalorie::select('count_calorie.id','weight','height','result','count_calorie.created_at')
-                ->join('user','user.id','=','count_calorie.created_by')
-                ->where('count_calorie.created_by',$user_id)
-                ->orderby('count_calorie.created_at','desc')
-                ->get();
-
-            $dashboard = BodyInfo::selectRaw('MAX(blood_glucose) as max_blood_glucose, MIN(blood_glucose) as min_blood_glucose, MAX(gout) as max_gout, 
-                MIN(gout) as min_gout, MAX(cholesterol) as max_cholesterol, MIN(cholesterol) as min_cholesterol,
-                MAX(weight) as max_weight, MIN(weight) as min_weight, MAX(height) as max_height, MIN(height) as min_height')
-                ->leftjoin('count_calorie','count_calorie.created_by','=','body_info.created_by')
-                ->where('count_calorie.created_by', $user_id)
-                ->orwhere('body_info.created_by', $user_id)
-                ->first();
-
+            $bodyInfos = BodyInfo::findAllBodyInfo($user_id);
+            $cals = CountCalorie::findAllCountCalorie($user_id);
+            $dashboard = BodyInfo::findAllMaxMinBodyInfo($user_id);
             if ($usr || $cal) {
                 return response()->json([
                     "data" => (object)[
-                        "body_info" => $usr,
-                        "calorie" => $cal,
-                        "dashboard" => $dashboard
+                        "body_info" => $bodyInfos,
+                        "calorie" => $cals,
+                        "max_min_body_info" => $dashboard
                     ],
                     "message" => Generator::getMessageTemplate("fetch", 'body history'),
                     "status" => 'success'

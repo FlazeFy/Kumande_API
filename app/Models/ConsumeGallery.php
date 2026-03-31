@@ -31,6 +31,10 @@ class ConsumeGallery extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'consume_id', 'gallery_desc', 'gallery_url', 'created_at'];
 
+    public static function findConsumeGalleryById($id) {
+        return ConsumeGallery::select("gallery_url")->where('id', $id)->first();
+    }
+
     public static function createConsumeGallery($data) {
         $data['created_at'] = date('Y-m-d H:i:s');
         $data['id'] = Generator::getUUID();

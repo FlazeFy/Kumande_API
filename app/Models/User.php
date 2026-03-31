@@ -47,7 +47,11 @@ class User extends Authenticatable
     protected $fillable = ['id', 'firebase_id','telegram_user_id','firebase_fcm_token','line_user_id', 'fullname', 'username', 'email', 'password', 'gender', 'image_url', 'timezone', 'born_at', 'created_at', 'updated_at', 'deleted_at'];
 
     public static function getProfile($id) {
-        return User::find($id);
+        return User::find($id)?->makeHidden(['password','firebase_fcm_token','firebase_id']);
+    }
+
+    public static function getUserByEmail($email) {
+        return User::where('email', $email)->first();
     }
 
     public static function getAllCleanReminder() {

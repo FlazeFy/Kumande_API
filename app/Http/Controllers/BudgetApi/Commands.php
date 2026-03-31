@@ -78,7 +78,7 @@ class Commands extends Controller
             } else {        
                 $user_id = $request->user()->id;
                 $id = Generator::getUUID();
-                $budget_ava = Budget::searchBudgetAvailable($user_id, $request->month, $request->year);
+                $budget_ava = Budget::isBudgetAvailable($user_id, $request->month, $request->year);
 
                 if ($budget_ava === null) {
                     $bdt = Budget::createBudget([
@@ -171,7 +171,7 @@ class Commands extends Controller
         try { 
             $user_id = $request->user()->id;
 
-            $data = Budget::find($id);
+            $budget = Budget::findBudgetById($id);
             $res = Budget::deleteBudgetById($user_id, $id);
             if ($res) {
                 $user = User::getProfile($user_id);
@@ -180,7 +180,7 @@ class Commands extends Controller
                     $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
                     $messaging = $factory->createMessaging();
                     $message = CloudMessage::withTarget('token', $fcm_token)
-                        ->withNotification(Notification::create("You have successfully delete budget plan $data->month-$data->year"));
+                        ->withNotification(Notification::create("You have successfully delete budget plan $budget->month-$budget->year"));
                     $response = $messaging->send($message);
                 }
     

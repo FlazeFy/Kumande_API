@@ -34,6 +34,20 @@ class CountCalorie extends Model
     public $timestamps = false;
     protected $fillable = ['id', 'firebase_id', 'weight', 'height', 'result', 'created_at', 'created_by'];
 
+    public static function findLatestCountCalorie($user_id) {
+        return CountCalorie::select("weight", "height", "result", "created_at")
+            ->where('created_by', $user_id)
+            ->orderby('created_at', 'desc')
+            ->first();
+    }
+
+    public static function findAllCountCalorie($user_id) {
+        return CountCalorie::select("id", "weight", "height", "result", "created_at")
+            ->where('created_by', $user_id)
+            ->orderby('created_at', 'desc')
+            ->get();
+    }
+
     public static function createCountCalorie($data, $user_id) {
         $data['created_at'] = date('Y-m-d H:i:s');
         $data['created_by'] = $user_id;

@@ -88,6 +88,41 @@ class Consume extends Model
         return $res ? $res->consume_name : null;
     }
 
+    public static function countUsageByTags($user_id) {
+        return Consume::selectRaw('
+                JSON_UNQUOTE(JSON_EXTRACT(jt.tag, "$.slug_name")) as tag_slug,
+                COUNT(*) as total
+            ')
+            ->joinRaw('
+                JSON_TABLE(consume_tag, "$[*]"
+                    COLUMNS (tag JSON PATH "$")
+                ) as jt
+            ')
+            ->where('created_by', $user_id)
+            ->groupBy('tag_slug')
+            ->pluck('total', 'tag_slug'); 
+    }
+
+    public static function findAnalyzeConsumeTag($user_id, $slug) {
+        $calorie_query = "REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '')";
+
+        return Consume::selectRaw("COUNT(1) as total_item, CAST(SUM(payment_price) as UNSIGNED) as total_price, 
+                CAST(AVG($calorie_query) as UNSIGNED) as average_calorie, CAST(MAX($calorie_query) as UNSIGNED) as max_calorie, CAST(MIN($calorie_query) as UNSIGNED) as min_calorie, 
+                MAX(consume.created_at) as last_used")
+            ->leftjoin('payment','payment.consume_id','=','consume.id')
+            ->whereRaw('consume_tag like '."'".'%"slug_name":"'.$slug.'"%'."'")
+            ->where('consume.created_by', $user_id)
+            ->first();
+    }
+
+    public static function findLastConsumedByTagSlugAndCreatedAt() {
+        return Consume::select('consume_name','consume_type','slug_name')
+            ->whereRaw('consume_tag like '."'".'%"slug_name":"'.$slug.'"%'."'")
+            ->where('consume.created_by', $user_id)
+            ->where('consume.created_at', $res->last_used)
+            ->first();
+    }
+
     public static function getRandom($user_id) {
         return Consume::where('created_by',$user_id)->inRandomOrder()->first();
     }

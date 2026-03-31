@@ -106,7 +106,7 @@ class CommandsGallery extends Controller
         
                         // Helper: Upload inventory image
                         try {
-                            $user = User::find($user_id);
+                            $user = User::getProfile($user_id);
                             $gallery_image = Firebase::uploadFile('consume', $user_id, $user->username, $file, $file_ext); 
                         } catch (\Exception $e) {
                             return response()->json([
@@ -204,13 +204,13 @@ class CommandsGallery extends Controller
      */
     public function deleteGalleryById($gallery_id) {
         try {
-            $data = ConsumeGallery::find($gallery_id);
+            $consumeGallery = ConsumeGallery::findConsumeGalleryById($gallery_id);
             $res = ConsumeGallery::destroy($gallery_id);
 
             if ($res) {
                 $factory = (new Factory)->withServiceAccount(base_path('/firebase/kumande-64a66-firebase-adminsdk-maclr-55c5b66363.json'));
                 $storage = $factory->createStorage();
-                $fileName = Generator::generateUUIDStorageURL('consume',$data->gallery_url);
+                $fileName = Generator::generateUUIDStorageURL('consume',$consumeGallery->gallery_url);
 
                 if ($fileName) {
                     $bucket = 'kumande-64a66.appspot.com';

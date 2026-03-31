@@ -88,8 +88,7 @@ class Commands extends Controller
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
             } else {
                 if (str_contains($request->email, '@gmail')) {
-                    $user = User::where('email', $request->email)->first();
-
+                    $user = User::getUserByEmail($request->email);
                     if (!$user) {
                         return response()->json([
                             'status' => 'failed',

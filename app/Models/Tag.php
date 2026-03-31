@@ -32,6 +32,15 @@ class Tag extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'firebase_id', 'tag_slug', 'tag_name', 'created_at', 'created_by'];
 
+    public static function findAllTag($user_id = null, $paginate) {
+        $select = $user_id ? "id, tag_name, tag_slug, created_at" : "tag_name, tag_slug";
+        $res = Tag::selectRaw($select);
+
+        if ($user_id) $res = $res->where('created_by', $user_id);
+
+        return $res->orderby($user_id ? 'created_at' : 'tag_name', $user_id ? 'desc' : 'asc')->paginate($paginate);
+    }
+
     public static function getRandom($null) {
         return $null === 0 ? Tag::inRandomOrder()->first() : null;
     }

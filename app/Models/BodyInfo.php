@@ -34,6 +34,32 @@ class BodyInfo extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['id', 'firebase_id', 'blood_pressure', 'blood_glucose', 'gout', 'cholesterol', 'created_at', 'created_by'];
 
+    public static function findLatestBodyInfo($user_id) {
+        return BodyInfo::select('blood_pressure', 'blood_glucose', 'gout', 'cholesterol', 'created_at')
+            ->where('created_by', $user_id)
+            ->orderby('created_at', 'desc')
+            ->first();
+    }
+
+    public static function findAllBodyInfo($user_id) {
+        return BodyInfo::select('id', 'blood_pressure', 'blood_glucose', 'gout', 'cholesterol', 'created_at')
+            ->where('created_by', $user_id)
+            ->orderby('created_at', 'desc')
+            ->get();
+    }
+
+    public static function findAllMaxMinBodyInfo($user_id) {
+        return BodyInfo::selectRaw('
+                MAX(blood_glucose) as max_blood_glucose, MIN(blood_glucose) as min_blood_glucose,
+                MAX(gout) as max_gout, MIN(gout) as min_gout,
+                MAX(cholesterol) as max_cholesterol, MIN(cholesterol) as min_cholesterol,
+                AVG(CAST(SUBSTRING_INDEX(blood_pressure, "/", 1) AS UNSIGNED)) as avg_systolic,
+                AVG(CAST(SUBSTRING_INDEX(blood_pressure, "/", -1) AS UNSIGNED)) as avg_diastolic
+            ')
+            ->where('created_by', $user_id)
+            ->first();
+    }
+
     public static function createBodyInfo($data, $user_id) {
         $data['created_at'] = date('Y-m-d H:i:s');
         $data['created_by'] = $user_id;

@@ -34,12 +34,16 @@ class Budget extends Model
         'budget_month_year' => 'array',
     ];
 
-    public static function searchBudgetAvailable($user_id, $month, $year) {
+    public static function isBudgetAvailable($user_id, $month, $year) {
         return Budget::selectRaw("1")
             ->where('created_by', $user_id)
             ->whereRaw("REPLACE(JSON_EXTRACT(budget_month_year, '$[0].month'), '\"', '') = ?", $month)
             ->whereRaw("REPLACE(JSON_EXTRACT(budget_month_year, '$[0].year'), '\"', '') = ?", $year)
             ->first();
+    }
+
+    public static function findBudgetById($id) {
+        return Budget::select("budget_month_year","budget_total")->where('id', $id)->first();
     }
 
     public static function createBudget($data, $user_id) {

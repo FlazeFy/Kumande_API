@@ -67,10 +67,7 @@ class Queries extends Controller
         try {
             $user_id = $request->user()->id;
 
-            $usr = User::select('id','username','fullname','email','gender','born_at','created_at','updated_at')
-                ->where('id', $user_id)
-                ->first();
-
+            $usr = User::getProfile($user_id);
             if ($usr) {
                 return response()->json([
                     "message"=> Generator::getMessageTemplate("fetch", 'account'), 

@@ -66,20 +66,13 @@ class Queries extends Controller
     public function getMyTag(Request $request) {
         try {
             $user_id = $request->user()->id;
+            $paginate = $request->query('per_page_key') ?? 14;
 
-            $res = Tag::select('id','tag_name','tag_slug')
-                ->orderby('tag_name','ASC')
-                ->where('created_by',$user_id)
-                ->get();
-        
+            $res = Tag::findAllTag($user_id, $paginate);
             if (count($res) > 0) {
-                foreach($res as $idx => $dt) {
-                    $csm = Consume::selectRaw('COUNT(1) as total')
-                        ->whereRaw('consume_tag like '."'".'%"slug_name":"'.$dt->tag_slug.'"%'."'")
-                        ->where('created_by',$user_id)
-                        ->first();
-
-                    $res[$idx]->total_used = $csm->total;
+                $tagUsage = Consume::countUsageByTags($user_id);
+                foreach ($res as $dt) {
+                    $dt->total_used = $tagUsage[$dt->tag_slug] ?? 0;
                 }
 
                 return response()->json([
@@ -151,19 +144,14 @@ class Queries extends Controller
      */
     public function getAllTag(Request $request) {
         try {
-            $user_id = $request->user()->id;
+            $paginate = $request->query('per_page_key') ?? 14;
 
-            $sch = Tag::select('id','tag_name','tag_slug','created_by')
-                ->orderby('tag_name','ASC')
-                ->whereNull('created_by')
-                ->orwhere('created_by',$user_id)
-                ->get();
-        
-            if (count($sch) > 0) {
+            $res = Tag::findAllTag(null, $paginate);
+            if (count($res) > 0) {
                 return response()->json([
                     'status' => 'success',
                     'message' => Generator::getMessageTemplate("fetch", 'tag'), 
-                    'data' => $sch
+                    'data' => $res
                 ], Response::HTTP_OK);
             } else {
                 return response()->json([
@@ -241,27 +229,14 @@ class Queries extends Controller
     public function getAnalyzeMyTagBySlug(Request $request, $slug) {
         try {
             $user_id = $request->user()->id;
-            $calorie_query = "REPLACE(JSON_EXTRACT(consume_detail, '$[0].calorie'), '\"', '')";
 
-            $res = Consume::selectRaw("COUNT(1) as total_item, CAST(SUM(payment_price) as UNSIGNED) as total_price, 
-                    CAST(AVG($calorie_query) as UNSIGNED) as average_calorie, CAST(MAX($calorie_query) as UNSIGNED) as max_calorie, CAST(MIN($calorie_query) as UNSIGNED) as min_calorie, 
-                    MAX(consume.created_at) as last_used")
-                ->leftjoin('payment','payment.consume_id','=','consume.id')
-                ->whereRaw('consume_tag like '."'".'%"slug_name":"'.$slug.'"%'."'")
-                ->where('consume.created_by', $user_id)
-                ->first();
-        
+            $res = Consume::findAnalyzeConsumeTag($user_id, $slug);
             if ($res) {
                 if ($res->total_item > 0) {
-                    $lastUsedConsume = Consume::select('consume_name','consume_type','slug_name')
-                        ->whereRaw('consume_tag like '."'".'%"slug_name":"'.$slug.'"%'."'")
-                        ->where('consume.created_by', $user_id)
-                        ->where('consume.created_at', $res->last_used)
-                        ->first();
-
-                        $res->last_used_consume_name = $lastUsedConsume ? $lastUsedConsume->consume_name : null;
-                        $res->last_used_consume_type = $lastUsedConsume ? $lastUsedConsume->consume_type : null;
-                        $res->last_used_consume_slug = $lastUsedConsume ? $lastUsedConsume->slug_name : null;
+                    $lastUsedConsume = Consume::findLastConsumedByTagSlugAndCreatedAt($user_id, $slug, $res->last_used);
+                    $res->last_used_consume_name = $lastUsedConsume ? $lastUsedConsume->consume_name : null;
+                    $res->last_used_consume_type = $lastUsedConsume ? $lastUsedConsume->consume_type : null;
+                    $res->last_used_consume_slug = $lastUsedConsume ? $lastUsedConsume->slug_name : null;
                     
                     return response()->json([
                         'status' => 'success',
